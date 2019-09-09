@@ -14,7 +14,7 @@ except:
 
 # Check if the BIN file does not exist yet ...
 if not os.path.exists("all10g.bin"):
-    print("Downloading \"all10g.bin\" ...")
+    print("Making \"all10g.bin\" ...")
 
     # Define constants ...
     bins = [

@@ -3,7 +3,8 @@ PROGRAM main
     USE ISO_FORTRAN_ENV
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
                                     sub_load_array_from_BIN,                    &
-                                    sub_save_array_as_BIN
+                                    sub_save_array_as_BIN,                      &
+                                    sub_save_array_as_PPM
 
     IMPLICIT NONE
 
@@ -15,6 +16,7 @@ PROGRAM main
 
     ! Declare variables ...
     CHARACTER(len = 12)                                                         :: bname
+    CHARACTER(len = 12)                                                         :: iname
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: i
@@ -43,7 +45,8 @@ PROGRAM main
     CALL sub_allocate_array(elev, "elev", nx, ny, .TRUE._INT8)
     CALL sub_load_array_from_BIN(elev, "all10g.bin")                            ! [m]
 
-    ! Allocate (889.89 MiB) array and initialize it ...
+    ! Allocate (889.89 MiB) array and initialize it to not allow pregnant women
+    ! to go anywhere ...
     CALL sub_allocate_array(mask, "mask", nx, ny, .TRUE._INT8)
     mask = .FALSE._INT8
 
@@ -55,8 +58,9 @@ PROGRAM main
 
     ! Start ~infinite loop ...
     DO i = 1_INT64, nmax
-        ! Create file name ...
+        ! Create file names ...
         WRITE(bname, '("mask", i4.4, ".bin")') i
+        WRITE(iname, '("mask", i4.4, ".ppm")') i
 
         ! Initialize counter ...
         n = 0_INT64                                                             ! [#]
@@ -106,12 +110,16 @@ PROGRAM main
                 iy2 =  iy            * scale
 
                 ! Find average mask ...
+                ! NOTE: Within shrunkMask:
+                !         * 0.0 = pregnant women can't go here =  RED
+                !         * 1.0 = pregnant women  can  go here = GREEN
                 shrunkMask(ix, iy) = REAL(COUNT(mask(ix1:ix2, iy1:iy2)), kind = REAL32) / REAL(scale * scale, kind = REAL32)
             END DO
         END DO
 
         ! Save shrunk mask ...
         CALL sub_save_array_as_BIN(shrunkMask, bname)
+        CALL sub_save_array_as_PPM(shrunkMask, iname, "r2g")
 
         ! Stop looping once no changes have been made ...
         IF(n == 0_INT64)THEN

@@ -2,9 +2,7 @@ PROGRAM main
     ! Import modules ...
     USE ISO_FORTRAN_ENV
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
-                                    sub_load_array_from_BIN,                    &
-                                    sub_save_array_as_BIN,                      &
-                                    sub_save_array_as_PPM
+                                    sub_load_array_from_BIN
 
     IMPLICIT NONE
 
@@ -27,7 +25,11 @@ PROGRAM main
     INTEGER(kind = INT64)                                                       :: iy1
     INTEGER(kind = INT64)                                                       :: iy2
     INTEGER(kind = INT64)                                                       :: n
-    REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: shrunkMask
+
+    ! Declare FORTRAN variables ...
+    CHARACTER(len = 256)                                                        :: errmsg
+    INTEGER(kind = INT32)                                                       :: errnum
+    INTEGER(kind = INT32)                                                       :: funit
 
     ! Check scale ...
     IF(MOD(nx, scale) /= 0_INT64)THEN
@@ -50,11 +52,20 @@ PROGRAM main
     CALL sub_allocate_array(mask, "mask", nx, ny, .TRUE._INT8)
     mask = .FALSE._INT8
 
-    ! Allocate (35.60 MiB) array ...
-    CALL sub_allocate_array(shrunkMask, "shrunkMask", nx / scale, ny / scale, .TRUE._INT8)
-
     ! Allow pregnant women to go to the top-left corner ...
     mask(1, 1) = .TRUE._INT8
+
+    ! Open CSV ...
+    OPEN(action = "write", file = "createMask.csv", form = "formatted", iomsg = errmsg, iostat = errnum, newunit = funit, status = "replace")
+    IF(errnum /= 0_INT32)THEN
+        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open BIN", TRIM(errmsg), errnum
+        FLUSH(unit = ERROR_UNIT)
+        STOP
+    END IF
+
+    ! Write header ...
+    WRITE(fmt = '(a)', unit = funit) "iteration,number added"
+    FLUSH(unit = funit)
 
     ! Start ~infinite loop ...
     DO i = 1_INT64, nmax
@@ -93,33 +104,9 @@ PROGRAM main
             END DO
         END DO
 
-        ! Print summary ...
-        WRITE(fmt = '(i9, "px out of ", i9, "px are allowed (", i9, "px were added this iteration)")', unit = OUTPUT_UNIT) COUNT(mask), SIZE(mask), n
-        FLUSH(unit = OUTPUT_UNIT)
-
-        ! Loop over x-axis ...
-        DO ix = 1_INT64, nx / scale
-            ! Find the extent of the window ...
-            ix1 = (ix - 1_INT64) * scale + 1_INT64
-            ix2 =  ix            * scale
-
-            ! Loop over y-axis ...
-            DO iy = 1_INT64, ny / scale
-                ! Find the extent of the window ...
-                iy1 = (iy - 1_INT64) * scale + 1_INT64
-                iy2 =  iy            * scale
-
-                ! Find average mask ...
-                ! NOTE: Within shrunkMask:
-                !         * 0.0 = pregnant women can't go here =  RED
-                !         * 1.0 = pregnant women  can  go here = GREEN
-                shrunkMask(ix, iy) = REAL(COUNT(mask(ix1:ix2, iy1:iy2)), kind = REAL32) / REAL(scale * scale, kind = REAL32)
-            END DO
-        END DO
-
-        ! Save shrunk mask ...
-        CALL sub_save_array_as_BIN(shrunkMask, bname)
-        CALL sub_save_array_as_PPM(shrunkMask, iname, "r2g")
+        ! Write progress ...
+        WRITE(fmt = '(i3, ",", i9)', unit = funit) i, n
+        FLUSH(unit = funit)
 
         ! Stop looping once no changes have been made ...
         IF(n == 0_INT64)THEN
@@ -127,8 +114,10 @@ PROGRAM main
         END IF
     END DO
 
+    ! Close CSV ...
+    CLOSE(unit = funit)
+
     ! Clean up ...
     DEALLOCATE(elev)
     DEALLOCATE(mask)
-    DEALLOCATE(shrunkMask)
 END PROGRAM main

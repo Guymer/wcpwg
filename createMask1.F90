@@ -19,13 +19,8 @@ PROGRAM main
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: i
-    INTEGER(kind = INT64)                                                       :: ix
-    INTEGER(kind = INT64)                                                       :: ix1
-    INTEGER(kind = INT64)                                                       :: ix2
-    INTEGER(kind = INT64)                                                       :: iy
-    INTEGER(kind = INT64)                                                       :: iy1
-    INTEGER(kind = INT64)                                                       :: iy2
-    INTEGER(kind = INT64)                                                       :: n
+    INTEGER(kind = INT64)                                                       :: oldtot
+    INTEGER(kind = INT64)                                                       :: newtot
 
     ! Declare FORTRAN variables ...
     CHARACTER(len = 256)                                                        :: errmsg
@@ -65,58 +60,44 @@ PROGRAM main
     END IF
 
     ! Write header ...
-    WRITE(fmt = '(a)', unit = funit) "iteration,number added"
+    WRITE(fmt = '(a)', unit = funit) "iteration,pixels allowed"
     FLUSH(unit = funit)
 
     ! Start ~infinite loop ...
     DO i = 1_INT64, nmax
+        ! Print progress ...
+        WRITE(fmt = '("Calculating step ", i4, " of (up to) ", i4, " ...")', unit = OUTPUT_UNIT) i, nmax
+        FLUSH(unit = OUTPUT_UNIT)
+
         ! Create file names ...
         WRITE(bname, '("createMask1_mask", i4.4, ".bin")') i
         WRITE(iname, '("createMask1_mask", i4.4, ".ppm")') i
 
-        ! Initialize counter ...
-        n = 0_INT64                                                             ! [#]
+        ! Find initial total ...
+        oldtot = COUNT(mask, kind = INT64)
 
-        ! Loop over x-axis ...
-        DO ix = 1_INT64, nx
-            ! Find the limits of the border around this pixel ...
-            ix1 = MAX(ix - 1_INT64, 1_INT64)
-            ix2 = MIN(ix + 1_INT64,      nx)
+        ! Increment mask ...
+        CALL incrementMask(nx, ny, elev, mask, 1_INT64, nx, 1_INT64, ny)
 
-            ! Loop over y-axis ...
-            DO iy = 1_INT64, ny
-                ! Find the limits of the border around this pixel ...
-                iy1 = MAX(iy - 1_INT64, 1_INT64)
-                iy2 = MIN(iy + 1_INT64,      ny)
-
-                ! Check that this pixel has not already been allowed ...
-                IF(.NOT. mask(ix, iy))THEN
-                    ! Check that this pixel is <= 2,500m ASL ...
-                    IF(elev(ix, iy) <= 2500_INT16)THEN
-                        ! Check that this pixel is accessible ...
-                        IF(ANY(mask(ix1:ix2, iy1:iy2)))THEN
-                            ! Allow pregnant women to go here and increment
-                            ! counter ...
-                            mask(ix, iy) = .TRUE._INT8
-                            n = n + 1_INT64                                     ! [#]
-                        END IF
-                    END IF
-                END IF
-            END DO
-        END DO
+        ! Find new total ...
+        newtot = COUNT(mask, kind = INT64)
 
         ! Write progress ...
-        WRITE(fmt = '(i3, ",", i9)', unit = funit) i, n
+        WRITE(fmt = '(i3, ",", i9)', unit = funit) i, newtot
         FLUSH(unit = funit)
 
         ! Stop looping once no changes have been made ...
-        IF(n == 0_INT64)THEN
+        IF(newtot == oldtot)THEN
             EXIT
         END IF
     END DO
 
     ! Close CSV ...
     CLOSE(unit = funit)
+
+    ! Print progress ...
+    WRITE(fmt = '("Saving final answer ...")', unit = OUTPUT_UNIT)
+    FLUSH(unit = OUTPUT_UNIT)
 
     ! Save final answer ...
     CALL saveShrunkMask(nx, ny, mask, scale, bname, iname)

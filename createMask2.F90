@@ -121,6 +121,11 @@ PROGRAM main
                             ! Find initial total ...
                             oldtot_thread = COUNT(mask(ixlo:ixhi, iylo:iyhi), kind = INT64)
 
+                            ! Stop looping once no changes can be made ...
+                            IF(oldtot_thread == 0_INT64 .OR. oldtot_thread == scale ** 2)THEN
+                                EXIT
+                            END IF
+
                             ! Increment mask (of the tile) ...
                             CALL incrementMask(nx, ny, elev, mask, ixlo, ixhi, iylo, iyhi)
 

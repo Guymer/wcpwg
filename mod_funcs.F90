@@ -105,7 +105,7 @@ MODULE mod_funcs
                 ! NOTE: Within shrunkMask:
                 !         *     0.0     = pregnant women can't go here =  RED
                 !         * scale*scale = pregnant women  can  go here = GREEN
-                shrunkMask(ix, iy) = REAL(COUNT(mask(ix1:ix2, iy1:iy2)), kind = REAL32)
+                shrunkMask(ix, iy) = REAL(COUNT(mask(ix1:ix2, iy1:iy2), kind = INT64), kind = REAL32)
             END DO
         END DO
 

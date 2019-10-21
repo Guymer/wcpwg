@@ -9,6 +9,7 @@ PROGRAM main
 
     ! Declare parameters ...
     INTEGER(kind = INT64), PARAMETER                                            :: nmax = 25_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: nmax_thread = 1000_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: nx = 43200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: ny = 21600_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: scale = 100_INT64
@@ -19,8 +20,17 @@ PROGRAM main
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: i
+    INTEGER(kind = INT64)                                                       :: i_thread
+    INTEGER(kind = INT64)                                                       :: ix
+    INTEGER(kind = INT64)                                                       :: ixlo
+    INTEGER(kind = INT64)                                                       :: ixhi
+    INTEGER(kind = INT64)                                                       :: iy
+    INTEGER(kind = INT64)                                                       :: iylo
+    INTEGER(kind = INT64)                                                       :: iyhi
     INTEGER(kind = INT64)                                                       :: newtot
+    INTEGER(kind = INT64)                                                       :: newtot_thread
     INTEGER(kind = INT64)                                                       :: oldtot
+    INTEGER(kind = INT64)                                                       :: oldtot_thread
 
     ! Declare FORTRAN variables ...
     CHARACTER(len = 256)                                                        :: errmsg
@@ -60,23 +70,75 @@ PROGRAM main
     END IF
 
     ! Write header ...
-    WRITE(fmt = '(a)', unit = funit) "iteration,number added"
+    WRITE(fmt = '(a)', unit = funit) "iteration,pixels allowed"
     FLUSH(unit = funit)
 
     ! Start ~infinite loop ...
     DO i = 1_INT64, nmax
+        ! Print progress ...
+        WRITE(fmt = '("Calculating step ", i4, " of (up to) ", i4, " ...")', unit = OUTPUT_UNIT) i, nmax
+        FLUSH(unit = OUTPUT_UNIT)
+
         ! Create file names ...
         WRITE(bname, '("createMask2_mask", i4.4, ".bin")') i
         WRITE(iname, '("createMask2_mask", i4.4, ".ppm")') i
 
         ! Find initial total ...
-        oldtot = COUNT(mask, kind = INT64)                                      ! [#]
+        oldtot = COUNT(mask, kind = INT64)
 
-        ! Increment mask ...
-        CALL incrementMask(nx, ny, elev, mask)
+        ! Increment mask (of the world) ...
+        CALL incrementMask(nx, ny, elev, mask, 1_INT64, nx, 1_INT64, ny)
+
+        !$omp parallel                                                          &
+        !$omp default(none)                                                     &
+        !$omp private(i_thread)                                                 &
+        !$omp private(ix)                                                       &
+        !$omp private(ixlo)                                                     &
+        !$omp private(ixhi)                                                     &
+        !$omp private(iy)                                                       &
+        !$omp private(iylo)                                                     &
+        !$omp private(iyhi)                                                     &
+        !$omp private(oldtot_thread)                                            &
+        !$omp private(newtot_thread)                                            &
+        !$omp shared(elev)                                                      &
+        !$omp shared(mask)
+            !$omp do                                                            &
+            !$omp schedule(dynamic)
+                ! Loop over x-axis tiles ...
+                DO ix = 1_INT64, nx / scale
+                    ! Find the extent of the tile ...
+                    ixlo = (ix - 1_INT64) * scale + 1_INT64
+                    ixhi =  ix            * scale
+
+                    ! Loop over y-axis tiles ...
+                    DO iy = 1_INT64, ny / scale
+                        ! Find the extent of the tile ...
+                        iylo = (iy - 1_INT64) * scale + 1_INT64
+                        iyhi =  iy            * scale
+
+                        ! Start ~infinite loop ...
+                        DO i_thread = 1_INT64, nmax_thread
+                            ! Find initial total ...
+                            oldtot_thread = COUNT(mask(ixlo:ixhi, iylo:iyhi), kind = INT64)
+
+                            ! Increment mask (of the tile) ...
+                            CALL incrementMask(nx, ny, elev, mask, ixlo, ixhi, iylo, iyhi)
+
+                            ! Find new total ...
+                            newtot_thread = COUNT(mask(ixlo:ixhi, iylo:iyhi), kind = INT64)
+
+                            ! Stop looping once no changes have been made ...
+                            IF(newtot_thread == oldtot_thread)THEN
+                                EXIT
+                            END IF
+                        END DO
+                    END DO
+                END DO
+            !$omp end do
+        !$omp end parallel
 
         ! Find new total ...
-        newtot = COUNT(mask, kind = INT64)                                      ! [#]
+        newtot = COUNT(mask, kind = INT64)
 
         ! Write progress ...
         WRITE(fmt = '(i3, ",", i9)', unit = funit) i, newtot
@@ -90,6 +152,10 @@ PROGRAM main
 
     ! Close CSV ...
     CLOSE(unit = funit)
+
+    ! Print progress ...
+    WRITE(fmt = '("Saving final answer ...")', unit = OUTPUT_UNIT)
+    FLUSH(unit = OUTPUT_UNIT)
 
     ! Save final answer ...
     CALL saveShrunkMask(nx, ny, mask, scale, bname, iname)

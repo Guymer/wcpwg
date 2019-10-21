@@ -11,4 +11,6 @@ MACH_OPTS="-m64"
 # Compile ...
 mpif90 -c ${LANG_OPTS} ${WARN_OPTS} ${MACH_OPTS} -Ifortranlib mod_funcs.F90
 mpif90 -c ${LANG_OPTS} ${WARN_OPTS} ${MACH_OPTS} -Ifortranlib createMask1.F90
+mpif90 -c ${LANG_OPTS} ${WARN_OPTS} ${MACH_OPTS} -Ifortranlib createMask2.F90
 mpif90 -o createMask1 ${LANG_OPTS} ${WARN_OPTS} ${MACH_OPTS} createMask1.o mod_funcs.o fortranlib/*.o -Lfortranlib
+mpif90 -o createMask2 ${LANG_OPTS} ${WARN_OPTS} ${MACH_OPTS} createMask2.o mod_funcs.o fortranlib/*.o -Lfortranlib

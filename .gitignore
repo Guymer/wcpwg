@@ -9,6 +9,7 @@ ehthumbs.db
 Thumbs.db
 
 # Hide compiled code ...
+*.mod
 *.o
 __pycache__
 createMask?

@@ -56,7 +56,7 @@ PROGRAM main
     mask(1, 1) = .TRUE._INT8
 
     ! Open CSV ...
-    OPEN(action = "write", file = "createMask.csv", form = "formatted", iomsg = errmsg, iostat = errnum, newunit = funit, status = "replace")
+    OPEN(action = "write", file = "createMask1.csv", form = "formatted", iomsg = errmsg, iostat = errnum, newunit = funit, status = "replace")
     IF(errnum /= 0_INT32)THEN
         WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open BIN", TRIM(errmsg), errnum
         FLUSH(unit = ERROR_UNIT)

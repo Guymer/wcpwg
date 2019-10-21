@@ -1,7 +1,7 @@
 MODULE mod_funcs
     CONTAINS
 
-    PURE SUBROUTINE incrementMask(nx, ny, elev, mask)
+    PURE SUBROUTINE incrementMask(nx, ny, elev, mask, ixlo, ixhi, iylo, iyhi)
         ! Import modules ...
         USE ISO_FORTRAN_ENV
 
@@ -12,6 +12,10 @@ MODULE mod_funcs
         INTEGER(kind = INT64), INTENT(in)                                       :: ny
         INTEGER(kind = INT16), DIMENSION(nx, ny), INTENT(inout)                 :: elev
         LOGICAL(kind = INT8), DIMENSION(nx, ny), INTENT(inout)                  :: mask
+        INTEGER(kind = INT64), INTENT(in)                                       :: ixlo
+        INTEGER(kind = INT64), INTENT(in)                                       :: ixhi
+        INTEGER(kind = INT64), INTENT(in)                                       :: iylo
+        INTEGER(kind = INT64), INTENT(in)                                       :: iyhi
 
         ! Declare variables ...
         INTEGER(kind = INT64)                                                   :: ix
@@ -22,16 +26,16 @@ MODULE mod_funcs
         INTEGER(kind = INT64)                                                   :: iy2
 
         ! Loop over x-axis ...
-        DO ix = 1_INT64, nx
+        DO ix = ixlo, ixhi
             ! Find the limits of the border around this pixel ...
-            ix1 = MAX(ix - 1_INT64, 1_INT64)
-            ix2 = MIN(ix + 1_INT64,      nx)
+            ix1 = MAX(ix - 1_INT64, ixlo)
+            ix2 = MIN(ix + 1_INT64, ixhi)
 
             ! Loop over y-axis ...
-            DO iy = 1_INT64, ny
+            DO iy = iylo, iyhi
                 ! Find the limits of the border around this pixel ...
-                iy1 = MAX(iy - 1_INT64, 1_INT64)
-                iy2 = MIN(iy + 1_INT64,      ny)
+                iy1 = MAX(iy - 1_INT64, iylo)
+                iy2 = MIN(iy + 1_INT64, iyhi)
 
                 ! Check that this pixel has not already been allowed ...
                 IF(.NOT. mask(ix, iy))THEN
@@ -67,11 +71,11 @@ MODULE mod_funcs
 
         ! Declare variables ...
         INTEGER(kind = INT64)                                                   :: ix
-        INTEGER(kind = INT64)                                                   :: ix1
-        INTEGER(kind = INT64)                                                   :: ix2
+        INTEGER(kind = INT64)                                                   :: ixlo
+        INTEGER(kind = INT64)                                                   :: ixhi
         INTEGER(kind = INT64)                                                   :: iy
-        INTEGER(kind = INT64)                                                   :: iy1
-        INTEGER(kind = INT64)                                                   :: iy2
+        INTEGER(kind = INT64)                                                   :: iylo
+        INTEGER(kind = INT64)                                                   :: iyhi
         REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                       :: shrunkMask
 
         ! Check scale ...
@@ -89,23 +93,23 @@ MODULE mod_funcs
         ! Allocate array ...
         CALL sub_allocate_array(shrunkMask, "shrunkMask", nx / scale, ny / scale, .TRUE._INT8)
 
-        ! Loop over x-axis ...
+        ! Loop over x-axis tiles ...
         DO ix = 1_INT64, nx / scale
-            ! Find the extent of the window ...
-            ix1 = (ix - 1_INT64) * scale + 1_INT64
-            ix2 =  ix            * scale
+            ! Find the extent of the tile ...
+            ixlo = (ix - 1_INT64) * scale + 1_INT64
+            ixhi =  ix            * scale
 
-            ! Loop over y-axis ...
+            ! Loop over y-axis tiles ...
             DO iy = 1_INT64, ny / scale
-                ! Find the extent of the window ...
-                iy1 = (iy - 1_INT64) * scale + 1_INT64
-                iy2 =  iy            * scale
+                ! Find the extent of the tile ...
+                iylo = (iy - 1_INT64) * scale + 1_INT64
+                iyhi =  iy            * scale
 
                 ! Find average mask ...
                 ! NOTE: Within shrunkMask:
                 !         *     0.0     = pregnant women can't go here =  RED
                 !         * scale*scale = pregnant women  can  go here = GREEN
-                shrunkMask(ix, iy) = REAL(COUNT(mask(ix1:ix2, iy1:iy2), kind = INT64), kind = REAL32)
+                shrunkMask(ix, iy) = REAL(COUNT(mask(ixlo:ixhi, iylo:iyhi), kind = INT64), kind = REAL32)
             END DO
         END DO
 

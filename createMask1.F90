@@ -1,20 +1,21 @@
 PROGRAM main
     ! Import modules ...
     USE ISO_FORTRAN_ENV
+    USE mod_funcs
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
                                     sub_load_array_from_BIN
 
     IMPLICIT NONE
 
     ! Declare parameters ...
-    INTEGER(kind = INT64), PARAMETER                                            :: nmax = 100_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: nmax = 25_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: nx = 43200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: ny = 21600_INT64
-    INTEGER(kind = INT64), PARAMETER                                            :: scale = 10_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: scale = 100_INT64
 
     ! Declare variables ...
-    CHARACTER(len = 12)                                                         :: bname
-    CHARACTER(len = 12)                                                         :: iname
+    CHARACTER(len = 24)                                                         :: bname
+    CHARACTER(len = 24)                                                         :: iname
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: i
@@ -70,8 +71,8 @@ PROGRAM main
     ! Start ~infinite loop ...
     DO i = 1_INT64, nmax
         ! Create file names ...
-        WRITE(bname, '("mask", i4.4, ".bin")') i
-        WRITE(iname, '("mask", i4.4, ".ppm")') i
+        WRITE(bname, '("createMask1_mask", i4.4, ".bin")') i
+        WRITE(iname, '("createMask1_mask", i4.4, ".ppm")') i
 
         ! Initialize counter ...
         n = 0_INT64                                                             ! [#]
@@ -116,6 +117,9 @@ PROGRAM main
 
     ! Close CSV ...
     CLOSE(unit = funit)
+
+    ! Save final answer ...
+    CALL saveShrunkMask(nx, ny, mask, scale, bname, iname)
 
     ! Clean up ...
     DEALLOCATE(elev)

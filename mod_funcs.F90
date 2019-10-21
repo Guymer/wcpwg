@@ -27,6 +27,18 @@ MODULE mod_funcs
         INTEGER(kind = INT64)                                                   :: iy2
         REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                       :: shrunkMask
 
+        ! Check scale ...
+        IF(MOD(nx, scale) /= 0_INT64)THEN
+            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"nx" is not an integer multiple of "scale"'
+            FLUSH(unit = ERROR_UNIT)
+            STOP
+        END IF
+        IF(MOD(ny, scale) /= 0_INT64)THEN
+            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"ny" is not an integer multiple of "scale"'
+            FLUSH(unit = ERROR_UNIT)
+            STOP
+        END IF
+
         ! Allocate array ...
         CALL sub_allocate_array(shrunkMask, "shrunkMask", nx / scale, ny / scale, .TRUE._INT8)
 

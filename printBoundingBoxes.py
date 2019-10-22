@@ -35,7 +35,7 @@ for record in cartopy.io.shapereader.Reader(shape_file).records():
 
 # ******************************************************************************
 
-# Find file containing all the state/provinces shapes ...
+# Find file containing all the states/provinces shapes ...
 shape_file = cartopy.io.shapereader.natural_earth(
     resolution = "110m",
       category = "cultural",
@@ -44,7 +44,7 @@ shape_file = cartopy.io.shapereader.natural_earth(
 
 # Loop over records ...
 for record in cartopy.io.shapereader.Reader(shape_file).records():
-    # Check if this country is one that I want ...
+    # Check if this state/province is one that I want ...
     if record.attributes["name"] in ["Colorado"]:
         print("{:s}:".format(record.attributes["name"]))
         for geometry in record.geometry:

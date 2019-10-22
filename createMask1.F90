@@ -8,7 +8,7 @@ PROGRAM main
     IMPLICIT NONE
 
     ! Declare parameters ...
-    INTEGER(kind = INT64), PARAMETER                                            :: nmax = 25_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: nmax = 50_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: nx = 43200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: ny = 21600_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: scale = 100_INT64

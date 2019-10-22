@@ -14,6 +14,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 5. Compare the output between versions (by running `join -t, createMask1.csv createMask2.csv > createMask.csv`)
 6. Convert all generated PBM images to PNG images (by running [convertPBMtoPNG.sh](convertPBMtoPNG.sh))
 7. Convert all generated PPM images to PNG images (by running [convertPPMtoPNG.sh](convertPPMtoPNG.sh))
+8. Convert the sequence of PPM images to a GIF image (by running `convert createMask3_mask????.ppm createMask3.gif`)
 
 ## To Do
 

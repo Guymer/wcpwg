@@ -120,13 +120,17 @@ if not os.path.exists(pfile):
                 ax.plot(
                     record.geometry.x,
                     record.geometry.y,
-                    "ob",
+                    "o",
+                    color = "blue",
                     transform = cartopy.crs.PlateCarree()
                 )
                 ax.annotate(
                     record.attributes["NAME"],
-                    (record.geometry.x, record.geometry.y),
-                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax)
+                    xy = (record.geometry.x, record.geometry.y),
+                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax),
+                    xytext = (3, 2),
+                    textcoords = "offset points",
+                    color = "blue"
                 )
 
     # Save plot ...
@@ -234,13 +238,17 @@ if not os.path.exists(pfile):
                 ax.plot(
                     record.geometry.x,
                     record.geometry.y,
-                    "ob",
+                    "o",
+                    color = "blue",
                     transform = cartopy.crs.PlateCarree()
                 )
                 ax.annotate(
                     record.attributes["NAME"],
-                    (record.geometry.x, record.geometry.y),
-                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax)
+                    xy = (record.geometry.x, record.geometry.y),
+                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax),
+                    xytext = (3, 2),
+                    textcoords = "offset points",
+                    color = "blue"
                 )
 
     # Save plot ...

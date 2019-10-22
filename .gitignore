@@ -12,6 +12,7 @@ Thumbs.db
 *.mod
 *.o
 __pycache__
+compareMasks
 createMask?
 
 # Hide output of Pylint ...

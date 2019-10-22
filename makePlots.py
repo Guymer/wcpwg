@@ -30,22 +30,36 @@ os.environ["CARTOPY_USER_BACKGROUNDS"] = os.getcwd()
 # Configure matplotlib ...
 matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
+# Set extents of the regions ...
+extUS = [
+    -125.0, # left
+     -66.0, # right
+      24.0, # bottom
+      50.0, # top
+]
+
 # ******************************************************************************
 
 # Define PNG file name and check if it exists already ...
-pfile = "diff.png"
+pfile = "diffUS.png"
 if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
-    ax = matplotlib.pyplot.axes(projection = cartopy.crs.Robinson())
-    ax.set_global()
+    ax = matplotlib.pyplot.axes(
+        projection = cartopy.crs.Orthographic(
+            central_longitude = 0.5 * (extUS[0] + extUS[1]),
+             central_latitude = 0.5 * (extUS[2] + extUS[3])
+        )
+    )
+    ax.set_extent(extUS)
 
     # Add background images ...
-    pyguymer3.add_map_background(ax, name = "diff", resolution = "diff")
+    pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extUS)
 
     # Add coastlines ...
+    ax.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
     ax.coastlines(resolution = "10m", color = "white", linewidth = 0.1)
 
     # Save plot ...

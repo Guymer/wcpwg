@@ -38,7 +38,7 @@ PROGRAM main
 
     ! Find out which pixels are <= 2,500m ASL but not accessible ...
     DO ix = 1_INT64, nx
-        DO iy = 1_INT64, nx
+        DO iy = 1_INT64, ny
             IF(mask1(ix, iy))THEN
                 IF(mask2(ix, iy))THEN
                     flags(ix, iy) = 255_INT16

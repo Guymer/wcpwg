@@ -59,7 +59,6 @@ PROGRAM main
     DEALLOCATE(mask2)
 
     ! Save difference in masks ...
-    CALL sub_save_array_as_BIN(mask3, "createMask3_diff.bin")
     CALL sub_save_array_as_PBM(mask3, "createMask3_diff.pbm")
 
     ! Clean up ...

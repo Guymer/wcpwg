@@ -29,6 +29,26 @@ The output of [compareMasks.F90](compareMasks.F90) is:
 
 Note that the second number is smaller than the first, thus indicating that *some* of the pixels that are less than 2,500m ASL are not accessible by land/sea.
 
+## Dependencies
+
+WCPWG requires the following Python modules to be installed and available in your `PYTHONPATH`.
+
+* [cartopy](https://pypi.org/project/Cartopy)
+* [matplotlib](https://pypi.org/project/matplotlib)
+* [numpy](https://pypi.org/project/numpy)
+* [pyguymer3](https://github.com/Guymer/PyGuymer3)
+* [requests](https://pypi.org/project/requests)
+
+WCPWG uses some [Natural Earth](http://www.naturalearthdata.com/) resources via the [Cartopy](http://scitools.org.uk/cartopy/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run WCPWG.
+
 ## To Do
 
 * Obviously, the [compile.sh](compile.sh) needs to be replaced by a real Makefile at some point.
+
+## Bugs
+
+* Due to what I assume is "a rendering error" or "an efficiency saving" in either [cartopy](https://pypi.org/project/Cartopy) or [matplotlib](https://pypi.org/project/matplotlib), some of the plots produced by [makePlots.py](makePlots.py) have green pixels touching orange pixels. The whole point of this project is to find the places in the world where green pixels and orange pixels are separated by red pixels. If a green pixel touches an orange pixel then the orange pixel should be green. I am convinced that this is not my fault and that my code is calculating the arrays correctly - it is purely a rendering error. Below are two screenshots: a) the first is a zoom in on a plot using Atom; and b) the second is a zoom in on a background image using Photoshop. Photoshop shows the green and orange separated by red, so I am happy that it is just a rendering error in either [cartopy](https://pypi.org/project/Cartopy) or [matplotlib](https://pypi.org/project/matplotlib).
+
+![Screenshot from Atom](Screenshot_Atom.png)
+
+![Screenshot from Photoshop](Screenshot_Photoshop.png)

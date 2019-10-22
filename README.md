@@ -16,6 +16,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 7. Convert all generated PBM images to PNG images (by running [convertPBMtoPNG.sh](convertPBMtoPNG.sh))
 8. Convert all generated PPM images to PNG images (by running [convertPPMtoPNG.sh](convertPPMtoPNG.sh))
 9. Convert the sequence of PPM images to a GIF image (by running `convert createMask3_mask????.ppm createMask3.gif`)
+10. Make plots (by running [makePlots.py](makePlots.py))
 
 ## Output
 

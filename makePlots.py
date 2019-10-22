@@ -59,8 +59,7 @@ if not os.path.exists(pfile):
     pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extUS)
 
     # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
-    ax.coastlines(resolution = "10m", color = "white", linewidth = 0.1)
+    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
 
     # Save plot ...
     fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
@@ -89,7 +88,7 @@ if not os.path.exists(pfile):
     pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extUS)
 
     # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
 
     # Save plot ...
     fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)

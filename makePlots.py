@@ -31,17 +31,17 @@ os.environ["CARTOPY_USER_BACKGROUNDS"] = os.getcwd()
 matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
 # Set extents of the regions ...
-extUS = [
-    -125.0, # left
-     -66.0, # right
-     +25.0, # bottom
-     +50.0, # top
-]
 extCL = [
      -76.0, # left
      -66.0, # right
      -54.0, # bottom
      -17.0, # top
+]
+extUS = [
+    -125.0, # left
+     -66.0, # right
+     +25.0, # bottom
+     +50.0, # top
 ]
 
 # ******************************************************************************

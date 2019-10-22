@@ -17,7 +17,7 @@ PROGRAM main
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask2
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask3
 
-    ! Allocate three (889.89 MiB) arrays and populate them ...
+    ! Allocate three (889.89 MiB) arrays and populate two of them ...
     CALL sub_allocate_array(mask1, "mask1", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask2, "mask2", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask3, "mask3", nx, ny, .TRUE._INT8)

@@ -20,5 +20,6 @@ pylint.log
 # Hide large datasets ...
 *.bin
 *.csv
+*.pbm
 *.ppm
 *.zip

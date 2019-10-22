@@ -33,7 +33,11 @@ The output of [compareMasks.F90](compareMasks.F90) is:
 93.800614% of the world is accessible
 ```
 
-Note that the second number is smaller than the first, thus indicating that *some* of the pixels that are less than 2,500m ASL are not accessible by land/sea.
+Note that the second number is smaller than the first, thus indicating that *some* of the pixels that are less than 2,500m ASL are not accessible by land/sea. Examples of places that are less than 2,500m ASL but which are not accessible can be found in Colorado (US), shown in orange below.
+
+![all three types of places](flagsCO.png)
+
+![places less than 2,500m ASL but which are not accessible](diffCO.png)
 
 ## Dependencies
 

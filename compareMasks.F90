@@ -4,7 +4,8 @@ PROGRAM main
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
                                     sub_load_array_from_BIN,                    &
                                     sub_save_array_as_BIN,                      &
-                                    sub_save_array_as_PBM
+                                    sub_save_array_as_PBM,                      &
+                                    sub_save_array_as_PPM
 
     IMPLICIT NONE
 
@@ -16,11 +17,17 @@ PROGRAM main
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask1
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask2
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask3
+    INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: flags
+    INTEGER(kind = INT64)                                                       :: ix
+    INTEGER(kind = INT64)                                                       :: iy
 
-    ! Allocate three (889.89 MiB) arrays and populate two of them ...
+    ! Allocate one (1.74 GiB) array and three (889.89 MiB) arrays ...
+    CALL sub_allocate_array(flags, "flags", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask1, "mask1", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask2, "mask2", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask3, "mask3", nx, ny, .TRUE._INT8)
+
+    ! Populate arrays ...
     CALL sub_load_array_from_BIN(mask1, "createMask3_before.bin")
     CALL sub_load_array_from_BIN(mask2, "createMask3_after.bin")
 
@@ -30,7 +37,22 @@ PROGRAM main
     FLUSH(unit = OUTPUT_UNIT)
 
     ! Find out which pixels are <= 2,500m ASL but not accessible ...
-    mask3 = mask1 .AND. .NOT. mask2
+    DO ix = 1_INT64, nx
+        DO iy = 1_INT64, nx
+            IF(mask1(ix, iy))THEN
+                IF(mask2(ix, iy))THEN
+                    flags(ix, iy) = 255_INT16
+                    mask3(ix, iy) = .FALSE._INT8
+                ELSE
+                    flags(ix, iy) = 127_INT16
+                    mask3(ix, iy) = .TRUE._INT8
+                END IF
+            ELSE
+                flags(ix, iy) = 0_INT16
+                mask3(ix, iy) = .FALSE._INT8
+            END IF
+        END DO
+    END DO
 
     ! Clean up ...
     DEALLOCATE(mask1)
@@ -42,4 +64,10 @@ PROGRAM main
 
     ! Clean up ...
     DEALLOCATE(mask3)
+
+    ! Save flags ...
+    CALL sub_save_array_as_PPM(flags, "createMask3_flags.ppm", "r2o2g")
+
+    ! Clean up ...
+    DEALLOCATE(flags)
 END PROGRAM

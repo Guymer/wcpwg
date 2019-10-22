@@ -17,5 +17,11 @@
         "__projection__": "PlateCarree",
         "__source__": "https://github.com/Guymer/wcpwg"
     },
+    "flags": {
+        "flags": "createMask3_flags.png",
+        "__comment__": "All three types of places",
+        "__projection__": "PlateCarree",
+        "__source__": "https://github.com/Guymer/wcpwg"
+    },
     "__comment__": "JSON file specifying the image to use for a given mask. Read in by cartopy.mpl.geoaxes.read_user_background_images."
 }

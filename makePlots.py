@@ -67,3 +67,32 @@ if not os.path.exists(pfile):
     pyguymer3.exiftool(pfile)
     pyguymer3.optipng(pfile)
     matplotlib.pyplot.close("all")
+
+# ******************************************************************************
+
+# Define PNG file name and check if it exists already ...
+pfile = "flagsUS.png"
+if not os.path.exists(pfile):
+    print("Making \"{:s}\" ...".format(pfile))
+
+    # Create plot ...
+    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    ax = matplotlib.pyplot.axes(
+        projection = cartopy.crs.Orthographic(
+            central_longitude = 0.5 * (extUS[0] + extUS[1]),
+             central_latitude = 0.5 * (extUS[2] + extUS[3])
+        )
+    )
+    ax.set_extent(extUS)
+
+    # Add background images ...
+    pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extUS)
+
+    # Add coastlines ...
+    ax.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+
+    # Save plot ...
+    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
+    pyguymer3.exiftool(pfile)
+    pyguymer3.optipng(pfile)
+    matplotlib.pyplot.close("all")

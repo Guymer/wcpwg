@@ -58,7 +58,7 @@ if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
     ax = matplotlib.pyplot.axes(
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extCL[0] + extCL[1]),
@@ -87,7 +87,7 @@ if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
     ax = matplotlib.pyplot.axes(
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extCO[0] + extCO[1]),
@@ -101,6 +101,26 @@ if not os.path.exists(pfile):
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
+
+    # Loop over records ...
+    for record in cartopy.io.shapereader.Reader(shape_file).records():
+        # Check that populated place is in the United States of America ...
+        if record.attributes["ADM0NAME"] == "United States of America":
+            # Check that populated place is in Colorado ...
+            if record.attributes["ADM1NAME"] == "Colorado":
+                # Annotate the plot ...
+                # NOTE: https://stackoverflow.com/a/25421922
+                ax.plot(
+                    record.geometry.x,
+                    record.geometry.y,
+                    "ob",
+                    transform = cartopy.crs.PlateCarree()
+                )
+                ax.annotate(
+                    record.attributes["NAME"],
+                    (record.geometry.x, record.geometry.y),
+                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax)
+                )
 
     # Save plot ...
     fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
@@ -116,7 +136,7 @@ if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
     ax = matplotlib.pyplot.axes(
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extUS[0] + extUS[1]),
@@ -145,7 +165,7 @@ if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
     ax = matplotlib.pyplot.axes(
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extCL[0] + extCL[1]),
@@ -174,7 +194,7 @@ if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
     ax = matplotlib.pyplot.axes(
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extCO[0] + extCO[1]),
@@ -188,6 +208,33 @@ if not os.path.exists(pfile):
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
+
+    # Find file containing all the populated places shapes ...
+    shape_file = cartopy.io.shapereader.natural_earth(
+        resolution = "10m",
+          category = "cultural",
+              name = "populated_places"
+    )
+
+    # Loop over records ...
+    for record in cartopy.io.shapereader.Reader(shape_file).records():
+        # Check that populated place is in the United States of America ...
+        if record.attributes["ADM0NAME"] == "United States of America":
+            # Check that populated place is in Colorado ...
+            if record.attributes["ADM1NAME"] == "Colorado":
+                # Annotate the plot ...
+                # NOTE: https://stackoverflow.com/a/25421922
+                ax.plot(
+                    record.geometry.x,
+                    record.geometry.y,
+                    "ob",
+                    transform = cartopy.crs.PlateCarree()
+                )
+                ax.annotate(
+                    record.attributes["NAME"],
+                    (record.geometry.x, record.geometry.y),
+                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax)
+                )
 
     # Save plot ...
     fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
@@ -203,7 +250,7 @@ if not os.path.exists(pfile):
     print("Making \"{:s}\" ...".format(pfile))
 
     # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 4), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
     ax = matplotlib.pyplot.axes(
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extUS[0] + extUS[1]),

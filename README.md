@@ -18,6 +18,12 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 9. Convert the sequence of PPM images to a GIF image (by running `convert createMask3_mask????.ppm createMask3.gif`)
 10. Make plots (by running [makePlots.py](makePlots.py))
 
+## Method
+
+For each pixel, the FORTRAN programs check if the pixel is less than 2,500m ASL *and* if the pixel is next to a pixel that is accessible; if both checks are true then the pixel is marked as accessible. The FORTRAN programs continue looping over the entire world until no new pixels are marked as accessible. Below is an animation of how this looks.
+
+![Animation of method](createMask3.gif)
+
 ## Output
 
 The output of [compareMasks.F90](compareMasks.F90) is:

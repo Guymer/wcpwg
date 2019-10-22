@@ -102,6 +102,13 @@ if not os.path.exists(pfile):
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
 
+    # Find file containing all the populated places shapes ...
+    shape_file = cartopy.io.shapereader.natural_earth(
+        resolution = "10m",
+          category = "cultural",
+              name = "populated_places"
+    )
+
     # Loop over records ...
     for record in cartopy.io.shapereader.Reader(shape_file).records():
         # Check that populated place is in the United States of America ...

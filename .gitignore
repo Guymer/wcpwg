@@ -14,6 +14,7 @@ Thumbs.db
 __pycache__
 compareMasks
 createMask?
+createMask?_mask????.png
 
 # Hide output of Pylint ...
 pylint.log

@@ -3,7 +3,9 @@ PROGRAM main
     USE ISO_FORTRAN_ENV
     USE mod_funcs
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
-                                    sub_load_array_from_BIN
+                                    sub_load_array_from_BIN,                    &
+                                    sub_save_array_as_BIN,                      &
+                                    sub_save_array_as_PBM
 
     IMPLICIT NONE
 
@@ -53,12 +55,23 @@ PROGRAM main
     CALL sub_allocate_array(elev, "elev", nx, ny, .TRUE._INT8)
     CALL sub_load_array_from_BIN(elev, "all10g.bin")                            ! [m]
 
-    ! Allocate (889.89 MiB) array and initialize it to not allow pregnant women
-    ! to go anywhere ...
+    ! Allocate (889.89 MiB) array ...
     CALL sub_allocate_array(mask, "mask", nx, ny, .TRUE._INT8)
-    mask = .FALSE._INT8
 
-    ! Allow pregnant women to go to the top-left corner ...
+    ! Initialize mask to allow women to go anywhere <= 2,500m ASL ...
+    mask = elev <= 2500_INT16
+
+    ! Print progress ...
+    WRITE(fmt = '("Saving initial answer ...")', unit = OUTPUT_UNIT)
+    FLUSH(unit = OUTPUT_UNIT)
+
+    ! Save initial mask ...
+    CALL sub_save_array_as_BIN(mask, "createMask3_before.bin")
+    CALL sub_save_array_as_PBM(mask, "createMask3_before.pbm")
+
+    ! Initialize mask to not allow pregnant women to go anywhere except the
+    ! top-left corner ...
+    mask = .FALSE._INT8
     mask(1, 1) = .TRUE._INT8
 
     ! Open CSV ...
@@ -149,6 +162,9 @@ PROGRAM main
         WRITE(fmt = '(i3, ",", i9)', unit = funit) i, newtot
         FLUSH(unit = funit)
 
+        ! Save shrunk mask ...
+        CALL saveShrunkMask(nx, ny, mask, scale, bname, iname)
+
         ! Stop looping once no changes have been made ...
         IF(newtot == oldtot)THEN
             EXIT
@@ -162,8 +178,9 @@ PROGRAM main
     WRITE(fmt = '("Saving final answer ...")', unit = OUTPUT_UNIT)
     FLUSH(unit = OUTPUT_UNIT)
 
-    ! Save final answer ...
-    CALL saveShrunkMask(nx, ny, mask, scale, bname, iname)
+    ! Save final mask ...
+    CALL sub_save_array_as_BIN(mask, "createMask3_after.bin")
+    CALL sub_save_array_as_PBM(mask, "createMask3_after.pbm")
 
     ! Clean up ...
     DEALLOCATE(elev)

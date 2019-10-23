@@ -57,6 +57,7 @@ WCPWG uses some [Natural Earth](http://www.naturalearthdata.com/) resources via 
 
 ## Bugs
 
+* The algorithm does not cross the meridian. Therefore, if a valley is only accessible by crossing the meridian then this program will incorrectly mark it as inaccessible.
 * Due to what I assume is "a rendering error" or "an efficiency saving" in either [cartopy](https://pypi.org/project/Cartopy) or [matplotlib](https://pypi.org/project/matplotlib), some of the plots produced by [makePlots.py](makePlots.py) have green pixels touching orange pixels. The whole point of this project is to find the places in the world where green pixels and orange pixels are separated by red pixels. If a green pixel touches an orange pixel then the orange pixel should be green. I am convinced that this is not my fault and that my code is calculating the arrays correctly - it is purely a rendering error. Below are two screenshots: a) the first is a zoom in on a plot using Atom; and b) the second is a zoom in on a background image using Photoshop. Photoshop shows the green and orange separated by red, so I am happy that it is just a rendering error in either [cartopy](https://pypi.org/project/Cartopy) or [matplotlib](https://pypi.org/project/matplotlib).
 
 ![Screenshot from Atom](Screenshot_Atom.png)

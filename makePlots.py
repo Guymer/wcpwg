@@ -66,6 +66,7 @@ if not os.path.exists(pfile):
         )
     )
     ax.set_extent(extCL)
+    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
     pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extCL)
@@ -95,6 +96,7 @@ if not os.path.exists(pfile):
         )
     )
     ax.set_extent(extCO)
+    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
     pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extCO)
@@ -155,6 +157,7 @@ if not os.path.exists(pfile):
         )
     )
     ax.set_extent(extUS)
+    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
     pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extUS)
@@ -184,6 +187,7 @@ if not os.path.exists(pfile):
         )
     )
     ax.set_extent(extCL)
+    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
     pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extCL)
@@ -213,6 +217,7 @@ if not os.path.exists(pfile):
         )
     )
     ax.set_extent(extCO)
+    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
     pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extCO)
@@ -273,6 +278,7 @@ if not os.path.exists(pfile):
         )
     )
     ax.set_extent(extUS)
+    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
     pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extUS)

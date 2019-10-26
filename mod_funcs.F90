@@ -105,7 +105,7 @@ MODULE mod_funcs
                 iylo = (iy - 1_INT64) * scale + 1_INT64
                 iyhi =  iy            * scale
 
-                ! Find average mask ...
+                ! Find total mask ...
                 ! NOTE: Within shrunkMask:
                 !         *     0.0     = pregnant women can't go here =  RED
                 !         * scale*scale = pregnant women  can  go here = GREEN

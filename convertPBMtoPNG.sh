@@ -16,4 +16,12 @@ for pbm in *.pbm; do
         exiftool -overwrite_original -all= $png
         optipng $png
     fi
+
+    # Check if the PBM needs removing ...
+    if [[ -f $png ]]; then
+        echo "Removing \"$pbm\" ..."
+
+        # Remove PBM ...
+        rm $pbm
+    fi
 done

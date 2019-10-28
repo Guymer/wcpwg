@@ -16,4 +16,12 @@ for ppm in *.ppm; do
         exiftool -overwrite_original -all= $png
         optipng $png
     fi
+
+    # Check if the PPM needs removing ...
+    if [[ -f $png ]]; then
+        echo "Removing \"$ppm\" ..."
+
+        # Remove PPM ...
+        rm $ppm
+    fi
 done

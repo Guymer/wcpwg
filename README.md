@@ -6,7 +6,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 
 1. Download the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset (by running [downloadGLOBE.py](downloadGLOBE.py))
 2. Convert the ZIP file of the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset to a BIN file (by running [convertZIPtoBIN.py](convertZIPtoBIN.py))
-3. Compile the FORTRAN programs (by running [compile.sh](compile.sh))
+3. Compile the FORTRAN programs (by running [Makefile](Makefile))
 4. Create the boolean mask (by running any of: [createMask1](createMask1.F90), [createMask2](createMask2.F90) or [createMask3](createMask3.F90))
     * [createMask1](createMask1.F90) applies the algorithm globally and loops until no more pixels are masked (or `nmax` is reached)
     * [createMask2](createMask2.F90) applies the algorithm globally **then on tiles** and loops **over both stages** until no more pixels are masked (or `nmax` is reached)
@@ -50,10 +50,6 @@ WCPWG requires the following Python modules to be installed and available in you
 * [requests](https://pypi.org/project/requests)
 
 WCPWG uses some [Natural Earth](http://www.naturalearthdata.com/) resources via the [Cartopy](http://scitools.org.uk/cartopy/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run WCPWG.
-
-## To Do
-
-* Obviously, the [compile.sh](compile.sh) needs to be replaced by a real Makefile at some point.
 
 ## Bugs
 

@@ -15,7 +15,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 6. Compare the masks and summarise the study (by running [compareMasks](compareMasks.F90))
 7. Convert all generated PBM images to PNG images (by running [convertPBMtoPNG.sh](convertPBMtoPNG.sh))
 8. Convert all generated PPM images to PNG images (by running [convertPPMtoPNG.sh](convertPPMtoPNG.sh))
-9. Convert the sequence of PPM images to a GIF animation (by running `convert createMask3_mask????.ppm createMask3.gif` and then `gifsicle --batch --optimize=3 createMask3.gif`)
+9. Convert the sequence of PNG images to a GIF animation (by running `convert createMask3_mask????.png createMask3.gif` and then `gifsicle --batch --optimize=3 createMask3.gif`)
 10. Make plots (by running [makePlots.py](makePlots.py))
 
 ## Method

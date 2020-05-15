@@ -54,7 +54,7 @@ if not os.path.exists("all10g.bin"):
             # Loop over x-axis ...
             for j in range(4):
                 # Define tile size ...
-                if i == 0 or i == 3:
+                if i in [0, 3]:
                     nrows = 4800                                                # [px]
                 else:
                     nrows = 6000                                                # [px]

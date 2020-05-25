@@ -9,15 +9,17 @@ ehthumbs.db
 Thumbs.db
 
 # Hide compiled code ...
-*.mod
-*.o
 __pycache__
-compareMasks
-createMask?
-createMask?_*.png
 
 # Hide output of Pylint ...
 pylint.log
+
+# Ignore compiler generated files ...
+*.mod
+*.so
+*.so.dSYM
+compareMasks
+createMask?
 
 # Hide large datasets ...
 *.bin
@@ -25,3 +27,6 @@ pylint.log
 *.pbm
 *.ppm
 *.zip
+
+# Hide intermediary output files ...
+createMask?_*.png

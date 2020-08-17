@@ -13,8 +13,8 @@ for pbm in *.pbm; do
         echo "Making \"$png\" ..."
 
         convert $pbm $png
-        exiftool -overwrite_original -all= $png
         optipng $png
+        exiftool -overwrite_original -all= $png
     fi
 
     # Check if the PBM needs removing ...

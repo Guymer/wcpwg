@@ -13,8 +13,8 @@ for ppm in *.ppm; do
         echo "Making \"$png\" ..."
 
         convert $ppm $png
-        exiftool -overwrite_original -all= $png
         optipng $png
+        exiftool -overwrite_original -all= $png
     fi
 
     # Check if the PPM needs removing ...

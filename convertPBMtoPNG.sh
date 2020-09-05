@@ -12,9 +12,9 @@ for pbm in *.pbm; do
     if [[ $pbm -nt $png ]]; then
         echo "Making \"$png\" ..."
 
-        convert $pbm $png
-        optipng $png
-        exiftool -overwrite_original -all= $png
+        convert "$pbm" "$png"
+        optipng "$png"
+        exiftool -overwrite_original -all= "$png"
     fi
 
     # Check if the PBM needs removing ...
@@ -22,6 +22,6 @@ for pbm in *.pbm; do
         echo "Removing \"$pbm\" ..."
 
         # Remove PBM ...
-        rm $pbm
+        rm "$pbm"
     fi
 done

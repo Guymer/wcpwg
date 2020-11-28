@@ -8,13 +8,13 @@ try:
     import cartopy
     import cartopy.crs
 except:
-    raise Exception("run \"pip install --user cartopy\"")
+    raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
 try:
     import matplotlib
     matplotlib.use("Agg")                                                       # NOTE: https://matplotlib.org/gallery/user_interfaces/canvasagg.html
     import matplotlib.pyplot
 except:
-    raise Exception("run \"pip install --user matplotlib\"")
+    raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
 
 # Import my modules ...
 try:

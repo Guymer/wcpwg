@@ -8,7 +8,7 @@ try:
     import cartopy
     import cartopy.crs
 except:
-    raise Exception("run \"pip install --user cartopy\"")
+    raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
 
 # Find file containing all the country shapes ...
 shape_file = cartopy.io.shapereader.natural_earth(

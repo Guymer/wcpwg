@@ -8,7 +8,7 @@ import zipfile
 try:
     import numpy
 except:
-    raise Exception("\"numpy\" is not installed; run \"pip install --user numpy\"")
+    raise Exception("\"numpy\" is not installed; run \"pip install --user numpy\"") from None
 
 # ******************************************************************************
 

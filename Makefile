@@ -7,6 +7,7 @@ RM   := $(shell which rm     2> /dev/null || echo "ERROR")
 # Set defaults ...
 DEBUG  ?= false
 FTNLIB ?= fortranlib
+LIBDIR ?= /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
 
 # ******************************************************************************
 
@@ -116,22 +117,22 @@ createMask3.o:	$(FC)															\
 compareMasks:	$(FC)															\
 				$(FTNLIB)/mod_safe.o											\
 				compareMasks.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -L/usr/lib -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -L$(LIBDIR) -o $@
 
 createMask1:	$(FC)															\
 				$(FTNLIB)/mod_safe.o											\
 				mod_funcs.o														\
 				createMask1.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -L/usr/lib -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -L$(LIBDIR) -o $@
 
 createMask2:	$(FC)															\
 				$(FTNLIB)/mod_safe.o											\
 				mod_funcs.o														\
 				createMask2.o
-	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -L/usr/lib -o $@
+	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -L$(LIBDIR) -o $@
 
 createMask3:	$(FC)															\
 				$(FTNLIB)/mod_safe.o											\
 				mod_funcs.o														\
 				createMask3.o
-	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -L/usr/lib -o $@
+	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -L$(LIBDIR) -o $@

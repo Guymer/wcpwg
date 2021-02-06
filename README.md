@@ -43,18 +43,18 @@ Note that the second number is smaller than the first, thus indicating that *som
 
 WCPWG requires the following Python modules to be installed and available in your `PYTHONPATH`.
 
-* [cartopy](https://pypi.org/project/Cartopy)
-* [matplotlib](https://pypi.org/project/matplotlib)
-* [numpy](https://pypi.org/project/numpy)
+* [cartopy](https://pypi.org/project/Cartopy/)
+* [matplotlib](https://pypi.org/project/matplotlib/)
+* [numpy](https://pypi.org/project/numpy/)
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
-* [requests](https://pypi.org/project/requests)
+* [requests](https://pypi.org/project/requests/)
 
 WCPWG uses some [Natural Earth](https://www.naturalearthdata.com/) resources via the [Cartopy](https://scitools.org.uk/cartopy/docs/latest/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run WCPWG.
 
 ## Bugs
 
 * The algorithm does not cross the meridian. Therefore, if a valley is only accessible by crossing the meridian then this program will incorrectly mark it as inaccessible.
-* Due to what I assume is "a rendering error" or "an efficiency saving" in either [cartopy](https://pypi.org/project/Cartopy) or [matplotlib](https://pypi.org/project/matplotlib), some of the plots produced by [makePlots.py](makePlots.py) have green pixels touching orange pixels. The whole point of this project is to find the places in the world where green pixels and orange pixels are separated by red pixels. If a green pixel touches an orange pixel then the orange pixel should be green. I am convinced that this is not my fault and that my code is calculating the arrays correctly - it is purely a rendering error. Below are two screenshots: a) the first is a zoom in on a plot using Atom; and b) the second is a zoom in on a background image using Photoshop. Photoshop shows the green and orange separated by red, so I am happy that it is just a rendering error in either [cartopy](https://pypi.org/project/Cartopy) or [matplotlib](https://pypi.org/project/matplotlib).
+* Due to what I assume is "a rendering error" or "an efficiency saving" in either [cartopy](https://pypi.org/project/Cartopy/) or [matplotlib](https://pypi.org/project/matplotlib/), some of the plots produced by [makePlots.py](makePlots.py) have green pixels touching orange pixels. The whole point of this project is to find the places in the world where green pixels and orange pixels are separated by red pixels. If a green pixel touches an orange pixel then the orange pixel should be green. I am convinced that this is not my fault and that my code is calculating the arrays correctly - it is purely a rendering error. Below are two screenshots: a) the first is a zoom in on a plot using Atom; and b) the second is a zoom in on a background image using Photoshop. Photoshop shows the green and orange separated by red, so I am happy that it is just a rendering error in either [cartopy](https://pypi.org/project/Cartopy/) or [matplotlib](https://pypi.org/project/matplotlib/).
 
 ![Screenshot from Atom](Screenshot_Atom.png)
 

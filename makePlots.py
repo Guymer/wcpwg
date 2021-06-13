@@ -69,7 +69,7 @@ if not os.path.exists(pfile):
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
-    pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extCL)
+    pyguymer3.geo.add_map_background(ax, name = "diff", resolution = "diff", extent = extCL)
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
@@ -98,7 +98,7 @@ if not os.path.exists(pfile):
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
-    pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extCO)
+    pyguymer3.geo.add_map_background(ax, name = "diff", resolution = "diff", extent = extCO)
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
@@ -158,7 +158,7 @@ if not os.path.exists(pfile):
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
-    pyguymer3.add_map_background(ax, name = "diff", resolution = "diff", extent = extUS)
+    pyguymer3.geo.add_map_background(ax, name = "diff", resolution = "diff", extent = extUS)
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
@@ -187,7 +187,7 @@ if not os.path.exists(pfile):
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
-    pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extCL)
+    pyguymer3.geo.add_map_background(ax, name = "flags", resolution = "flags", extent = extCL)
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
@@ -216,7 +216,7 @@ if not os.path.exists(pfile):
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
-    pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extCO)
+    pyguymer3.geo.add_map_background(ax, name = "flags", resolution = "flags", extent = extCO)
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
@@ -276,7 +276,7 @@ if not os.path.exists(pfile):
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
     # Add background image ...
-    pyguymer3.add_map_background(ax, name = "flags", resolution = "flags", extent = extUS)
+    pyguymer3.geo.add_map_background(ax, name = "flags", resolution = "flags", extent = extUS)
 
     # Add coastlines ...
     ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)

@@ -1,8 +1,8 @@
 # Find executables ...
-CUT  := $(shell which cut    2> /dev/null || echo "ERROR")
-FC   := $(shell which mpif90 2> /dev/null || echo "ERROR")
-GREP := $(shell which grep   2> /dev/null || echo "ERROR")
-RM   := $(shell which rm     2> /dev/null || echo "ERROR")
+CUT  := $(shell which cut               2> /dev/null || echo "ERROR")
+FC   := $(shell which gfortran-mp-devel 2> /dev/null || echo "ERROR")
+GREP := $(shell which grep              2> /dev/null || echo "ERROR")
+RM   := $(shell which rm                2> /dev/null || echo "ERROR")
 
 # Set defaults ...
 DEBUG  ?= false
@@ -45,26 +45,26 @@ endif
 
 # ******************************************************************************
 
-# "gmake [all]"   = "make compile" (default)
+# "gmake -r [all]"   = "make compile" (default)
 all:				compile
 
-# "gmake clean"   = removes the compiled code
-clean:				$(RM)
+# "gmake -r clean"   = removes the compiled code
+clean:				$(RM)														\
+					$(FC)
 	$(RM) -f compareMasks createMask1 createMask2 createMask3 *.mod *.o
-	$(MAKE) -r -C $(FTNLIB) clean
+	$(MAKE) -r -C $(FTNLIB) FC=$(FC) clean
 
-# "gmake compile" = compiles the code
-compile:			mod_funcs.o													\
-					compareMasks												\
+# "gmake -r compile" = compiles the code
+compile:			compareMasks												\
 					createMask1													\
 					createMask2													\
 					createMask3
 
-# "gmake help"    = print this help
+# "gmake -r help"    = print this help
 help:				$(GREP)														\
 					$(CUT)
 	echo "These are the available options:"
-	$(GREP) -E "^# \"gmake " Makefile | $(CUT) -c 2-
+	$(GREP) -E "^# \"gmake -r " Makefile | $(CUT) -c 2-
 
 # ******************************************************************************
 
@@ -81,57 +81,69 @@ help:				$(GREP)														\
 #         * https://stackoverflow.com/a/58081934
 
 $(FTNLIB)/%.mod																	\
-$(FTNLIB)/%.o:	$(FTNLIB)/Makefile												\
+$(FTNLIB)/%.o:	$(FC)															\
+				Makefile														\
+				$(FTNLIB)/Makefile												\
 				$(FTNLIB)/%.F90
-	$(MAKE) -r -C $(FTNLIB) DEBUG=$(DEBUG) $*.o
+	$(MAKE) -r -C $(FTNLIB) DEBUG=$(DEBUG) FC=$(FC) $*.o
+
 
 mod_funcs.mod																	\
 mod_funcs.o:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.mod											\
 				mod_funcs.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) mod_funcs.F90
 
 compareMasks.o:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.mod											\
 				compareMasks.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) compareMasks.F90 -o $@
 
 createMask1.o:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.mod											\
 				mod_funcs.mod													\
 				createMask1.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask1.F90 -o $@
 
 createMask2.o:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.mod											\
 				mod_funcs.mod													\
 				createMask2.F90
 	$(FC) -c -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask2.F90 -o $@
 
 createMask3.o:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.mod											\
 				mod_funcs.mod													\
 				createMask3.F90
 	$(FC) -c -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask3.F90 -o $@
 
 compareMasks:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.o											\
 				compareMasks.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -L$(LIBDIR) -o $@
 
 createMask1:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.o											\
 				mod_funcs.o														\
 				createMask1.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -L$(LIBDIR) -o $@
 
 createMask2:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.o											\
 				mod_funcs.o														\
 				createMask2.o
 	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -L$(LIBDIR) -o $@
 
 createMask3:	$(FC)															\
+				Makefile														\
 				$(FTNLIB)/mod_safe.o											\
 				mod_funcs.o														\
 				createMask3.o

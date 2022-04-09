@@ -15,14 +15,14 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 6. Compare the masks and summarise the study (by running [compareMasks](compareMasks.F90))
 7. Convert all generated PBM images to PNG images (by running [convertPBMtoPNG.sh](convertPBMtoPNG.sh))
 8. Convert all generated PPM images to PNG images (by running [convertPPMtoPNG.sh](convertPPMtoPNG.sh))
-9. Convert the sequence of PNG images to a GIF animation (by running `convert createMask3_mask????.png createMask3.gif` and then `gifsicle --batch --optimize=3 createMask3.gif`)
+9. Convert the sequence of PNG images to a WEBP animation (by running [convertPNGtoWEBP.py](convertPNGtoWEBP.py))
 10. Make plots (by running [makePlots.py](makePlots.py))
 
 ## Method
 
 For each pixel, the FORTRAN programs check if the pixel is less than 2,500m ASL *and* if the pixel is next to a pixel that is accessible; if both checks are true then the pixel is marked as accessible. The FORTRAN programs continue looping over the entire world until no new pixels are marked as accessible. Below is an animation of how this looks.
 
-![Animation of method](createMask3.gif)
+![Animation of method](createMask3.webp)
 
 ## Output
 

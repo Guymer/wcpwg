@@ -61,12 +61,7 @@ if not os.path.exists(pfile):
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = matplotlib.pyplot.axes(
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extCL[0] + extCL[1]),
-             central_latitude = 0.5 * (extCL[2] + extCL[3])
-        )
-    )
+    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCL[0] + extCL[1]), central_latitude = 0.5 * (extCL[2] + extCL[3])))
     ax.set_extent(extCL)
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
@@ -90,12 +85,7 @@ if not os.path.exists(pfile):
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = matplotlib.pyplot.axes(
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extCO[0] + extCO[1]),
-             central_latitude = 0.5 * (extCO[2] + extCO[3])
-        )
-    )
+    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCO[0] + extCO[1]), central_latitude = 0.5 * (extCO[2] + extCO[3])))
     ax.set_extent(extCO)
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
@@ -150,12 +140,7 @@ if not os.path.exists(pfile):
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = matplotlib.pyplot.axes(
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extUS[0] + extUS[1]),
-             central_latitude = 0.5 * (extUS[2] + extUS[3])
-        )
-    )
+    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extUS[0] + extUS[1]), central_latitude = 0.5 * (extUS[2] + extUS[3])))
     ax.set_extent(extUS)
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
@@ -179,12 +164,7 @@ if not os.path.exists(pfile):
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = matplotlib.pyplot.axes(
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extCL[0] + extCL[1]),
-             central_latitude = 0.5 * (extCL[2] + extCL[3])
-        )
-    )
+    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCL[0] + extCL[1]), central_latitude = 0.5 * (extCL[2] + extCL[3])))
     ax.set_extent(extCL)
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
@@ -208,12 +188,7 @@ if not os.path.exists(pfile):
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = matplotlib.pyplot.axes(
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extCO[0] + extCO[1]),
-             central_latitude = 0.5 * (extCO[2] + extCO[3])
-        )
-    )
+    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCO[0] + extCO[1]), central_latitude = 0.5 * (extCO[2] + extCO[3])))
     ax.set_extent(extCO)
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 
@@ -268,12 +243,7 @@ if not os.path.exists(pfile):
 
     # Create plot ...
     fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = matplotlib.pyplot.axes(
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extUS[0] + extUS[1]),
-             central_latitude = 0.5 * (extUS[2] + extUS[3])
-        )
-    )
+    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extUS[0] + extUS[1]), central_latitude = 0.5 * (extUS[2] + extUS[3])))
     ax.set_extent(extUS)
     ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
 

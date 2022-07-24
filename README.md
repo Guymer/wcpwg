@@ -15,8 +15,9 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 6. Compare the masks and summarise the study (by running [compareMasks](compareMasks.F90))
 7. Convert all generated PBM images to PNG images (by running [convertPBMtoPNG.sh](convertPBMtoPNG.sh))
 8. Convert all generated PPM images to PNG images (by running [convertPPMtoPNG.sh](convertPPMtoPNG.sh))
-9. Convert the sequence of PNG images to a WEBP animation (by running [convertPNGtoWEBP.py](convertPNGtoWEBP.py))
-10. Make plots (by running [makePlots.py](makePlots.py))
+9. Convert the sequence of PNG images to a MP4 video (by running [convertPNGtoMP4.py](convertPNGtoMP4.py))
+10. Convert the sequence of PNG images to a WEBP animation (by running [convertPNGtoWEBP.py](convertPNGtoWEBP.py))
+11. Make plots (by running [makePlots.py](makePlots.py))
 
 ## Method
 

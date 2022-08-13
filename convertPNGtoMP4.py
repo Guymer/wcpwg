@@ -28,8 +28,8 @@ del frames
 # ******************************************************************************
 
 # Set widths ...
-# NOTE: By inspection, the PNG frames are 432px wide.
-widths = [256]                                                                  # [px]
+# NOTE: By inspection, the PNG frames are 2160px wide.
+widths = [256, 512, 1024, 2048]                                                 # [px]
 
 # Loop over widths ...
 for width in widths:

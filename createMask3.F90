@@ -10,11 +10,11 @@ PROGRAM main
     IMPLICIT NONE
 
     ! Declare parameters ...
-    INTEGER(kind = INT64), PARAMETER                                            :: nmax = 50_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: nmax = 200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: nmax_thread = 1000_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: nx = 43200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: ny = 21600_INT64
-    INTEGER(kind = INT64), PARAMETER                                            :: scale = 100_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: scale = 20_INT64
 
     ! Declare variables ...
     CHARACTER(len = 24)                                                         :: bname
@@ -58,7 +58,7 @@ PROGRAM main
     ! Allocate (889.89 MiB) array ...
     CALL sub_allocate_array(mask, "mask", nx, ny, .TRUE._INT8)
 
-    ! Initialize mask to allow women to go anywhere <= 2,500m ASL ...
+    ! Initialize mask to allow pregnant women to go anywhere <= 2,500m ASL ...
     mask = elev <= 2500_INT16
 
     ! Print progress ...

@@ -29,6 +29,7 @@ createMask?
 *.mp4
 *.pbm
 *.ppm
+*.webp
 *.zip
 
 # Hide intermediary output files ...

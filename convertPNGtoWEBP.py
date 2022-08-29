@@ -23,7 +23,8 @@ images = []
 # Loop over frames ...
 for frame in sorted(glob.glob("createMask3_mask????.png")):
     # Open image as RGB (even if it is paletted) ...
-    image = PIL.Image.open(frame).convert("RGB")
+    with PIL.Image.open(frame) as iObj:
+        image = iObj.convert("RGB")
 
     # Append it to the list ...
     images.append(image)
@@ -32,8 +33,6 @@ for frame in sorted(glob.glob("createMask3_mask????.png")):
 images[0].save("createMask3.webp", lossless = True, quality = 100, method = 6, save_all = True, append_images = images[1:], duration = 40, loop = 0, minimize_size = True)
 
 # Clean up ...
-for image in images:
-    image.close()
 del images
 
 # ******************************************************************************
@@ -52,7 +51,8 @@ for width in widths:
     # Loop over frames ...
     for frame in sorted(glob.glob("createMask3_mask????.png")):
         # Open image as RGB (even if it is paletted) ...
-        image = PIL.Image.open(frame).convert("RGB")
+        with PIL.Image.open(frame) as iObj:
+            image = iObj.convert("RGB")
 
         # Calculate height ...
         ratio = float(image.width) / float(image.height)                        # [px/px]
@@ -65,6 +65,4 @@ for width in widths:
     images[0].save(f"createMask3{width:04d}px.webp", lossless = True, quality = 100, method = 6, save_all = True, append_images = images[1:], duration = 40, loop = 0, minimize_size = True)
 
     # Clean up ...
-    for image in images:
-        image.close()
     del images

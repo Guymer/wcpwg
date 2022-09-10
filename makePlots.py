@@ -38,222 +38,206 @@ extCL = [
      -66.0, # right
      -54.0, # bottom
      -17.0, # top
-]
+]                                                                               # [°]
 extCO = [
     -110.0, # left
     -102.0, # right
      +36.0, # bottom
      +42.0, # top
-]
+]                                                                               # [°]
 extUS = [
     -125.0, # left
      -66.0, # right
      +25.0, # bottom
      +50.0, # top
-]
+]                                                                               # [°]
+
+# Set fields ...
+fields = ["diff", "flags"]
 
 # ******************************************************************************
 
-# Define PNG file name and check if it exists already ...
-pfile = "diffCL.png"
-if not os.path.exists(pfile):
-    print("Making \"{:s}\" ...".format(pfile))
+# Loop over fields ...
+for field in fields:
+    # Define PNG file name and check if it exists already ...
+    pfile = f"{field}CL.png"
+    if not os.path.exists(pfile):
+        print(f"Making \"{pfile}\" ...")
 
-    # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCL[0] + extCL[1]), central_latitude = 0.5 * (extCL[2] + extCL[3])))
-    ax.set_extent(extCL)
-    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+        # Create figure ...
+        fg = matplotlib.pyplot.figure(
+                dpi = 300,
+            figsize = (9, 9),
+        )
 
-    # Add background image ...
-    pyguymer3.geo.add_map_background(ax, name = "diff", resolution = "diff", extent = extCL)
+        # Create axis ...
+        ax = fg.add_subplot(
+            projection = cartopy.crs.Orthographic(
+                central_longitude = 0.5 * (extCL[0] + extCL[1]),
+                 central_latitude = 0.5 * (extCL[2] + extCL[3]),
+            )
+        )
 
-    # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
+        # Configure axis ...
+        ax.coastlines(
+            resolution = "10m",
+                 color = "blue",
+             linewidth = 1.0,
+        )
+        ax.set_extent(extCL)
+        ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+        pyguymer3.geo.add_map_background(
+            ax,
+                extent = extCL,
+                  name = field,
+            resolution = field,
+        )
 
-    # Save plot ...
-    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
-    pyguymer3.image.optimize_image(pfile, strip = True)
-    matplotlib.pyplot.close(fg)
+        # Configure figure ...
+        fg.tight_layout()
 
-# ******************************************************************************
+        # Save figure ...
+        fg.savefig(
+            pfile,
+                   dpi = 300,
+            pad_inches = 0.1,
+        )
+        matplotlib.pyplot.close(fg)
 
-# Define PNG file name and check if it exists already ...
-pfile = "diffCO.png"
-if not os.path.exists(pfile):
-    print("Making \"{:s}\" ...".format(pfile))
+        # Optimize PNG ...
+        pyguymer3.image.optimize_image(pfile, strip = True)
 
-    # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCO[0] + extCO[1]), central_latitude = 0.5 * (extCO[2] + extCO[3])))
-    ax.set_extent(extCO)
-    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+    # **************************************************************************
 
-    # Add background image ...
-    pyguymer3.geo.add_map_background(ax, name = "diff", resolution = "diff", extent = extCO)
+    # Define PNG file name and check if it exists already ...
+    pfile = f"{field}CO.png"
+    if not os.path.exists(pfile):
+        print(f"Making \"{pfile}\" ...")
 
-    # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
+        # Create figure ...
+        fg = matplotlib.pyplot.figure(
+                dpi = 300,
+            figsize = (9, 9),
+        )
 
-    # Find file containing all the populated places shapes ...
-    shape_file = cartopy.io.shapereader.natural_earth(
-        resolution = "10m",
-          category = "cultural",
-              name = "populated_places"
-    )
+        # Create axis ...
+        ax = fg.add_subplot(
+            projection = cartopy.crs.Orthographic(
+                central_longitude = 0.5 * (extCO[0] + extCO[1]),
+                 central_latitude = 0.5 * (extCO[2] + extCO[3]),
+            )
+        )
 
-    # Loop over records ...
-    for record in cartopy.io.shapereader.Reader(shape_file).records():
-        # Check that populated place is in the United States of America ...
-        if record.attributes["ADM0NAME"] == "United States of America":
-            # Check that populated place is in Colorado ...
-            if record.attributes["ADM1NAME"] == "Colorado":
-                # Annotate the plot ...
-                # NOTE: https://stackoverflow.com/a/25421922
-                ax.plot(
-                    record.geometry.x,
-                    record.geometry.y,
-                    "o",
-                    color = "blue",
-                    transform = cartopy.crs.PlateCarree()
-                )
-                ax.annotate(
-                    record.attributes["NAME"],
-                    xy = (record.geometry.x, record.geometry.y),
-                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax),
-                    xytext = (3, 2),
-                    textcoords = "offset points",
-                    color = "blue"
-                )
+        # Configure axis ...
+        ax.coastlines(
+            resolution = "10m",
+                 color = "blue",
+             linewidth = 1.0,
+        )
+        ax.set_extent(extCO)
+        ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+        pyguymer3.geo.add_map_background(
+            ax,
+                extent = extCO,
+                  name = field,
+            resolution = field,
+        )
 
-    # Save plot ...
-    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
-    pyguymer3.image.optimize_image(pfile, strip = True)
-    matplotlib.pyplot.close(fg)
+        # Find file containing all the populated places shapes ...
+        sfile = cartopy.io.shapereader.natural_earth(
+              category = "cultural",
+                  name = "populated_places",
+            resolution = "10m",
+        )
 
-# ******************************************************************************
+        # Loop over records ...
+        for record in cartopy.io.shapereader.Reader(sfile).records():
+            # Create short-hands ...
+            neAdmin0Name = pyguymer3.geo.getRecordAttribute(record, "ADM0NAME")
+            neAdmin1Name = pyguymer3.geo.getRecordAttribute(record, "ADM1NAME")
 
-# Define PNG file name and check if it exists already ...
-pfile = "diffUS.png"
-if not os.path.exists(pfile):
-    print("Making \"{:s}\" ...".format(pfile))
+            # Check that populated place is in the United States of America ...
+            if neAdmin0Name == "United States of America":
+                # Check that populated place is in Colorado ...
+                if neAdmin1Name == "Colorado":
+                    # Annotate the plot ...
+                    # NOTE: https://stackoverflow.com/a/25421922
+                    ax.plot(
+                        record.geometry.x,
+                        record.geometry.y,
+                        "o",
+                            color = "blue",
+                        transform = cartopy.crs.PlateCarree(),
+                    )
+                    ax.annotate(
+                        record.attributes["NAME"],
+                             color = "blue",
+                        textcoords = "offset points",
+                                xy = (record.geometry.x, record.geometry.y),
+                          xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax),
+                            xytext = (3, 2),
+                    )
 
-    # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extUS[0] + extUS[1]), central_latitude = 0.5 * (extUS[2] + extUS[3])))
-    ax.set_extent(extUS)
-    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+        # Configure figure ...
+        fg.tight_layout()
 
-    # Add background image ...
-    pyguymer3.geo.add_map_background(ax, name = "diff", resolution = "diff", extent = extUS)
+        # Save figure ...
+        fg.savefig(
+            pfile,
+                   dpi = 300,
+            pad_inches = 0.1,
+        )
+        matplotlib.pyplot.close(fg)
 
-    # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
+        # Optimize PNG ...
+        pyguymer3.image.optimize_image(pfile, strip = True)
 
-    # Save plot ...
-    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
-    pyguymer3.image.optimize_image(pfile, strip = True)
-    matplotlib.pyplot.close(fg)
+    # **************************************************************************
 
-# ******************************************************************************
+    # Define PNG file name and check if it exists already ...
+    pfile = f"{field}US.png"
+    if not os.path.exists(pfile):
+        print(f"Making \"{pfile}\" ...")
 
-# Define PNG file name and check if it exists already ...
-pfile = "flagsCL.png"
-if not os.path.exists(pfile):
-    print("Making \"{:s}\" ...".format(pfile))
+        # Create figure ...
+        fg = matplotlib.pyplot.figure(
+                dpi = 300,
+            figsize = (9, 9),
+        )
 
-    # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCL[0] + extCL[1]), central_latitude = 0.5 * (extCL[2] + extCL[3])))
-    ax.set_extent(extCL)
-    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+        # Create axis ...
+        ax = fg.add_subplot(
+            projection = cartopy.crs.Orthographic(
+                central_longitude = 0.5 * (extUS[0] + extUS[1]),
+                 central_latitude = 0.5 * (extUS[2] + extUS[3]),
+            )
+        )
 
-    # Add background image ...
-    pyguymer3.geo.add_map_background(ax, name = "flags", resolution = "flags", extent = extCL)
+        # Configure axis ...
+        ax.coastlines(
+            resolution = "10m",
+                 color = "blue",
+             linewidth = 1.0,
+        )
+        ax.set_extent(extUS)
+        ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+        pyguymer3.geo.add_map_background(
+            ax,
+                extent = extUS,
+                  name = field,
+            resolution = field,
+        )
 
-    # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
+        # Configure figure ...
+        fg.tight_layout()
 
-    # Save plot ...
-    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
-    pyguymer3.image.optimize_image(pfile, strip = True)
-    matplotlib.pyplot.close(fg)
+        # Save figure ...
+        fg.savefig(
+            pfile,
+                   dpi = 300,
+            pad_inches = 0.1,
+        )
+        matplotlib.pyplot.close(fg)
 
-# ******************************************************************************
-
-# Define PNG file name and check if it exists already ...
-pfile = "flagsCO.png"
-if not os.path.exists(pfile):
-    print("Making \"{:s}\" ...".format(pfile))
-
-    # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extCO[0] + extCO[1]), central_latitude = 0.5 * (extCO[2] + extCO[3])))
-    ax.set_extent(extCO)
-    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
-
-    # Add background image ...
-    pyguymer3.geo.add_map_background(ax, name = "flags", resolution = "flags", extent = extCO)
-
-    # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
-
-    # Find file containing all the populated places shapes ...
-    shape_file = cartopy.io.shapereader.natural_earth(
-        resolution = "10m",
-          category = "cultural",
-              name = "populated_places"
-    )
-
-    # Loop over records ...
-    for record in cartopy.io.shapereader.Reader(shape_file).records():
-        # Check that populated place is in the United States of America ...
-        if record.attributes["ADM0NAME"] == "United States of America":
-            # Check that populated place is in Colorado ...
-            if record.attributes["ADM1NAME"] == "Colorado":
-                # Annotate the plot ...
-                # NOTE: https://stackoverflow.com/a/25421922
-                ax.plot(
-                    record.geometry.x,
-                    record.geometry.y,
-                    "o",
-                    color = "blue",
-                    transform = cartopy.crs.PlateCarree()
-                )
-                ax.annotate(
-                    record.attributes["NAME"],
-                    xy = (record.geometry.x, record.geometry.y),
-                    xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax),
-                    xytext = (3, 2),
-                    textcoords = "offset points",
-                    color = "blue"
-                )
-
-    # Save plot ...
-    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
-    pyguymer3.image.optimize_image(pfile, strip = True)
-    matplotlib.pyplot.close(fg)
-
-# ******************************************************************************
-
-# Define PNG file name and check if it exists already ...
-pfile = "flagsUS.png"
-if not os.path.exists(pfile):
-    print("Making \"{:s}\" ...".format(pfile))
-
-    # Create plot ...
-    fg = matplotlib.pyplot.figure(figsize = (9, 9), dpi = 300)
-    ax = fg.add_subplot(projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extUS[0] + extUS[1]), central_latitude = 0.5 * (extUS[2] + extUS[3])))
-    ax.set_extent(extUS)
-    ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
-
-    # Add background image ...
-    pyguymer3.geo.add_map_background(ax, name = "flags", resolution = "flags", extent = extUS)
-
-    # Add coastlines ...
-    ax.coastlines(resolution = "10m", color = "blue", linewidth = 0.1)
-
-    # Save plot ...
-    fg.savefig(pfile, bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
-    pyguymer3.image.optimize_image(pfile, strip = True)
-    matplotlib.pyplot.close(fg)
+        # Optimize PNG ...
+        pyguymer3.image.optimize_image(pfile, strip = True)

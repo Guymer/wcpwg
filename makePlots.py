@@ -155,6 +155,7 @@ for field in fields:
             # Create short-hands ...
             neAdmin0Name = pyguymer3.geo.getRecordAttribute(record, "ADM0NAME")
             neAdmin1Name = pyguymer3.geo.getRecordAttribute(record, "ADM1NAME")
+            neName = pyguymer3.geo.getRecordAttribute(record, "NAME")
 
             # Check that populated place is in the United States of America ...
             if neAdmin0Name == "United States of America":
@@ -170,7 +171,7 @@ for field in fields:
                         transform = cartopy.crs.PlateCarree(),
                     )
                     ax.annotate(
-                        record.attributes["NAME"],
+                        neName,
                              color = "blue",
                         textcoords = "offset points",
                                 xy = (record.geometry.x, record.geometry.y),

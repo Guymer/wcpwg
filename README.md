@@ -51,7 +51,7 @@ WCPWG requires the following Python modules to be installed and available in you
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
 * [requests](https://pypi.org/project/requests/)
 
-WCPWG uses some [Natural Earth](https://www.naturalearthdata.com/) resources via the [cartopy](https://pypi.org/project/Cartopy/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run WCPWG.
+WCPWG uses some [Natural Earth](https://www.naturalearthdata.com/) resources via the [cartopy](https://pypi.org/project/Cartopy/) module. If they do not exist on your system then [cartopy](https://pypi.org/project/Cartopy/) will download them for you in the background. Consequently, a working internet connection may be required the first time you run WCPWG.
 
 ## Bugs
 

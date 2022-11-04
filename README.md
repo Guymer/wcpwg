@@ -47,7 +47,6 @@ WCPWG requires the following Python modules to be installed and available in you
 * [cartopy](https://pypi.org/project/Cartopy/)
 * [matplotlib](https://pypi.org/project/matplotlib/)
 * [numpy](https://pypi.org/project/numpy/)
-* [PIL](https://pypi.org/project/Pillow/)
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
 * [requests](https://pypi.org/project/requests/)
 

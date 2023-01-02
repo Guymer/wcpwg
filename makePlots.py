@@ -13,6 +13,7 @@ try:
     import matplotlib
     matplotlib.use("Agg")                                                       # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
     import matplotlib.pyplot
+    matplotlib.pyplot.rcParams.update({"font.size" : 8})
 except:
     raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
 
@@ -28,9 +29,6 @@ except:
 
 # Configure cartopy ...
 os.environ["CARTOPY_USER_BACKGROUNDS"] = os.getcwd()
-
-# Configure matplotlib ...
-matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
 # Set extents of the regions ...
 extCL = [

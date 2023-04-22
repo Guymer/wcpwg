@@ -40,21 +40,21 @@ if __name__ == "__main__":
 
     # Set extents of the regions ...
     extCL = [
-         -76.0, # left
-         -66.0, # right
-         -54.0, # bottom
-         -17.0, # top
+         -74.0, # left
+         -63.0, # right
+         -29.0, # bottom
+         -18.0, # top
     ]                                                                           # [°]
     extCO = [
         -110.0, # left
-        -102.0, # right
+        -103.0, # right
          +36.0, # bottom
          +42.0, # top
     ]                                                                           # [°]
     extUS = [
         -125.0, # left
          -66.0, # right
-         +25.0, # bottom
+         +24.0, # bottom
          +50.0, # top
     ]                                                                           # [°]
 
@@ -74,11 +74,11 @@ if __name__ == "__main__":
             fg = matplotlib.pyplot.figure(figsize = (9, 9))
 
             # Create axis ...
-            ax = fg.add_subplot(
-                projection = cartopy.crs.Orthographic(
-                    central_longitude = 0.5 * (extCL[0] + extCL[1]),
-                     central_latitude = 0.5 * (extCL[2] + extCL[3]),
-                )
+            ax = pyguymer3.geo.add_top_down_axis(
+                fg,
+                -60.0,
+                -35.0,
+                2000.0e3,
             )
 
             # Configure axis ...
@@ -87,13 +87,20 @@ if __name__ == "__main__":
                      color = "blue",
                  linewidth = 1.0,
             )
-            ax.set_extent(extCL)
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
                     extent = extCL,
                       name = field,
                 resolution = field,
+            )
+            pyguymer3.geo.add_horizontal_gridlines(
+                ax,
+                locs = range(-90, +91, 1),
+            )
+            pyguymer3.geo.add_vertical_gridlines(
+                ax,
+                locs = range(-180, +181, 1),
             )
 
             # Configure figure ...
@@ -117,11 +124,11 @@ if __name__ == "__main__":
             fg = matplotlib.pyplot.figure(figsize = (9, 9))
 
             # Create axis ...
-            ax = fg.add_subplot(
-                projection = cartopy.crs.Orthographic(
-                    central_longitude = 0.5 * (extCO[0] + extCO[1]),
-                     central_latitude = 0.5 * (extCO[2] + extCO[3]),
-                )
+            ax = pyguymer3.geo.add_top_down_axis(
+                fg,
+                -106.25,
+                 +39.0,
+                350.0e3,
             )
 
             # Configure axis ...
@@ -130,13 +137,20 @@ if __name__ == "__main__":
                      color = "blue",
                  linewidth = 1.0,
             )
-            ax.set_extent(extCO)
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
                     extent = extCO,
                       name = field,
                 resolution = field,
+            )
+            pyguymer3.geo.add_horizontal_gridlines(
+                ax,
+                locs = range(-90, +91, 1),
+            )
+            pyguymer3.geo.add_vertical_gridlines(
+                ax,
+                locs = range(-180, +181, 1),
             )
 
             # Find file containing all the populated places shapes ...
@@ -196,11 +210,11 @@ if __name__ == "__main__":
             fg = matplotlib.pyplot.figure(figsize = (9, 9))
 
             # Create axis ...
-            ax = fg.add_subplot(
-                projection = cartopy.crs.Orthographic(
-                    central_longitude = 0.5 * (extUS[0] + extUS[1]),
-                     central_latitude = 0.5 * (extUS[2] + extUS[3]),
-                )
+            ax = pyguymer3.geo.add_top_down_axis(
+                fg,
+                -97.0,
+                +40.0,
+                2400.0e3,
             )
 
             # Configure axis ...
@@ -209,13 +223,20 @@ if __name__ == "__main__":
                      color = "blue",
                  linewidth = 1.0,
             )
-            ax.set_extent(extUS)
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
                     extent = extUS,
                       name = field,
                 resolution = field,
+            )
+            pyguymer3.geo.add_horizontal_gridlines(
+                ax,
+                locs = range(-90, +91, 1),
+            )
+            pyguymer3.geo.add_vertical_gridlines(
+                ax,
+                locs = range(-180, +181, 1),
             )
 
             # Configure figure ...

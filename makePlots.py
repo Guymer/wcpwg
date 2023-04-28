@@ -82,12 +82,13 @@ if __name__ == "__main__":
             )
 
             # Configure axis ...
-            ax.coastlines(
-                resolution = "10m",
-                     color = "blue",
-                 linewidth = 1.0,
-            )
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+            pyguymer3.geo.add_coastlines(
+                ax,
+                 colorName = "blue",
+                 linewidth = 1.0,
+                resolution = "i",
+            )
             pyguymer3.geo.add_map_background(
                 ax,
                     extent = extCL,
@@ -132,12 +133,13 @@ if __name__ == "__main__":
             )
 
             # Configure axis ...
-            ax.coastlines(
-                resolution = "10m",
-                     color = "blue",
-                 linewidth = 1.0,
-            )
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+            pyguymer3.geo.add_coastlines(
+                ax,
+                 colorName = "blue",
+                 linewidth = 1.0,
+                resolution = "i",
+            )
             pyguymer3.geo.add_map_background(
                 ax,
                     extent = extCO,
@@ -218,12 +220,13 @@ if __name__ == "__main__":
             )
 
             # Configure axis ...
-            ax.coastlines(
-                resolution = "10m",
-                     color = "blue",
-                 linewidth = 1.0,
-            )
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
+            pyguymer3.geo.add_coastlines(
+                ax,
+                 colorName = "blue",
+                 linewidth = 1.0,
+                resolution = "i",
+            )
             pyguymer3.geo.add_map_background(
                 ax,
                     extent = extUS,

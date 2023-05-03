@@ -172,7 +172,6 @@ if __name__ == "__main__":
                     # Check that populated place is in Colorado ...
                     if neAdmin1Name == "Colorado":
                         # Annotate the plot ...
-                        # NOTE: https://stackoverflow.com/a/25421922
                         ax.plot(
                             record.geometry.x,
                             record.geometry.y,
@@ -180,13 +179,15 @@ if __name__ == "__main__":
                                 color = "blue",
                             transform = cartopy.crs.PlateCarree(),
                         )
-                        ax.annotate(
+                        pyguymer3.geo.add_annotation(
+                            ax,
+                            record.geometry.x,
+                            record.geometry.y,
                             neName,
-                                 color = "blue",
-                            textcoords = "offset points",
-                                    xy = (record.geometry.x, record.geometry.y),
-                              xycoords = cartopy.crs.PlateCarree()._as_mpl_transform(ax),
-                                xytext = (3, 2),
+                                      colorName = "blue",
+                            horizontalalignment = "left",
+                                     txtOffsetX = 4,
+                                     txtOffsetY = 2,
                         )
 
             # Configure figure ...

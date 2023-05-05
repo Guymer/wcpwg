@@ -25,9 +25,6 @@ if __name__ == "__main__":
     vname = pyguymer3.media.images2mp4(frames)
     shutil.move(vname, "createMask3.mp4")
 
-    # Clean up ...
-    del frames
-
     # **************************************************************************
 
     # Set widths ...
@@ -44,6 +41,3 @@ if __name__ == "__main__":
         # Save 25fps MP4 ...
         vname = pyguymer3.media.images2mp4(frames, screenWidth = width, screenHeight = width)
         shutil.move(vname, f"createMask3{width:04d}px.mp4")
-
-        # Clean up ...
-        del frames

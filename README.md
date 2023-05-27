@@ -50,6 +50,11 @@ WCPWG requires the following Python modules to be installed and available in you
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
 * [requests](https://pypi.org/project/requests/)
 
+Additionally, due to the dependency on [my FORTRAN library](https://github.com/Guymer/fortranlib), you will also require the following Python modules to be installed and available in your `PYTHONPATH`:
+
+* [matplotlib](https://pypi.org/project/matplotlib/)
+* [scipy](https://pypi.org/project/scipy/)
+
 WCPWG uses some [Global Self-Consistent Hierarchical High-Resolution Geography](https://www.ngdc.noaa.gov/mgg/shorelines/) resources and some [Natural Earth](https://www.naturalearthdata.com/) resources via the [cartopy](https://pypi.org/project/Cartopy/) module. If they do not exist on your system then [cartopy](https://pypi.org/project/Cartopy/) will download them for you in the background. Consequently, a working internet connection may be required the first time you run WCPWG.
 
 ## Bugs

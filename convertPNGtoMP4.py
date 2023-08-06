@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Set widths ...
-    # NOTE: By inspection, the PNG frames are 2160px wide.
+    # NOTE: By inspection, the PNG frames are 2,160 px wide.
     widths = [512, 1024, 2048]                                                  # [px]
 
     # Loop over widths ...

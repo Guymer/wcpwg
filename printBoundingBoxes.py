@@ -5,10 +5,16 @@
 if __name__ == "__main__":
     # Import standard modules ...
     import math
+    import os
 
     # Import special modules ...
     try:
         import cartopy
+        cartopy.config.update(
+            {
+                "cache_dir" : os.path.expanduser("~/.local/share/cartopy_cache"),
+            }
+        )
     except:
         raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
 

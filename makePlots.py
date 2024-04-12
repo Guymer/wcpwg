@@ -99,14 +99,6 @@ if __name__ == "__main__":
                       name = field,
                 resolution = field,
             )
-            pyguymer3.geo.add_horizontal_gridlines(
-                ax,
-                locs = range(-90, +91, 1),
-            )
-            pyguymer3.geo.add_vertical_gridlines(
-                ax,
-                locs = range(-180, +181, 1),
-            )
 
             # Configure figure ...
             fg.tight_layout()
@@ -148,14 +140,6 @@ if __name__ == "__main__":
                     extent = extCO,
                       name = field,
                 resolution = field,
-            )
-            pyguymer3.geo.add_horizontal_gridlines(
-                ax,
-                locs = range(-90, +91, 1),
-            )
-            pyguymer3.geo.add_vertical_gridlines(
-                ax,
-                locs = range(-180, +181, 1),
             )
 
             # Find file containing all the populated places shapes ...
@@ -235,14 +219,6 @@ if __name__ == "__main__":
                     extent = extUS,
                       name = field,
                 resolution = field,
-            )
-            pyguymer3.geo.add_horizontal_gridlines(
-                ax,
-                locs = range(-90, +91, 1),
-            )
-            pyguymer3.geo.add_vertical_gridlines(
-                ax,
-                locs = range(-180, +181, 1),
             )
 
             # Configure figure ...

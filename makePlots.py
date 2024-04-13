@@ -173,7 +173,7 @@ if __name__ == "__main__":
                             record.geometry.x,
                             record.geometry.y,
                             neName,
-                                      colorName = "blue",
+                                          color = "blue",
                             horizontalalignment = "left",
                                      txtOffsetX = 4,
                                      txtOffsetY = 2,

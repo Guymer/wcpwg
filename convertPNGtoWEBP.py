@@ -26,7 +26,6 @@ if __name__ == "__main__":
     pyguymer3.media.images2webp(
         frames,
         "createMask3.webp",
-        strip = True,
     )
 
     # **************************************************************************
@@ -45,5 +44,4 @@ if __name__ == "__main__":
             f"createMask3{maxSize:04d}px.webp",
             screenHeight = maxSize,
              screenWidth = maxSize,
-                   strip = True,
         )

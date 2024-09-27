@@ -3,4 +3,5 @@
 
 cartopy
 matplotlib
+meson
 numpy

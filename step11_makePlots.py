@@ -81,8 +81,11 @@ if __name__ == "__main__":
             # Create axis ...
             ax = pyguymer3.geo.add_axis(
                 fg,
+                      add_coastlines = True,
+                       add_gridlines = True,
                 coastlines_edgecolor = "blue",
                 coastlines_linewidth = 1.0,
+                               debug = False,
                                 dist = 2000.0e3,
                                  lat = -35.0,
                                  lon = -60.0,
@@ -92,6 +95,7 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
+                     debug = False,
                     extent = extCL,
                       name = field,
                 resolution = field,
@@ -120,8 +124,11 @@ if __name__ == "__main__":
             # Create axis ...
             ax = pyguymer3.geo.add_axis(
                 fg,
+                      add_coastlines = True,
+                       add_gridlines = True,
                 coastlines_edgecolor = "blue",
                 coastlines_linewidth = 1.0,
+                               debug = False,
                                 dist = 350.0e3,
                                  lat =  +39.0,
                                  lon = -106.25,
@@ -131,6 +138,7 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
+                     debug = False,
                     extent = extCO,
                       name = field,
                 resolution = field,
@@ -168,9 +176,11 @@ if __name__ == "__main__":
                             record.geometry.y,
                             neName,
                                           color = "blue",
+                                          debug = False,
                             horizontalalignment = "left",
                                      txtOffsetX = 4,
                                      txtOffsetY = 2,
+                              verticalalignment = "center",
                         )
 
             # Configure figure ...
@@ -196,8 +206,11 @@ if __name__ == "__main__":
             # Create axis ...
             ax = pyguymer3.geo.add_axis(
                 fg,
+                      add_coastlines = True,
+                       add_gridlines = True,
                 coastlines_edgecolor = "blue",
                 coastlines_linewidth = 1.0,
+                               debug = False,
                                 dist = 2400.0e3,
                                  lat = +40.0,
                                  lon = -97.0,
@@ -207,6 +220,7 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
+                     debug = False,
                     extent = extUS,
                       name = field,
                 resolution = field,

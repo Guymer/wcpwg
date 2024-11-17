@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Find the frames ...
-    frames = sorted(glob.glob("createMask3_mask????.png"))
+    frames = sorted(glob.glob("createMask3output/mask????.png"))
 
     # **************************************************************************
 

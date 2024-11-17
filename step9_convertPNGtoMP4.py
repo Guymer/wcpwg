@@ -16,28 +16,33 @@ if __name__ == "__main__":
 
     # **************************************************************************
 
+    # Find the frames ...
+    frames = sorted(glob.glob("createMask3output/mask????.png"))
+
+    # **************************************************************************
+
     print("Making \"createMask3.mp4\" ...")
 
-    # Set list ...
-    frames = sorted(glob.glob("createMask3_mask????.png"))
-
     # Save 25fps MP4 ...
-    vname = pyguymer3.media.images2mp4(frames)
+    vname = pyguymer3.media.images2mp4(
+        frames,
+    )
     shutil.move(vname, "createMask3.mp4")
 
     # **************************************************************************
 
-    # Set widths ...
+    # Set maximum sizes ...
     # NOTE: By inspection, the PNG frames are 2,160 px wide.
-    widths = [512, 1024, 2048]                                                  # [px]
+    maxSizes = [512, 1024, 2048]                                                # [px]
 
-    # Loop over widths ...
-    for width in widths:
-        print(f"Making \"createMask3{width:04d}px.mp4\" ...")
-
-        # Set list ...
-        frames = sorted(glob.glob("createMask3_mask????.png"))
+    # Loop over maximum sizes ...
+    for maxSize in maxSizes:
+        print(f"Making \"createMask3{maxSize:04d}px.mp4\" ...")
 
         # Save 25fps MP4 ...
-        vname = pyguymer3.media.images2mp4(frames, screenWidth = width, screenHeight = width)
-        shutil.move(vname, f"createMask3{width:04d}px.mp4")
+        vname = pyguymer3.media.images2mp4(
+            frames,
+            screenHeight = maxSize,
+             screenWidth = maxSize,
+        )
+        shutil.move(vname, f"createMask3{maxSize:04d}px.mp4")

@@ -51,6 +51,14 @@ PROGRAM main
         STOP
     END IF
 
+    ! Ensure that the output directory exists ...
+    CALL EXECUTE_COMMAND_LINE("mkdir -p ../createMask3output", CMDMSG = errmsg, EXITSTAT = errnum)
+    IF(errnum /= 0_INT32)THEN
+        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to make output directory", TRIM(errmsg), errnum
+        FLUSH(unit = ERROR_UNIT)
+        STOP
+    END IF
+
     ! Allocate (1.74 GiB) array and populate it ...
     CALL sub_allocate_array(elev, "elev", nx, ny, .TRUE._INT8)
     CALL sub_load_array_from_BIN(elev, "../all10g.bin")                         ! [m]

@@ -20,6 +20,18 @@ PROGRAM main
     INTEGER(kind = INT64)                                                       :: ix
     INTEGER(kind = INT64)                                                       :: iy
 
+    ! Declare FORTRAN variables ...
+    CHARACTER(len = 256)                                                        :: errmsg
+    INTEGER(kind = INT32)                                                       :: errnum
+
+    ! Ensure that the output directory exists ...
+    CALL EXECUTE_COMMAND_LINE("mkdir -p ../compareMasksOutput", CMDMSG = errmsg, EXITSTAT = errnum)
+    IF(errnum /= 0_INT32)THEN
+        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to make output directory", TRIM(errmsg), errnum
+        FLUSH(unit = ERROR_UNIT)
+        STOP
+    END IF
+
     ! Allocate one (1.74 GiB) array and three (889.89 MiB) arrays ...
     CALL sub_allocate_array(flags, "flags", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask1, "mask1", nx, ny, .TRUE._INT8)

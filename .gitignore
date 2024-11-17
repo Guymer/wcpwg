@@ -20,17 +20,28 @@ shellcheck.log
 *.o
 *.so
 *.so.dSYM
-compareMasks
-createMask?
+src/compareMasks
+src/createMask?
 
 # Hide large datasets ...
-*.bin
-*.csv
+all10g.bin
+all10g.zip
 *.mp4
-*.pbm
-*.ppm
 *.webp
-*.zip
 
 # Hide intermediary output files ...
-createMask?_*.png
+compareMasksOutput/diff.pbm
+compareMasksOutput/diff.png
+compareMasksOutput/flags.ppm
+compareMasksOutput/flags.png
+createMask.csv
+createMask?.csv
+createMask?output/mask????.bin
+createMask?output/mask????.png
+createMask?output/mask????.ppm
+createMask3output/after.bin
+createMask3output/after.pbm
+createMask3output/after.png
+createMask3output/before.bin
+createMask3output/before.pbm
+createMask3output/before.png

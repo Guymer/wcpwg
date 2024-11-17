@@ -10,38 +10,33 @@ if ! type convert &> /dev/null; then
     echo "ERROR: \"convert\" is not installed." >&2
     exit 1
 fi
-if ! type exiftool &> /dev/null; then
-    echo "ERROR: \"exiftool\" is not installed." >&2
-    exit 1
-fi
 if ! type optipng &> /dev/null; then
     echo "ERROR: \"optipng\" is not installed." >&2
     exit 1
 fi
 
-# Loop over PBM images ...
-for pbm in *.pbm; do
+# Loop over PPM images ...
+for ppm in */*.ppm; do
     # Skip those that do not exist ...
-    [[ ! -f $pbm ]] && continue
+    [[ ! -f ${ppm} ]] && continue
 
     # Deduce PNG image ...
-    png="${pbm%.pbm}.png"
+    png="${ppm%.ppm}.png"
 
     # Check if the PNG needs making ...
-    if [[ $pbm -nt $png ]]; then
-        echo "Making \"$png\" ..."
+    if [[ ${ppm} -nt ${png} ]]; then
+        echo "Making \"${png}\" ..."
 
         # Make PNG ...
-        convert "$pbm" "$png"
-        optipng "$png"
-        exiftool -overwrite_original -all= "$png"
+        convert "${ppm}" "${png}"
+        optipng -strip all "${png}"
     fi
 
-    # Check if the PBM needs removing ...
-    if [[ -f $png ]]; then
-        echo "Removing \"$pbm\" ..."
+    # Check if the PPM needs removing ...
+    if [[ -f ${png} ]]; then
+        echo "Removing \"${ppm}\" ..."
 
-        # Remove PBM ...
-        rm "$pbm"
+        # Remove PPM ...
+        rm "${ppm}"
     fi
 done

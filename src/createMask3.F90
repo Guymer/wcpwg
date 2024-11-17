@@ -17,8 +17,8 @@ PROGRAM main
     INTEGER(kind = INT64), PARAMETER                                            :: scale = 20_INT64
 
     ! Declare variables ...
-    CHARACTER(len = 24)                                                         :: bname
-    CHARACTER(len = 24)                                                         :: iname
+    CHARACTER(len = 33)                                                         :: bname
+    CHARACTER(len = 33)                                                         :: iname
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: i
@@ -53,7 +53,7 @@ PROGRAM main
 
     ! Allocate (1.74 GiB) array and populate it ...
     CALL sub_allocate_array(elev, "elev", nx, ny, .TRUE._INT8)
-    CALL sub_load_array_from_BIN(elev, "all10g.bin")                            ! [m]
+    CALL sub_load_array_from_BIN(elev, "../all10g.bin")                         ! [m]
 
     ! Allocate (889.89 MiB) array ...
     CALL sub_allocate_array(mask, "mask", nx, ny, .TRUE._INT8)
@@ -66,8 +66,8 @@ PROGRAM main
     FLUSH(unit = OUTPUT_UNIT)
 
     ! Save initial mask ...
-    CALL sub_save_array_as_BIN(mask, "createMask3_before.bin")
-    CALL sub_save_array_as_PBM(mask, "createMask3_before.pbm")
+    CALL sub_save_array_as_BIN(mask, "../createMask3output/before.bin")
+    CALL sub_save_array_as_PBM(mask, "../createMask3output/before.pbm")
 
     ! Initialize mask to not allow pregnant women to go anywhere except the
     ! top-left corner ...
@@ -75,7 +75,7 @@ PROGRAM main
     mask(1, 1) = .TRUE._INT8
 
     ! Open CSV ...
-    OPEN(action = "write", file = "createMask3.csv", form = "formatted", iomsg = errmsg, iostat = errnum, newunit = funit, status = "replace")
+    OPEN(action = "write", file = "../createMask3.csv", form = "formatted", iomsg = errmsg, iostat = errnum, newunit = funit, status = "replace")
     IF(errnum /= 0_INT32)THEN
         WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open BIN", TRIM(errmsg), errnum
         FLUSH(unit = ERROR_UNIT)
@@ -93,8 +93,8 @@ PROGRAM main
         FLUSH(unit = OUTPUT_UNIT)
 
         ! Create file names ...
-        WRITE(bname, '("createMask3_mask", i4.4, ".bin")') i
-        WRITE(iname, '("createMask3_mask", i4.4, ".ppm")') i
+        WRITE(bname, '("../createMask3output/mask", i4.4, ".bin")') i
+        WRITE(iname, '("../createMask3output/mask", i4.4, ".ppm")') i
 
         ! Find initial total ...
         oldtot = COUNT(mask, kind = INT64)
@@ -179,8 +179,8 @@ PROGRAM main
     FLUSH(unit = OUTPUT_UNIT)
 
     ! Save final mask ...
-    CALL sub_save_array_as_BIN(mask, "createMask3_after.bin")
-    CALL sub_save_array_as_PBM(mask, "createMask3_after.pbm")
+    CALL sub_save_array_as_BIN(mask, "../createMask3output/after.bin")
+    CALL sub_save_array_as_PBM(mask, "../createMask3output/after.pbm")
 
     ! Clean up ...
     DEALLOCATE(elev)

@@ -17,6 +17,7 @@ MACH_OPTS := -march=native -m64
 CUT     := $(shell which cut            2> /dev/null || echo "ERROR")
 FC      := $(shell which gfortran-mp-14 2> /dev/null || echo "ERROR")
 GREP    := $(shell which grep           2> /dev/null || echo "ERROR")
+MKDIR   := $(shell which mkdir          2> /dev/null || echo "ERROR")
 PYTHON3 := $(shell which python3.12     2> /dev/null || echo "ERROR")
 RM      := $(shell which rm             2> /dev/null || echo "ERROR")
 
@@ -40,6 +41,9 @@ ifeq ($(FC),ERROR)
 endif
 ifeq ($(GREP),ERROR)
     $(error The binary "grep" is not installed)
+endif
+ifeq ($(MKDIR),ERROR)
+    $(error The binary "mkdir" is not installed)
 endif
 ifeq ($(PYTHON3),ERROR)
     $(error The binary "python3" is not installed)
@@ -134,19 +138,23 @@ createMask3.o:		$(FTNLIB)/mod_safe.mod										\
 
 compareMasks:		$(FTNLIB)/mod_safe.o										\
 					compareMasks.o
+	$(MKDIR) -p ../compareMasksOutput
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
 
 createMask1:		$(FTNLIB)/mod_safe.o										\
 					mod_funcs.o													\
 					createMask1.o
+	$(MKDIR) -p ../createMask1output
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
 createMask2:		$(FTNLIB)/mod_safe.o										\
 					mod_funcs.o													\
 					createMask2.o
+	$(MKDIR) -p ../createMask2output
 	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
 createMask3:		$(FTNLIB)/mod_safe.o										\
 					mod_funcs.o													\
 					createMask3.o
+	$(MKDIR) -p ../createMask3output
 	$(FC) -fopenmp $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@

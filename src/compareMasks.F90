@@ -27,8 +27,8 @@ PROGRAM main
     CALL sub_allocate_array(mask3, "mask3", nx, ny, .TRUE._INT8)
 
     ! Populate arrays ...
-    CALL sub_load_array_from_BIN(mask1, "createMask3_before.bin")
-    CALL sub_load_array_from_BIN(mask2, "createMask3_after.bin")
+    CALL sub_load_array_from_BIN(mask1, "../createMask3output/before.bin")
+    CALL sub_load_array_from_BIN(mask2, "../createMask3output/after.bin")
 
     ! Print summary ...
     WRITE(fmt = '(f9.6, "% of the world is <= 2,500m ASL")', unit = OUTPUT_UNIT) 100.0e0_REAL64 * REAL(COUNT(mask1, kind = INT64), kind = REAL64) / REAL(nx * ny, kind = REAL64)
@@ -58,13 +58,13 @@ PROGRAM main
     DEALLOCATE(mask2)
 
     ! Save difference in masks ...
-    CALL sub_save_array_as_PBM(mask3, "createMask3_diff.pbm")
+    CALL sub_save_array_as_PBM(mask3, "../compareMasksOutput/diff.pbm")
 
     ! Clean up ...
     DEALLOCATE(mask3)
 
     ! Save flags ...
-    CALL sub_save_array_as_PPM(flags, "createMask3_flags.ppm", "r2o2g")
+    CALL sub_save_array_as_PPM(flags, "../compareMasksOutput/flags.ppm", "r2o2g")
 
     ! Clean up ...
     DEALLOCATE(flags)

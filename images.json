@@ -1,24 +1,24 @@
 {
     "before": {
-        "before": "createMask3_before.png",
+        "before": "createMask3output/before.png",
         "__comment__": "Places less than 2,500m ASL",
         "__projection__": "PlateCarree",
         "__source__": "https://github.com/Guymer/wcpwg"
     },
     "after": {
-        "after": "createMask3_after.png",
+        "after": "createMask3output/after.png",
         "__comment__": "Places less than 2,500m ASL and accessible",
         "__projection__": "PlateCarree",
         "__source__": "https://github.com/Guymer/wcpwg"
     },
     "diff": {
-        "diff": "createMask3_diff.png",
+        "diff": "compareMasksOutput/diff.png",
         "__comment__": "Places less than 2,500m ASL and not accessible",
         "__projection__": "PlateCarree",
         "__source__": "https://github.com/Guymer/wcpwg"
     },
     "flags": {
-        "flags": "createMask3_flags.png",
+        "flags": "compareMasksOutput/flags.png",
         "__comment__": "All three types of places",
         "__projection__": "PlateCarree",
         "__source__": "https://github.com/Guymer/wcpwg"

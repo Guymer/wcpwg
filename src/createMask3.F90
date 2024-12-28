@@ -75,7 +75,7 @@ PROGRAM main
 
     ! Save initial mask ...
     CALL sub_save_array_as_BIN(mask, "../createMask3output/before.bin")
-    CALL sub_save_array_as_PBM(mask, "../createMask3output/before.pbm")
+    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/before.pbm")
 
     ! Initialize mask to not allow pregnant women to go anywhere except the
     ! top-left corner ...
@@ -188,7 +188,7 @@ PROGRAM main
 
     ! Save final mask ...
     CALL sub_save_array_as_BIN(mask, "../createMask3output/after.bin")
-    CALL sub_save_array_as_PBM(mask, "../createMask3output/after.pbm")
+    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/after.pbm")
 
     ! Clean up ...
     DEALLOCATE(elev)

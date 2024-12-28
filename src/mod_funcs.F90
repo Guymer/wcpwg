@@ -121,7 +121,7 @@ MODULE mod_funcs
 
         ! Save shrunk mask ...
         CALL sub_save_array_as_BIN(shrunkMask, TRIM(bname))
-        CALL sub_save_array_as_PPM(shrunkMask, TRIM(iname), "r2g")
+        CALL sub_save_array_as_PPM(nx / scale, ny / scale, shrunkMask, TRIM(iname), "r2g")
 
         ! Clean up ...
         DEALLOCATE(shrunkMask)

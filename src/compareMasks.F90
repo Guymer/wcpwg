@@ -70,13 +70,13 @@ PROGRAM main
     DEALLOCATE(mask2)
 
     ! Save difference in masks ...
-    CALL sub_save_array_as_PBM(mask3, "../compareMasksOutput/diff.pbm")
+    CALL sub_save_array_as_PBM(nx, ny, mask3, "../compareMasksOutput/diff.pbm")
 
     ! Clean up ...
     DEALLOCATE(mask3)
 
     ! Save flags ...
-    CALL sub_save_array_as_PPM(flags, "../compareMasksOutput/flags.ppm", "r2o2g")
+    CALL sub_save_array_as_PPM(nx, ny, flags, "../compareMasksOutput/flags.ppm", "r2o2g")
 
     ! Clean up ...
     DEALLOCATE(flags)

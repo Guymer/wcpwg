@@ -52,7 +52,7 @@ MODULE mod_funcs
         END DO
     END SUBROUTINE incrementMask
 
-    SUBROUTINE saveShrunkMask(nx, ny, mask, scale, bname, iname)
+    SUBROUTINE saveShrunkMask(nx, ny, mask, tileScale, bname, iname)
         ! Import modules ...
         USE ISO_FORTRAN_ENV
         USE mod_safe,       ONLY:   sub_allocate_array,                         &
@@ -65,7 +65,7 @@ MODULE mod_funcs
         INTEGER(kind = INT64), INTENT(in)                                       :: nx
         INTEGER(kind = INT64), INTENT(in)                                       :: ny
         LOGICAL(kind = INT8), DIMENSION(nx, ny), INTENT(in)                     :: mask
-        INTEGER(kind = INT64), INTENT(in)                                       :: scale
+        INTEGER(kind = INT64), INTENT(in)                                       :: tileScale
         CHARACTER(len = *), INTENT(in)                                          :: bname
         CHARACTER(len = *), INTENT(in)                                          :: iname
 
@@ -79,36 +79,36 @@ MODULE mod_funcs
         REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                       :: shrunkMask
 
         ! Check scale ...
-        IF(MOD(nx, scale) /= 0_INT64)THEN
-            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"nx" is not an integer multiple of "scale"'
+        IF(MOD(nx, tileScale) /= 0_INT64)THEN
+            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"nx" is not an integer multiple of "tileScale"'
             FLUSH(unit = ERROR_UNIT)
             STOP
         END IF
-        IF(MOD(ny, scale) /= 0_INT64)THEN
-            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"ny" is not an integer multiple of "scale"'
+        IF(MOD(ny, tileScale) /= 0_INT64)THEN
+            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"ny" is not an integer multiple of "tileScale"'
             FLUSH(unit = ERROR_UNIT)
             STOP
         END IF
 
         ! Allocate array ...
-        CALL sub_allocate_array(shrunkMask, "shrunkMask", nx / scale, ny / scale, .TRUE._INT8)
+        CALL sub_allocate_array(shrunkMask, "shrunkMask", nx / tileScale, ny / tileScale, .TRUE._INT8)
 
         ! Loop over x-axis tiles ...
-        DO ix = 1_INT64, nx / scale
+        DO ix = 1_INT64, nx / tileScale
             ! Find the extent of the tile ...
-            ixlo = (ix - 1_INT64) * scale + 1_INT64
-            ixhi =  ix            * scale
+            ixlo = (ix - 1_INT64) * tileScale + 1_INT64
+            ixhi =  ix            * tileScale
 
             ! Loop over y-axis tiles ...
-            DO iy = 1_INT64, ny / scale
+            DO iy = 1_INT64, ny / tileScale
                 ! Find the extent of the tile ...
-                iylo = (iy - 1_INT64) * scale + 1_INT64
-                iyhi =  iy            * scale
+                iylo = (iy - 1_INT64) * tileScale + 1_INT64
+                iyhi =  iy            * tileScale
 
                 ! Find total mask ...
                 ! NOTE: Within shrunkMask:
-                !         *     0.0     = pregnant women can't go here =  RED
-                !         * scale*scale = pregnant women  can  go here = GREEN
+                !         *         0.0         = pregnant women can't go here =  RED
+                !         * tileScale*tileScale = pregnant women  can  go here = GREEN
                 shrunkMask(ix, iy) = REAL(COUNT(mask(ixlo:ixhi, iylo:iyhi), kind = INT64), kind = REAL32)
             END DO
         END DO
@@ -117,11 +117,11 @@ MODULE mod_funcs
         ! NOTE: Within shrunkMask:
         !         * 0.0 = pregnant women can't go here =  RED
         !         * 1.0 = pregnant women  can  go here = GREEN
-        shrunkMask = shrunkMask / REAL(scale * scale, kind = REAL32)
+        shrunkMask = shrunkMask / REAL(tileScale * tileScale, kind = REAL32)
 
         ! Save shrunk mask ...
         CALL sub_save_array_as_BIN(shrunkMask, TRIM(bname))
-        CALL sub_save_array_as_PPM(nx / scale, ny / scale, shrunkMask, TRIM(iname), "r2g")
+        CALL sub_save_array_as_PPM(nx / tileScale, ny / tileScale, shrunkMask, TRIM(iname), "r2g")
 
         ! Clean up ...
         DEALLOCATE(shrunkMask)

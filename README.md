@@ -18,6 +18,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 9. Convert the sequence of PNG images to a MP4 video (by running [step9_convertPNGtoMP4.py](step9_convertPNGtoMP4.py))
 10. Convert the sequence of PNG images to a WEBP animation (by running [step10_convertPNGtoWEBP.py](step10_convertPNGtoWEBP.py))
 11. Make plots (by running [step11_makePlots.py](step11_makePlots.py))
+12. Confirm updated behaviour (by running [step12_convergence.py](step12_convergence.py))
 
 ## Method
 
@@ -39,6 +40,26 @@ Note that the second number is smaller than the first, thus indicating that *som
 ![all three types of places](flagsCO.png)
 
 ![places less than 2,500m ASL but which are not accessible](diffCO.png)
+
+## Update (December 2024)
+
+I have genericised the `incrementMask` subroutine and its surrounding iteration loop, as it is also used in the [RSL project](https://github.com/Guymer/rsl). The new genericised version (for `INT16` 2D arrays) can be found in `fortranlib` [here](https://github.com/Guymer/fortranlib/blob/main/mod_safe/sub_flood_array/sub_flood_INT16_integer_array.f90). The new genericised version allows the user to toggle using tiles (by setting `tileScale = 1_INT64` in the subroutine call), which allows me to easily reproduce the comparison between [createMask1](src/createMask1.F90) and [createMask2](src/createMask2.F90). However, it appears that the new genericised version converges significantly quicker than the original `incrementMask` subroutine included in this repository.
+
+As can be seen in the animation above, most of the iterations are spent going from east to west to fill in the Taklamakan Desert in China. The new genericised version does four sweeps per iteration:
+
+1. Start top-left and go down then right.
+2. Start top-right and go left then down.
+3. Start bottom-right and go up then left.
+4. Start bottom-left and go right then up.
+
+This improvement means that [createMask1](src/createMask1.F90) (without any tiling) converges in 6 iterations now rather than not converging after 200 iterations. Enabling tiling in [createMask2](src/createMask2.F90) converges in 5 iterations now rather than the 92 iterations it took before - thus showing that the improvement of tiling is much less impactful than the improvement of sweeping in each direction. I will leave [createMask3](src/createMask3.F90) untouched so as to reproduce the animation if anyone wants to.
+
+The old behaviour can be reproduced by:
+
+1. adding a `RETURN` statement to a local copy of [sub_flood_INT16_integer_array_iter](https://github.com/Guymer/fortranlib/blob/main/mod_safe/sub_flood_array_iter/sub_flood_INT16_integer_array_iter.f90) to disable the three new sweeps; and
+2. adding `IF(iIter == 200_INT64) EXIT` to a local copy of [sub_flood_INT16_integer_array](https://github.com/Guymer/fortranlib/blob/main/mod_safe/sub_flood_array/sub_flood_INT16_integer_array.f90) to make the iteration give up but return an answer.
+
+This was confirmed on 29/Dec/2024.
 
 ## Dependencies
 

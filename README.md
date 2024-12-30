@@ -61,6 +61,8 @@ The old behaviour can be reproduced by:
 
 This was confirmed on 29/Dec/2024.
 
+![comparison of old and new methods](step12_convergence.png)
+
 ## Dependencies
 
 WCPWG requires the following Python modules to be installed and available in your `PYTHONPATH`.

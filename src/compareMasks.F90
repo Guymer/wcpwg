@@ -25,7 +25,11 @@ PROGRAM main
     INTEGER(kind = INT32)                                                       :: errnum
 
     ! Ensure that the output directory exists ...
-    CALL EXECUTE_COMMAND_LINE("mkdir -p ../compareMasksOutput", CMDMSG = errmsg, EXITSTAT = errnum)
+    CALL EXECUTE_COMMAND_LINE(                                                  &
+        "mkdir -p ../compareMasksOutput",                                       &
+          cmdmsg = errmsg,                                                      &
+        exitstat = errnum                                                       &
+    )
     IF(errnum /= 0_INT32)THEN
         WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to make output directory", TRIM(errmsg), errnum
         FLUSH(unit = ERROR_UNIT)

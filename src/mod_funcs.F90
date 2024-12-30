@@ -2,7 +2,7 @@ MODULE mod_funcs
     CONTAINS
 
     PURE SUBROUTINE incrementMask(nx, ny, elev, mask, ixlo, ixhi, iylo, iyhi)
-        ! Import modules ...
+        ! Import standard modules ...
         USE ISO_FORTRAN_ENV
 
         IMPLICIT NONE
@@ -53,11 +53,13 @@ MODULE mod_funcs
     END SUBROUTINE incrementMask
 
     SUBROUTINE saveShrunkMask(nx, ny, mask, tileScale, bname, iname)
-        ! Import modules ...
+        ! Import standard modules ...
         USE ISO_FORTRAN_ENV
-        USE mod_safe,       ONLY:   sub_allocate_array,                         &
-                                    sub_save_array_as_BIN,                      &
-                                    sub_save_array_as_PPM
+
+        ! Import my modules ...
+        USE mod_safe,       ONLY:   sub_save_array_as_BIN,                      &
+                                    sub_save_array_as_PPM,                      &
+                                    sub_shrink_array
 
         IMPLICIT NONE
 
@@ -70,54 +72,16 @@ MODULE mod_funcs
         CHARACTER(len = *), INTENT(in)                                          :: iname
 
         ! Declare variables ...
-        INTEGER(kind = INT64)                                                   :: ix
-        INTEGER(kind = INT64)                                                   :: ixlo
-        INTEGER(kind = INT64)                                                   :: ixhi
-        INTEGER(kind = INT64)                                                   :: iy
-        INTEGER(kind = INT64)                                                   :: iylo
-        INTEGER(kind = INT64)                                                   :: iyhi
         REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                       :: shrunkMask
 
-        ! Check scale ...
-        IF(MOD(nx, tileScale) /= 0_INT64)THEN
-            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"nx" is not an integer multiple of "tileScale"'
-            FLUSH(unit = ERROR_UNIT)
-            STOP
-        END IF
-        IF(MOD(ny, tileScale) /= 0_INT64)THEN
-            WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"ny" is not an integer multiple of "tileScale"'
-            FLUSH(unit = ERROR_UNIT)
-            STOP
-        END IF
-
-        ! Allocate array ...
-        CALL sub_allocate_array(shrunkMask, "shrunkMask", nx / tileScale, ny / tileScale, .TRUE._INT8)
-
-        ! Loop over x-axis tiles ...
-        DO ix = 1_INT64, nx / tileScale
-            ! Find the extent of the tile ...
-            ixlo = (ix - 1_INT64) * tileScale + 1_INT64
-            ixhi =  ix            * tileScale
-
-            ! Loop over y-axis tiles ...
-            DO iy = 1_INT64, ny / tileScale
-                ! Find the extent of the tile ...
-                iylo = (iy - 1_INT64) * tileScale + 1_INT64
-                iyhi =  iy            * tileScale
-
-                ! Find total mask ...
-                ! NOTE: Within shrunkMask:
-                !         *         0.0         = pregnant women can't go here =  RED
-                !         * tileScale*tileScale = pregnant women  can  go here = GREEN
-                shrunkMask(ix, iy) = REAL(COUNT(mask(ixlo:ixhi, iylo:iyhi), kind = INT64), kind = REAL32)
-            END DO
-        END DO
-
-        ! Convert total mask to average mask ...
-        ! NOTE: Within shrunkMask:
-        !         * 0.0 = pregnant women can't go here =  RED
-        !         * 1.0 = pregnant women  can  go here = GREEN
-        shrunkMask = shrunkMask / REAL(tileScale * tileScale, kind = REAL32)
+        ! Shrink the logical array down to a real array ..
+        CALL sub_shrink_array(                                                  &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                    arr = mask,                                                 &
+            shrinkScale = tileScale,                                            &
+            shrunkenArr = shrunkMask                                            &
+        )
 
         ! Save shrunk mask ...
         CALL sub_save_array_as_BIN(shrunkMask, TRIM(bname))

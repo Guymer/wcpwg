@@ -2,12 +2,11 @@
 # *                                 VARIABLES                                  *
 # ******************************************************************************
 
+COVERAGE  ?= false
 DEBUG     ?= false
 FTNLIB    ?= $(abspath ../fortranlib)
-DEBG_OPTS := -g -fcheck=all
 LANG_OPTS := -fopenmp -ffree-form -ffree-line-length-none -frecursive -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans -fPIC
 WARN_OPTS := -Wall -Wextra -Waliasing -Wcharacter-truncation -Wconversion-extra -Wimplicit-interface -Wimplicit-procedure -Wunderflow -Wtabs
-OPTM_OPTS := -O2
 MACH_OPTS := -march=native -m64
 
 # ******************************************************************************
@@ -24,8 +23,12 @@ RM      := $(shell which rm             2> /dev/null || echo "ERROR")
 # *                             DYNAMIC VARIABLES                              *
 # ******************************************************************************
 
-ifeq ($(DEBUG), true)
-	LANG_OPTS += $(DEBG_OPTS)
+ifeq ($(COVERAGE), true)
+	LANG_OPTS += -g -O0 -fprofile-abs-path --coverage
+else ifeq ($(DEBUG), true)
+	LANG_OPTS += -g -fcheck=all
+else
+	LANG_OPTS += -O2
 endif
 
 # ******************************************************************************
@@ -71,8 +74,8 @@ all:				compile
 
 # "gmake -r clean"   = removes the compiled code
 clean:
-	$(RM) -f compareMasks createMask1 createMask2 createMask3 *.mod *.o
-	$(MAKE) -r -C $(FTNLIB) FC=$(FC) PYTHON3=$(PYTHON3) clean
+	$(RM) -f compareMasks createMask1 createMask2 createMask3 *.gcda *.gcno *.mod *.o *.so
+	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) clean
 
 # "gmake -r compile" = compiles the code
 compile:			compareMasks												\
@@ -105,48 +108,47 @@ help:
 
 $(FTNLIB)/%.mod																	\
 $(FTNLIB)/%.o &:	$(FTNLIB)/%.F90
-	$(MAKE) -r -C $(FTNLIB) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) $*.o
-
+	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) $*.o
 
 mod_funcs.mod																	\
 mod_funcs.o &:		$(FTNLIB)/mod_safe.mod										\
 					mod_funcs.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) mod_funcs.F90
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) mod_funcs.F90
 
 compareMasks.o:		$(FTNLIB)/mod_safe.mod										\
 					compareMasks.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) compareMasks.F90 -o $@
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) compareMasks.F90 -o $@
 
 createMask1.o:		$(FTNLIB)/mod_safe.mod										\
 					mod_funcs.mod												\
 					createMask1.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask1.F90 -o $@
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask1.F90 -o $@
 
 createMask2.o:		$(FTNLIB)/mod_safe.mod										\
 					mod_funcs.mod												\
 					createMask2.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask2.F90 -o $@
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask2.F90 -o $@
 
 createMask3.o:		$(FTNLIB)/mod_safe.mod										\
 					mod_funcs.mod												\
 					createMask3.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask3.F90 -o $@
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask3.F90 -o $@
 
 compareMasks:		$(FTNLIB)/mod_safe.o										\
 					compareMasks.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
 
 createMask1:		$(FTNLIB)/mod_safe.o										\
 					mod_funcs.o													\
 					createMask1.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
 createMask2:		$(FTNLIB)/mod_safe.o										\
 					mod_funcs.o													\
 					createMask2.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
 createMask3:		$(FTNLIB)/mod_safe.o										\
 					mod_funcs.o													\
 					createMask3.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(OPTM_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@

@@ -3,8 +3,8 @@ PROGRAM main
     USE ISO_FORTRAN_ENV
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
                                     sub_load_array_from_BIN,                    &
-                                    sub_save_array_as_PBM,                      &
-                                    sub_save_array_as_PPM
+                                    sub_save_array_as_BIN,                      &
+                                    sub_shrink_array
 
     IMPLICIT NONE
 
@@ -16,9 +16,14 @@ PROGRAM main
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask1
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask2
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask3
-    INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: flags
+    CHARACTER(len = 256)                                                        :: fName
+    INTEGER(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: flags
+    INTEGER(kind = INT64)                                                       :: iScale
     INTEGER(kind = INT64)                                                       :: ix
     INTEGER(kind = INT64)                                                       :: iy
+    INTEGER(kind = INT64)                                                       :: shrinkScale
+    REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: flagsScaled
+    REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: mask3scaled
 
     ! Declare FORTRAN variables ...
     CHARACTER(len = 256)                                                        :: errmsg
@@ -36,7 +41,7 @@ PROGRAM main
         STOP
     END IF
 
-    ! Allocate one (1.74 GiB) array and three (889.89 MiB) arrays ...
+    ! Allocate four (889.89 MiB) arrays ...
     CALL sub_allocate_array(flags, "flags", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask1, "mask1", nx, ny, .TRUE._INT8)
     CALL sub_allocate_array(mask2, "mask2", nx, ny, .TRUE._INT8)
@@ -56,14 +61,14 @@ PROGRAM main
         DO iy = 1_INT64, ny
             IF(mask1(ix, iy))THEN
                 IF(mask2(ix, iy))THEN
-                    flags(ix, iy) = 255_INT16
+                    flags(ix, iy) = 2_INT8
                     mask3(ix, iy) = .FALSE._INT8
                 ELSE
-                    flags(ix, iy) = 127_INT16
+                    flags(ix, iy) = 1_INT8
                     mask3(ix, iy) = .TRUE._INT8
                 END IF
             ELSE
-                flags(ix, iy) = 0_INT16
+                flags(ix, iy) = 0_INT8
                 mask3(ix, iy) = .FALSE._INT8
             END IF
         END DO
@@ -73,14 +78,66 @@ PROGRAM main
     DEALLOCATE(mask1)
     DEALLOCATE(mask2)
 
+    ! **************************************************************************
+
     ! Save difference in masks ...
-    CALL sub_save_array_as_PBM(nx, ny, mask3, "../compareMasksOutput/diff.pbm")
+    CALL sub_save_array_as_BIN(mask3, "../compareMasksOutput/diff_scale=01km.bin")
+
+    ! Loop over scales ...
+    DO iScale = 1_INT64, 5_INT64
+        ! Determine scale ...
+        shrinkScale = 2_INT64 ** iScale                                         ! [km]
+
+        ! Determine file name ...
+        WRITE(fName, fmt = '("../compareMasksOutput/diff_scale=", i2.2, "km.bin")') shrinkScale
+
+        ! Allocate array and populate it ...
+        CALL sub_shrink_array(                                                  &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                    arr = mask3,                                                &
+            shrinkScale = shrinkScale,                                          &
+            shrunkenArr = mask3scaled                                           &
+        )
+
+        ! Save scaled difference in masks ...
+        CALL sub_save_array_as_BIN(mask3scaled, TRIM(fName))
+
+        ! Clean up ...
+        DEALLOCATE(mask3scaled)
+    END DO
 
     ! Clean up ...
     DEALLOCATE(mask3)
 
+    ! **************************************************************************
+
     ! Save flags ...
-    CALL sub_save_array_as_PPM(nx, ny, flags, "../compareMasksOutput/flags.ppm", "r2o2g")
+    CALL sub_save_array_as_BIN(flags, "../compareMasksOutput/flags_scale=01km.bin")
+
+    ! Loop over scales ...
+    DO iScale = 1_INT64, 5_INT64
+        ! Determine scale ...
+        shrinkScale = 2_INT64 ** iScale                                         ! [km]
+
+        ! Determine file name ...
+        WRITE(fName, fmt = '("../compareMasksOutput/flags_scale=", i2.2, "km.bin")') shrinkScale
+
+        ! Allocate array and populate it ...
+        CALL sub_shrink_array(                                                  &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                    arr = flags,                                                &
+            shrinkScale = shrinkScale,                                          &
+            shrunkenArr = flagsScaled                                           &
+        )
+
+        ! Save scaled difference in masks ...
+        CALL sub_save_array_as_BIN(flagsScaled, TRIM(fName))
+
+        ! Clean up ...
+        DEALLOCATE(flagsScaled)
+    END DO
 
     ! Clean up ...
     DEALLOCATE(flags)

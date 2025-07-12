@@ -56,7 +56,7 @@ if __name__ == "__main__":
     ny = 21600                                                                  # [px]
 
     # Find files ...
-    fNames = sorted(glob.glob("compareMasksOutput/*.*"))
+    fNames = sorted(glob.glob("compareMasksOutput/*.*") + glob.glob("createMask?output/*.*"))
 
     # Loop over files ...
     for bName in fNames:
@@ -166,9 +166,6 @@ if __name__ == "__main__":
                 )
                 with open(pName, "wb") as fObj:
                     fObj.write(src)
-            # case "elevLatsMask.bin" | "elevLonsMask.bin":
-            #     print(f"Skipping \"{bName}\" (it contains 1D data).")
-            #     continue
             case "compareMasksOutput/flags_scale=02km.bin" | "compareMasksOutput/flags_scale=04km.bin" | "compareMasksOutput/flags_scale=08km.bin" | "compareMasksOutput/flags_scale=16km.bin" | "compareMasksOutput/flags_scale=32km.bin":
                 # Find scale ...
                 scale = int(bName.split("=")[1][:2])

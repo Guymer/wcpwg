@@ -28,6 +28,18 @@ PROGRAM main
     INTEGER(kind = INT32)                                                       :: errnum
     INTEGER(kind = INT32)                                                       :: funit
 
+    ! Check scale ...
+    IF(MOD(nx, tileScale) /= 0_INT64)THEN
+        WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"nx" is not an integer multiple of "tileScale"'
+        FLUSH(unit = ERROR_UNIT)
+        STOP
+    END IF
+    IF(MOD(ny, tileScale) /= 0_INT64)THEN
+        WRITE(fmt = '("ERROR: ", a, ".")', unit = ERROR_UNIT) '"ny" is not an integer multiple of "tileScale"'
+        FLUSH(unit = ERROR_UNIT)
+        STOP
+    END IF
+
     ! Ensure that the output directory exists ...
     CALL EXECUTE_COMMAND_LINE(                                                  &
         "mkdir -p ../createMask1output",                                        &

@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
         # Figure out what to do with it ...
         match bName:
-            case "compareMasksOutput/diff_scale=01km.bin":
+            case "compareMasksOutput/diff_scale=01km.bin" | "createMask3output/after_scale=01km.bin" | "createMask3output/before_scale=01km.bin":
                 print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
                 continue
             case str(x) if re.fullmatch(r"compareMasksOutput/diff_scale=[0-9][0-9]km.bin", x):
@@ -214,13 +214,7 @@ if __name__ == "__main__":
                 )
                 with open(pName, "wb") as fObj:
                     fObj.write(src)
-            case "createMask3output/after_scale=01km.bin":
-                print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
-                continue
-            case "createMask3output/before_scale=01km.bin":
-                print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
-                continue
-            case str(x) if re.fullmatch(r"createMask[0-9]output/mask[0-9][0-9][0-9][0-9]_scale=[0-9][0-9]km.bin", x):
+            case str(x) if re.fullmatch(r"createMask[0-9]output/.+_scale=[0-9][0-9]km.bin", x):
                 # Find scale ...
                 scale = int(bName.split("=")[1][:2])
 

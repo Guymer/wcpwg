@@ -7,6 +7,7 @@ if __name__ == "__main__":
     import argparse
     import glob
     import json
+    import re
 
     # Import special modules ...
     try:
@@ -48,6 +49,7 @@ if __name__ == "__main__":
     # Load colour tables and create short-hand ...
     with open(f"{pyguymer3.__path__[0]}/data/json/colourTables.json", "rt", encoding = "utf-8") as fObj:
         colourTables = json.load(fObj)
+    r2g = numpy.array(colourTables["r2g"]).astype(numpy.uint8)
     r2o2g = numpy.array(colourTables["r2o2g"]).astype(numpy.uint8)
     turbo = numpy.array(colourTables["turbo"]).astype(numpy.uint8)
 
@@ -76,7 +78,7 @@ if __name__ == "__main__":
             case "compareMasksOutput/diff_scale=01km.bin":
                 print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
                 continue
-            case "compareMasksOutput/diff_scale=02km.bin" | "compareMasksOutput/diff_scale=04km.bin" | "compareMasksOutput/diff_scale=08km.bin" | "compareMasksOutput/diff_scale=16km.bin" | "compareMasksOutput/diff_scale=32km.bin":
+            case str(x) if re.fullmatch(r"compareMasksOutput/diff_scale=[0-9][0-9]km.bin", x):
                 # Find scale ...
                 scale = int(bName.split("=")[1][:2])
 
@@ -166,7 +168,7 @@ if __name__ == "__main__":
                 )
                 with open(pName, "wb") as fObj:
                     fObj.write(src)
-            case "compareMasksOutput/flags_scale=02km.bin" | "compareMasksOutput/flags_scale=04km.bin" | "compareMasksOutput/flags_scale=08km.bin" | "compareMasksOutput/flags_scale=16km.bin" | "compareMasksOutput/flags_scale=32km.bin":
+            case str(x) if re.fullmatch(r"compareMasksOutput/flags_scale=[0-9][0-9]km.bin", x):
                 # Find scale ...
                 scale = int(bName.split("=")[1][:2])
 
@@ -207,6 +209,58 @@ if __name__ == "__main__":
                        memLevels = [9,],
                          modTime = None,
                         palUint8 = r2o2g,
+                      strategies = None,
+                          wbitss = [15,],
+                )
+                with open(pName, "wb") as fObj:
+                    fObj.write(src)
+            case "createMask3output/after_scale=01km.bin":
+                print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
+                continue
+            case "createMask3output/before_scale=01km.bin":
+                print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
+                continue
+            case str(x) if re.fullmatch(r"createMask[0-9]output/mask[0-9][0-9][0-9][0-9]_scale=[0-9][0-9]km.bin", x):
+                # Find scale ...
+                scale = int(bName.split("=")[1][:2])
+
+                # Find out how many mega-pixels there are and skip this BIN if
+                # the PNG would be too big ...
+                mega = float((nx // scale) * (ny // scale)) / 1.0e6             # [Mpx]
+                if mega > args.maxSize:
+                    print(f"Skipping \"{bName}\" (the PNG would be {mega:,.1f} Mpx).")
+                    continue
+
+                print(f"Making \"{pName}\" ...")
+
+                # Load data ...
+                data = numpy.fromfile(
+                    bName,
+                    dtype = numpy.float32,
+                ).reshape(ny // scale, nx // scale, 1)
+
+                # Scale data from 0 to 255 ...
+                data *= 255.0
+                numpy.place(data, data <   0.0,   0.0)
+                numpy.place(data, data > 255.0, 255.0)
+                data = data.astype(numpy.uint8)
+
+                # Make PNG ...
+                src = pyguymer3.image.makePng(
+                    data,
+                    calcAdaptive = True,
+                     calcAverage = True,
+                        calcNone = True,
+                       calcPaeth = True,
+                         calcSub = True,
+                          calcUp = True,
+                         choices = "all",
+                           debug = args.debug,
+                             dpi = None,
+                          levels = [9,],
+                       memLevels = [9,],
+                         modTime = None,
+                        palUint8 = r2g,
                       strategies = None,
                           wbitss = [15,],
                 )

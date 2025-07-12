@@ -36,10 +36,10 @@ all10g.zip
 *.webp
 
 # Hide intermediary output files ...
-compareMasksOutput/diff.pbm
-compareMasksOutput/diff.png
-compareMasksOutput/flags.ppm
-compareMasksOutput/flags.png
+compareMasksOutput/diff_scale=??km.bin
+compareMasksOutput/diff_scale=??km.png
+compareMasksOutput/flags_scale=??km.bin
+compareMasksOutput/flags_scale=??km.png
 createMask.csv
 createMask?.csv
 createMask?output/mask????.bin

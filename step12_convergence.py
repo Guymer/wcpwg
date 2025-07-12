@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     # Load data and plot it ...
     i, n = numpy.loadtxt(
-        "createMask1_fourSweeps.csv",
+        "createMask1.csv",
         delimiter = ",",
             dtype = numpy.uint32,
          skiprows = 2,
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     # Load data and plot it ...
     i, n = numpy.loadtxt(
-        "createMask2_fourSweeps.csv",
+        "createMask2.csv",
         delimiter = ",",
             dtype = numpy.uint32,
          skiprows = 2,

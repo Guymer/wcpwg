@@ -13,11 +13,11 @@ PROGRAM main
     ! Declare parameters ...
     INTEGER(kind = INT64), PARAMETER                                            :: nx = 43200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: ny = 21600_INT64
-    INTEGER(kind = INT64), PARAMETER                                            :: tileScale = 20_INT64
+    INTEGER(kind = INT64), PARAMETER                                            :: tileScale = 32_INT64
 
     ! Declare variables ...
-    CHARACTER(len = 33)                                                         :: bname
-    CHARACTER(len = 33)                                                         :: iname
+    CHARACTER(len = 256)                                                        :: bname
+    CHARACTER(len = 256)                                                        :: iname
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: iIter
@@ -94,8 +94,8 @@ PROGRAM main
         FLUSH(unit = OUTPUT_UNIT)
 
         ! Create file names ...
-        WRITE(bname, '("../createMask2output/mask", i4.4, ".bin")') iIter
-        WRITE(iname, '("../createMask2output/mask", i4.4, ".ppm")') iIter
+        WRITE(bname, '("../createMask2output/mask", i4.4, "_scale=", i2.2, "km.bin")') iIter, tileScale
+        WRITE(iname, '("../createMask2output/mask", i4.4, "_scale=", i2.2, "km.ppm")') iIter, tileScale
 
         ! Write progress ...
         WRITE(fmt = '(i3, ",", i9)', unit = funit) iIter, tot(iIter)
@@ -115,8 +115,8 @@ PROGRAM main
                ny = ny,                                                         &
              mask = mask,                                                       &
         tileScale = tileScale,                                                  &
-            bname = bname,                                                      &
-            iname = iname                                                       &
+            bname = TRIM(bname),                                                &
+            iname = TRIM(iname)                                                 &
     )
 
     ! Clean up ...

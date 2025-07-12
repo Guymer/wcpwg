@@ -7,7 +7,7 @@ PROGRAM main
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
                                     sub_load_array_from_BIN,                    &
                                     sub_save_array_as_BIN,                      &
-                                    sub_save_array_as_PBM
+                                    sub_shrink_array
 
     IMPLICIT NONE
 
@@ -24,6 +24,7 @@ PROGRAM main
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: iIter
     INTEGER(kind = INT64)                                                       :: iIter_thread
+    INTEGER(kind = INT64)                                                       :: iScale
     INTEGER(kind = INT64)                                                       :: ix
     INTEGER(kind = INT64)                                                       :: ixlo
     INTEGER(kind = INT64)                                                       :: ixhi
@@ -34,6 +35,8 @@ PROGRAM main
     INTEGER(kind = INT64)                                                       :: newtot_thread
     INTEGER(kind = INT64)                                                       :: oldtot
     INTEGER(kind = INT64)                                                       :: oldtot_thread
+    INTEGER(kind = INT64)                                                       :: shrinkScale
+    REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: maskScaled
 
     ! Declare FORTRAN variables ...
     CHARACTER(len = 256)                                                        :: errmsg
@@ -77,9 +80,36 @@ PROGRAM main
     WRITE(fmt = '("Saving initial answer ...")', unit = OUTPUT_UNIT)
     FLUSH(unit = OUTPUT_UNIT)
 
+    ! **************************************************************************
+
     ! Save initial mask ...
     CALL sub_save_array_as_BIN(mask, "../createMask3output/before_scale=01km.bin")
-    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/before_scale=01km.pbm")
+
+    ! Loop over scales ...
+    DO iScale = 1_INT64, 5_INT64
+        ! Determine scale ...
+        shrinkScale = 2_INT64 ** iScale                                         ! [km]
+
+        ! Determine file name ...
+        WRITE(bname, fmt = '("../createMask3output/before_scale=", i2.2, "km.bin")') shrinkScale
+
+        ! Allocate array and populate it ...
+        CALL sub_shrink_array(                                                  &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                    arr = mask,                                                 &
+            shrinkScale = shrinkScale,                                          &
+            shrunkenArr = maskScaled                                            &
+        )
+
+        ! Save scaled difference in masks ...
+        CALL sub_save_array_as_BIN(maskScaled, TRIM(bname))
+
+        ! Clean up ...
+        DEALLOCATE(maskScaled)
+    END DO
+
+    ! **************************************************************************
 
     ! Re-initialize mask to not allow pregnant women to go anywhere except the
     ! top-left corner ...
@@ -203,9 +233,36 @@ PROGRAM main
     WRITE(fmt = '("Saving final answer ...")', unit = OUTPUT_UNIT)
     FLUSH(unit = OUTPUT_UNIT)
 
+    ! **************************************************************************
+
     ! Save final mask ...
     CALL sub_save_array_as_BIN(mask, "../createMask3output/after_scale=01km.bin")
-    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/after_scale=01km.pbm")
+
+    ! Loop over scales ...
+    DO iScale = 1_INT64, 5_INT64
+        ! Determine scale ...
+        shrinkScale = 2_INT64 ** iScale                                         ! [km]
+
+        ! Determine file name ...
+        WRITE(bname, fmt = '("../createMask3output/after_scale=", i2.2, "km.bin")') shrinkScale
+
+        ! Allocate array and populate it ...
+        CALL sub_shrink_array(                                                  &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                    arr = mask,                                                 &
+            shrinkScale = shrinkScale,                                          &
+            shrunkenArr = maskScaled                                            &
+        )
+
+        ! Save scaled difference in masks ...
+        CALL sub_save_array_as_BIN(maskScaled, TRIM(bname))
+
+        ! Clean up ...
+        DEALLOCATE(maskScaled)
+    END DO
+
+    ! **************************************************************************
 
     ! Clean up ...
     DEALLOCATE(elev)

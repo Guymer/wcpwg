@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Find the frames ...
-    frames = sorted(glob.glob("createMask3output/mask????.png"))
+    frames = sorted(glob.glob("createMask3output/mask????_scale=32km.png"))
 
     # **************************************************************************
 
@@ -31,8 +31,8 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Set maximum sizes ...
-    # NOTE: By inspection, the PNG frames are 2,160 px wide.
-    maxSizes = [512, 1024, 2048]                                                # [px]
+    # NOTE: By inspection, the PNG frames are 1,350 px wide.
+    maxSizes = [512, 1024]                                                      # [px]
 
     # Loop over maximum sizes ...
     for maxSize in maxSizes:

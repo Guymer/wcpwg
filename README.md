@@ -1,6 +1,6 @@
 # Where Can Pregnant Women Go? (WCPWG)
 
-!["gmake" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/gmake.yaml/badge.svg) !["mypy" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/mypy.yaml/badge.svg) !["pylint" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/pylint.yaml/badge.svg) !["shellcheck" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/shellcheck.yaml/badge.svg)
+!["gmake" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/gmake.yaml/badge.svg) !["mypy" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/mypy.yaml/badge.svg) !["pylint" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/pylint.yaml/badge.svg)
 
 This all started after reading the [NHS guidance on exercise in pregnancy](https://www.nhs.uk/conditions/pregnancy-and-baby/pregnancy-exercise/).
 
@@ -15,10 +15,9 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
     * [src/createMask3](src/createMask3.F90) is the same as [src/createMask2](src/createMask2.F90) but has extra output to make a pretty blog post
 5. Compare the output between versions (by running `join -t, createMask1.csv createMask2.csv > createMask.csv`)
 6. Compare the masks and summarise the study (by running [src/compareMasks](src/compareMasks.F90))
-7. Convert all generated PBM images to PNG images (by running [step7_convertPBMtoPNG.sh](step7_convertPBMtoPNG.sh))
-8. Convert all generated PPM images to PNG images (by running [step8_convertPPMtoPNG.sh](step8_convertPPMtoPNG.sh))
-9. Convert the sequence of PNG images to a MP4 video (by running [step9_convertPNGtoMP4.py](step9_convertPNGtoMP4.py))
-10. Convert the sequence of PNG images to a WEBP animation (by running [step10_convertPNGtoWEBP.py](step10_convertPNGtoWEBP.py))
+7. Convert all generated BIN files to PNG images (by running [step7_convertBINtoPNG.py](step7_convertBINtoPNG.py))
+8. Convert the sequence of PNG images to a MP4 video (by running [step8_convertPNGtoMP4.py](step8_convertPNGtoMP4.py))
+9. Convert the sequence of PNG images to a WEBP animation (by running [step9_convertPNGtoWEBP.py](step9_convertPNGtoWEBP.py))
 11. Make plots (by running [step11_makePlots.py](step11_makePlots.py))
 12. Confirm updated behaviour (by running [step12_convergence.py](step12_convergence.py))
 

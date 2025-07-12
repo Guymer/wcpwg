@@ -18,8 +18,8 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 7. Convert all generated BIN files to PNG images (by running [step7_convertBINtoPNG.py](step7_convertBINtoPNG.py))
 8. Convert the sequence of PNG images to a MP4 video (by running [step8_convertPNGtoMP4.py](step8_convertPNGtoMP4.py))
 9. Convert the sequence of PNG images to a WEBP animation (by running [step9_convertPNGtoWEBP.py](step9_convertPNGtoWEBP.py))
-11. Make plots (by running [step11_makePlots.py](step11_makePlots.py))
-12. Confirm updated behaviour (by running [step12_convergence.py](step12_convergence.py))
+10. Make plots (by running [step10_makePlots.py](step10_makePlots.py))
+11. Confirm updated behaviour (by running [step11_convergence.py](step11_convergence.py))
 
 ## Method
 
@@ -38,9 +38,9 @@ The output of [src/compareMasks](src/compareMasks.F90) is:
 
 Note that the second number is smaller than the first, thus indicating that *some* of the pixels that are less than 2,500m ASL are not accessible by land/sea. Examples of places that are less than 2,500m ASL but which are not accessible can be found in Colorado (US), shown in orange below.
 
-![all three types of places](step11_flagsCO.png)
+![all three types of places](step10_flagsCO.png)
 
-![places less than 2,500m ASL but which are not accessible](step11_diffCO.png)
+![places less than 2,500m ASL but which are not accessible](step10_diffCO.png)
 
 ## Update (December 2024)
 
@@ -62,7 +62,7 @@ The old behaviour can be reproduced by:
 
 This was confirmed on 29/Dec/2024.
 
-![comparison of old and new methods](step12.png)
+![comparison of old and new methods](step11.png)
 
 ## Dependencies
 
@@ -84,7 +84,7 @@ WCPWG uses some [Global Self-Consistent Hierarchical High-Resolution Geography](
 ## Bugs
 
 * The algorithm does not cross the meridian. Therefore, if a valley is only accessible by crossing the meridian then this program will incorrectly mark it as inaccessible.
-* Due to what I assume is "a rendering error" or "an efficiency saving" in either [cartopy](https://pypi.org/project/Cartopy/) or [matplotlib](https://pypi.org/project/matplotlib/), some of the plots produced by [step11_makePlots.py](step11_makePlots.py) have green pixels touching orange pixels. The whole point of this project is to find the places in the world where green pixels and orange pixels are separated by red pixels. If a green pixel touches an orange pixel then the orange pixel should be green. I am convinced that this is not my fault and that my code is calculating the arrays correctly - it is purely a rendering error. Below are two screenshots: a) the first is a zoom in on a plot using Atom; and b) the second is a zoom in on a background image using Photoshop. Photoshop shows the green and orange separated by red, so I am happy that it is just a rendering error in either [cartopy](https://pypi.org/project/Cartopy/) or [matplotlib](https://pypi.org/project/matplotlib/).
+* Due to what I assume is "a rendering error" or "an efficiency saving" in either [cartopy](https://pypi.org/project/Cartopy/) or [matplotlib](https://pypi.org/project/matplotlib/), some of the plots produced by [step10_makePlots.py](step10_makePlots.py) have green pixels touching orange pixels. The whole point of this project is to find the places in the world where green pixels and orange pixels are separated by red pixels. If a green pixel touches an orange pixel then the orange pixel should be green. I am convinced that this is not my fault and that my code is calculating the arrays correctly - it is purely a rendering error. Below are two screenshots: a) the first is a zoom in on a plot using Atom; and b) the second is a zoom in on a background image using Photoshop. Photoshop shows the green and orange separated by red, so I am happy that it is just a rendering error in either [cartopy](https://pypi.org/project/Cartopy/) or [matplotlib](https://pypi.org/project/matplotlib/).
 
 ![Screenshot from Atom](Screenshot_Atom.png)
 

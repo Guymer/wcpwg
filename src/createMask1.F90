@@ -17,7 +17,6 @@ PROGRAM main
 
     ! Declare variables ...
     CHARACTER(len = 256)                                                        :: bname
-    CHARACTER(len = 256)                                                        :: iname
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: iIter
@@ -105,9 +104,8 @@ PROGRAM main
         WRITE(fmt = '("Saving convergence for iteration ", i4, " ...")', unit = OUTPUT_UNIT) iIter
         FLUSH(unit = OUTPUT_UNIT)
 
-        ! Create file names ...
+        ! Create file name ...
         WRITE(bname, '("../createMask1output/mask", i4.4, "_scale=", i2.2, "km.bin")') iIter, tileScale
-        WRITE(iname, '("../createMask1output/mask", i4.4, "_scale=", i2.2, "km.ppm")') iIter, tileScale
 
         ! Write progress ...
         WRITE(fmt = '(i3, ",", i9)', unit = funit) iIter, tot(iIter)
@@ -127,8 +125,7 @@ PROGRAM main
                ny = ny,                                                         &
              mask = mask,                                                       &
         tileScale = tileScale,                                                  &
-            bname = TRIM(bname),                                                &
-            iname = TRIM(iname)                                                 &
+            bname = TRIM(bname)                                                 &
     )
 
     ! Clean up ...

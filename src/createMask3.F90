@@ -20,7 +20,6 @@ PROGRAM main
 
     ! Declare variables ...
     CHARACTER(len = 256)                                                        :: bname
-    CHARACTER(len = 256)                                                        :: iname
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT16), ALLOCATABLE, DIMENSION(:, :)                         :: elev
     INTEGER(kind = INT64)                                                       :: iIter
@@ -113,9 +112,8 @@ PROGRAM main
         WRITE(fmt = '("Calculating step ", i4, " of (up to) ", i4, " ...")', unit = OUTPUT_UNIT) iIter, nIterMax
         FLUSH(unit = OUTPUT_UNIT)
 
-        ! Create file names ...
+        ! Create file name ...
         WRITE(bname, '("../createMask3output/mask", i4.4, "_scale=", i2.2, "km.bin")') iIter, tileScale
-        WRITE(iname, '("../createMask3output/mask", i4.4, "_scale=", i2.2, "km.ppm")') iIter, tileScale
 
         ! Find initial total ...
         oldtot = COUNT(mask, kind = INT64)
@@ -189,8 +187,7 @@ PROGRAM main
                    ny = ny,                                                     &
                  mask = mask,                                                   &
             tileScale = tileScale,                                              &
-                bname = TRIM(bname),                                            &
-                iname = TRIM(iname)                                             &
+                bname = TRIM(bname)                                             &
         )
 
         ! Stop looping once no changes have been made ...

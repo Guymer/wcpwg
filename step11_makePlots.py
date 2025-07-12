@@ -4,6 +4,7 @@
 # NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
+    import argparse
     import os
 
     # Import special modules ...
@@ -37,6 +38,27 @@ if __name__ == "__main__":
         import pyguymer3.image
     except:
         raise Exception("\"pyguymer3\" is not installed; run \"pip install --user PyGuymer3\"") from None
+
+    # **************************************************************************
+
+    # Create argument parser and parse the arguments ...
+    parser = argparse.ArgumentParser(
+           allow_abbrev = False,
+            description = "Make some plots.",
+        formatter_class = argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--debug",
+        action = "store_true",
+          help = "print debug messages",
+    )
+    parser.add_argument(
+        "--timeout",
+        default = 60.0,
+           help = "the timeout for any requests/subprocess calls (in seconds)",
+           type = float,
+    )
+    args = parser.parse_args()
 
     # **************************************************************************
 
@@ -85,7 +107,7 @@ if __name__ == "__main__":
                        add_gridlines = True,
                 coastlines_edgecolor = "blue",
                 coastlines_linewidth = 1.0,
-                               debug = False,
+                               debug = args.debug,
                                 dist = 2000.0e3,
                                  lat = -35.0,
                                  lon = -60.0,
@@ -95,7 +117,7 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
-                     debug = False,
+                     debug = args.debug,
                     extent = extCL,
                       name = field,
                 resolution = field,
@@ -109,7 +131,12 @@ if __name__ == "__main__":
             matplotlib.pyplot.close(fg)
 
             # Optimize PNG ...
-            pyguymer3.image.optimise_image(pfile, strip = True)
+            pyguymer3.image.optimise_image(
+                pfile,
+                  debug = args.debug,
+                  strip = True,
+                timeout = args.timeout,
+            )
 
         # **********************************************************************
 
@@ -128,7 +155,7 @@ if __name__ == "__main__":
                        add_gridlines = True,
                 coastlines_edgecolor = "blue",
                 coastlines_linewidth = 1.0,
-                               debug = False,
+                               debug = args.debug,
                                 dist = 350.0e3,
                                  lat =  +39.0,
                                  lon = -106.25,
@@ -138,7 +165,7 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
-                     debug = False,
+                     debug = args.debug,
                     extent = extCO,
                       name = field,
                 resolution = field,
@@ -176,7 +203,7 @@ if __name__ == "__main__":
                             record.geometry.y,
                             neName,
                                           color = "blue",
-                                          debug = False,
+                                          debug = args.debug,
                             horizontalalignment = "left",
                                      txtOffsetX = 4,
                                      txtOffsetY = 2,
@@ -191,7 +218,12 @@ if __name__ == "__main__":
             matplotlib.pyplot.close(fg)
 
             # Optimize PNG ...
-            pyguymer3.image.optimise_image(pfile, strip = True)
+            pyguymer3.image.optimise_image(
+                pfile,
+                  debug = args.debug,
+                  strip = True,
+                timeout = args.timeout,
+            )
 
         # **********************************************************************
 
@@ -210,7 +242,7 @@ if __name__ == "__main__":
                        add_gridlines = True,
                 coastlines_edgecolor = "blue",
                 coastlines_linewidth = 1.0,
-                               debug = False,
+                               debug = args.debug,
                                 dist = 2400.0e3,
                                  lat = +40.0,
                                  lon = -97.0,
@@ -220,7 +252,7 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
-                     debug = False,
+                     debug = args.debug,
                     extent = extUS,
                       name = field,
                 resolution = field,
@@ -234,4 +266,9 @@ if __name__ == "__main__":
             matplotlib.pyplot.close(fg)
 
             # Optimize PNG ...
-            pyguymer3.image.optimise_image(pfile, strip = True)
+            pyguymer3.image.optimise_image(
+                pfile,
+                  debug = args.debug,
+                  strip = True,
+                timeout = args.timeout,
+            )

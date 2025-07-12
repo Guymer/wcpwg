@@ -78,8 +78,8 @@ PROGRAM main
     FLUSH(unit = OUTPUT_UNIT)
 
     ! Save initial mask ...
-    CALL sub_save_array_as_BIN(mask, "../createMask3output/before.bin")
-    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/before.pbm")
+    CALL sub_save_array_as_BIN(mask, "../createMask3output/before_scale=01km.bin")
+    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/before_scale=01km.pbm")
 
     ! Re-initialize mask to not allow pregnant women to go anywhere except the
     ! top-left corner ...
@@ -204,8 +204,8 @@ PROGRAM main
     FLUSH(unit = OUTPUT_UNIT)
 
     ! Save final mask ...
-    CALL sub_save_array_as_BIN(mask, "../createMask3output/after.bin")
-    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/after.pbm")
+    CALL sub_save_array_as_BIN(mask, "../createMask3output/after_scale=01km.bin")
+    CALL sub_save_array_as_PBM(nx, ny, mask, "../createMask3output/after_scale=01km.pbm")
 
     ! Clean up ...
     DEALLOCATE(elev)

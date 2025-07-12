@@ -48,8 +48,8 @@ PROGRAM main
     CALL sub_allocate_array(mask3, "mask3", nx, ny, .TRUE._INT8)
 
     ! Populate arrays ...
-    CALL sub_load_array_from_BIN(mask1, "../createMask3output/before.bin")
-    CALL sub_load_array_from_BIN(mask2, "../createMask3output/after.bin")
+    CALL sub_load_array_from_BIN(mask1, "../createMask3output/before_scale=01km.bin")
+    CALL sub_load_array_from_BIN(mask2, "../createMask3output/after_scale=01km.bin")
 
     ! Print summary ...
     WRITE(fmt = '(f9.6, "% of the world is <= 2,500m ASL")', unit = OUTPUT_UNIT) 100.0e0_REAL64 * REAL(COUNT(mask1, kind = INT64), kind = REAL64) / REAL(nx * ny, kind = REAL64)

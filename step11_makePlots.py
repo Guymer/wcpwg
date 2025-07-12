@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # Loop over fields ...
     for field in fields:
         # Define PNG file name and check if it exists already ...
-        pfile = f"{field}CL.png"
+        pfile = f"step11_{field}CL.png"
         if not os.path.exists(pfile):
             print(f"Making \"{pfile}\" ...")
 
@@ -141,7 +141,7 @@ if __name__ == "__main__":
         # **********************************************************************
 
         # Define PNG file name and check if it exists already ...
-        pfile = f"{field}CO.png"
+        pfile = f"step11_{field}CO.png"
         if not os.path.exists(pfile):
             print(f"Making \"{pfile}\" ...")
 
@@ -228,7 +228,7 @@ if __name__ == "__main__":
         # **********************************************************************
 
         # Define PNG file name and check if it exists already ...
-        pfile = f"{field}US.png"
+        pfile = f"step11_{field}US.png"
         if not os.path.exists(pfile):
             print(f"Making \"{pfile}\" ...")
 

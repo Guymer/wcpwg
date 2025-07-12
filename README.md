@@ -38,9 +38,9 @@ The output of [src/compareMasks](src/compareMasks.F90) is:
 
 Note that the second number is smaller than the first, thus indicating that *some* of the pixels that are less than 2,500m ASL are not accessible by land/sea. Examples of places that are less than 2,500m ASL but which are not accessible can be found in Colorado (US), shown in orange below.
 
-![all three types of places](flagsCO.png)
+![all three types of places](step11_flagsCO.png)
 
-![places less than 2,500m ASL but which are not accessible](diffCO.png)
+![places less than 2,500m ASL but which are not accessible](step11_diffCO.png)
 
 ## Update (December 2024)
 
@@ -62,7 +62,7 @@ The old behaviour can be reproduced by:
 
 This was confirmed on 29/Dec/2024.
 
-![comparison of old and new methods](step12_convergence.png)
+![comparison of old and new methods](step12.png)
 
 ## Dependencies
 

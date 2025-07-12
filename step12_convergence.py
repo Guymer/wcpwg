@@ -128,12 +128,12 @@ if __name__ == "__main__":
     fg.tight_layout()
 
     # Save figure ...
-    fg.savefig("step12_convergence.png")
+    fg.savefig("step12.png")
     matplotlib.pyplot.close(fg)
 
     # Optimize PNG ...
     pyguymer3.image.optimise_image(
-        "step12_convergence.png",
+        "step12.png",
           debug = args.debug,
           strip = True,
         timeout = args.timeout,

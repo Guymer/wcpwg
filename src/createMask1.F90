@@ -84,7 +84,7 @@ PROGRAM main
          status = "replace"                                                     &
     )
     IF(errnum /= 0_INT32)THEN
-        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open BIN", TRIM(errmsg), errnum
+        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open CSV", TRIM(errmsg), errnum
         FLUSH(unit = ERROR_UNIT)
         STOP
     END IF

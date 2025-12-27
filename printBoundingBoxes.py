@@ -5,7 +5,6 @@
 if __name__ == "__main__":
     # Import standard modules ...
     import math
-    import os
     import pathlib
 
     # Import special modules ...

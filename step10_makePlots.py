@@ -120,10 +120,10 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
-                     debug = args.debug,
-                    extent = extCL,
-                      name = field,
-                resolution = field,
+                  debug = args.debug,
+                 extent = extCL,
+                   name = field,
+                subName = field,
             )
 
             # Configure figure ...
@@ -168,10 +168,10 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
-                     debug = args.debug,
-                    extent = extCO,
-                      name = field,
-                resolution = field,
+                  debug = args.debug,
+                 extent = extCO,
+                   name = field,
+                subName = field,
             )
 
             # Find file containing all the populated places shapes ...
@@ -255,10 +255,10 @@ if __name__ == "__main__":
             ax.set_title("Where is ≤ 2,500m ASL but is not accessible?")
             pyguymer3.geo.add_map_background(
                 ax,
-                     debug = args.debug,
-                    extent = extUS,
-                      name = field,
-                resolution = field,
+                  debug = args.debug,
+                 extent = extUS,
+                   name = field,
+                subName = field,
             )
 
             # Configure figure ...

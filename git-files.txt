@@ -12,6 +12,7 @@ createMask1_oneSweep.csv
 createMask2_oneSweep.csv
 createMask31024px.webp
 fortranlib
+git-files.txt
 images.json
 LICENCE.txt
 printBoundingBoxes.py

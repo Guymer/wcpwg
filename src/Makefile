@@ -78,13 +78,12 @@ all:				compile
 
 # "gmake -r clean"   = removes the compiled code
 clean:
-	$(RM) -f compareMasks step2_createMask2 step2_createMask3 *.a *.gcda *.gcno *.mod *.o *.so
+	$(RM) -f compareMasks step2_createMask *.a *.gcda *.gcno *.mod *.o *.so
 	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) clean
 
 # "gmake -r compile" = compiles the code
 compile:			compareMasks												\
-					step2_createMask2											\
-					step2_createMask3
+					step2_createMask
 
 # "gmake -r help"    = print this help
 help:
@@ -125,12 +124,7 @@ compareMasks.o:							compareMasks.F90						\
 										$(FTNLIB)/mod_safe.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-step2_createMask2.o:					step2_createMask2.F90					\
-										$(FTNLIB)/mod_safe.mod					\
-										mod_funcs.mod
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
-
-step2_createMask3.o:					step2_createMask3.F90					\
+step2_createMask.o:						step2_createMask.F90					\
 										$(FTNLIB)/mod_safe.mod					\
 										mod_funcs.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
@@ -139,12 +133,7 @@ compareMasks:							compareMasks.o							\
 										$(FTNLIB)/mod_safe.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
 
-step2_createMask2:						step2_createMask2.o						\
+step2_createMask:						step2_createMask.o						\
 										$(FTNLIB)/mod_safe.o					\
 										mod_funcs.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step2_createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
-
-step2_createMask3:						step2_createMask3.o						\
-										$(FTNLIB)/mod_safe.o					\
-										mod_funcs.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step2_createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step2_createMask.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@

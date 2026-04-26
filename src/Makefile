@@ -111,15 +111,6 @@ help:
 
 # NOTE: See https://numpy.org/doc/stable/f2py/buildtools/distutils-to-meson.html
 
-# NOTE: How GCC embeds the RPATH has changed, which results in binaries which do
-#       not work on MacOS 15.5 using GFortran 14.2 and Python 3.12 (as of
-#       21/Jun/2025). Here are two examples of other people having the same
-#       problem:
-#         * https://github.com/mesonbuild/meson/issues/10711
-#         * https://stackoverflow.com/questions/52430325/f2py-compilation-failed-cannot-find-library-gomp
-#       After hours of investigation, I have settled on a work around using
-#       "install_name_tool -add_rpath" on Darwin-based operating systems.
-
 $(FTNLIB)/lib%.a																\
 $(FTNLIB)/%.mod																	\
 $(FTNLIB)/%.o &:						$(FTNLIB)/%.F90
@@ -127,51 +118,51 @@ $(FTNLIB)/%.o &:						$(FTNLIB)/%.F90
 
 libmod_funcs.a																	\
 mod_funcs.mod																	\
-mod_funcs.o &:							$(FTNLIB)/mod_safe.mod					\
-										mod_funcs.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) mod_funcs.F90
+mod_funcs.o &:							mod_funcs.F90							\
+										$(FTNLIB)/mod_safe.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $<
 	$(AR) -r libmod_funcs.a mod_funcs.o
 
-compareMasks.o:							$(FTNLIB)/mod_safe.mod					\
-										compareMasks.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) compareMasks.F90 -o $@
+compareMasks.o:							compareMasks.F90						\
+										$(FTNLIB)/mod_safe.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask1.o:							$(FTNLIB)/mod_safe.mod					\
-										mod_funcs.mod							\
-										createMask1.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask1.F90 -o $@
+createMask1.o:							createMask1.F90							\
+										$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask2.o:							$(FTNLIB)/mod_safe.mod					\
-										mod_funcs.mod							\
-										createMask2.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask2.F90 -o $@
+createMask2.o:							createMask2.F90							\
+										$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask3.o:							$(FTNLIB)/mod_safe.mod					\
-										mod_funcs.mod							\
-										createMask3.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask3.F90 -o $@
+createMask3.o:							createMask3.F90							\
+										$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
 step2_downscaleGlobe.o:					step2_downscaleGlobe.F90				\
 										$(FTNLIB)/mod_safe.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-compareMasks:							$(FTNLIB)/mod_safe.o					\
-										compareMasks.o
+compareMasks:							compareMasks.o							\
+										$(FTNLIB)/mod_safe.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
 
-createMask1:							$(FTNLIB)/mod_safe.o					\
-										mod_funcs.o								\
-										createMask1.o
+createMask1:							createMask1.o							\
+										$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
-createMask2:							$(FTNLIB)/mod_safe.o					\
-										mod_funcs.o								\
-										createMask2.o
+createMask2:							createMask2.o							\
+										$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
-createMask3:							$(FTNLIB)/mod_safe.o					\
-										mod_funcs.o								\
-										createMask3.o
+createMask3:							createMask3.o							\
+										$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
 step2_downscaleGlobe:					step2_downscaleGlobe.o					\

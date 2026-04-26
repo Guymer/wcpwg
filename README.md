@@ -17,11 +17,11 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 
 
 
-4. Create the boolean mask (by running any of: [src/step3_createMask1](src/step3_createMask1.F90), [src/step3_createMask2](src/step3_createMask2.F90) or [src/step3_createMask3](src/step3_createMask3.F90))
-    * [src/step3_createMask1](src/step3_createMask1.F90) applies the algorithm globally and loops until no more pixels are masked (or `nmax` is reached)
-    * [src/step3_createMask2](src/step3_createMask2.F90) applies the algorithm globally **then applies the algorithm on tiles** and loops **over both stages** until no more pixels are masked (or `nmax` is reached)
-    * [src/step3_createMask3](src/step3_createMask3.F90) is the same as [src/step3_createMask2](src/step3_createMask2.F90) but has extra output to make a pretty blog post
-5. Compare the output between versions (by running `join -t, step3_createMask1.csv step3_createMask2.csv > step3_createMask.csv`)
+4. Create the boolean mask (by running any of: [src/step2_createMask1](src/step2_createMask1.F90), [src/step2_createMask2](src/step2_createMask2.F90) or [src/step2_createMask3](src/step2_createMask3.F90))
+    * [src/step2_createMask1](src/step2_createMask1.F90) applies the algorithm globally and loops until no more pixels are masked (or `nmax` is reached)
+    * [src/step2_createMask2](src/step2_createMask2.F90) applies the algorithm globally **then applies the algorithm on tiles** and loops **over both stages** until no more pixels are masked (or `nmax` is reached)
+    * [src/step2_createMask3](src/step2_createMask3.F90) is the same as [src/step2_createMask2](src/step2_createMask2.F90) but has extra output to make a pretty blog post
+5. Compare the output between versions (by running `join -t, step2_createMask1.csv step2_createMask2.csv > step2_createMask.csv`)
 6. Compare the masks and summarise the study (by running [src/compareMasks](src/compareMasks.F90))
 7. Convert all generated BIN files to PNG images (by running [step7_convertBINtoPNG.py](step7_convertBINtoPNG.py))
 8. Convert the sequence of PNG images to a MP4 video (by running [step8_convertPNGtoMP4.py](step8_convertPNGtoMP4.py))
@@ -33,7 +33,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 
 For each pixel, the FORTRAN programs check if the pixel is less than 2,500m ASL *and* if the pixel is next to a pixel that is accessible; if both checks are true then the pixel is marked as accessible. The FORTRAN programs continue looping over the entire world until no new pixels are marked as accessible. Below is an animation of how this looks.
 
-![Animation of method](step3_createMask31024px.webp)
+![Animation of method](step2_createMask31024px.webp)
 
 ## Output
 
@@ -52,7 +52,7 @@ Note that the second number is smaller than the first, thus indicating that *som
 
 ## Update (December 2024)
 
-I have genericised the `incrementMask` subroutine and its surrounding iteration loop, as it is also used in the [RSL project](https://github.com/Guymer/rsl). The new genericised version (for `INT16` 2D arrays) can be found in `fortranlib` [here](https://github.com/Guymer/fortranlib/blob/main/mod_safe/sub_flood_array/sub_flood_INT16_integer_array.f90). The new genericised version allows the user to toggle using tiles (by setting `tileScale = 1_INT64` in the subroutine call), which allows me to easily reproduce the comparison between [step3_createMask1](src/step3_createMask1.F90) and [step3_createMask2](src/step3_createMask2.F90). However, it appears that the new genericised version converges significantly quicker than the original `incrementMask` subroutine included in this repository.
+I have genericised the `incrementMask` subroutine and its surrounding iteration loop, as it is also used in the [RSL project](https://github.com/Guymer/rsl). The new genericised version (for `INT16` 2D arrays) can be found in `fortranlib` [here](https://github.com/Guymer/fortranlib/blob/main/mod_safe/sub_flood_array/sub_flood_INT16_integer_array.f90). The new genericised version allows the user to toggle using tiles (by setting `tileScale = 1_INT64` in the subroutine call), which allows me to easily reproduce the comparison between [step2_createMask1](src/step2_createMask1.F90) and [step2_createMask2](src/step2_createMask2.F90). However, it appears that the new genericised version converges significantly quicker than the original `incrementMask` subroutine included in this repository.
 
 As can be seen in the animation above, most of the iterations are spent going from east to west to fill in the Taklamakan Desert in China. The new genericised version does four sweeps per iteration:
 
@@ -61,7 +61,7 @@ As can be seen in the animation above, most of the iterations are spent going fr
 3. Start bottom-right and go up then left.
 4. Start bottom-left and go right then up.
 
-This improvement means that [step3_createMask1](src/step3_createMask1.F90) (without any tiling) converges in 6 iterations now rather than not converging after 200 iterations. Enabling tiling in [step3_createMask2](src/step3_createMask2.F90) converges in 5 iterations now rather than the 92 iterations it took before - thus showing that the improvement of tiling is much less impactful than the improvement of sweeping in each direction. I will leave [step3_createMask3](src/step3_createMask3.F90) untouched so as to reproduce the animation if anyone wants to.
+This improvement means that [step2_createMask1](src/step2_createMask1.F90) (without any tiling) converges in 6 iterations now rather than not converging after 200 iterations. Enabling tiling in [step2_createMask2](src/step2_createMask2.F90) converges in 5 iterations now rather than the 92 iterations it took before - thus showing that the improvement of tiling is much less impactful than the improvement of sweeping in each direction. I will leave [step2_createMask3](src/step2_createMask3.F90) untouched so as to reproduce the animation if anyone wants to.
 
 The old behaviour can be reproduced by:
 

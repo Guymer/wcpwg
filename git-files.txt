@@ -26,7 +26,7 @@ src/createMask2.F90
 src/createMask3.F90
 src/Makefile
 src/mod_funcs.F90
-step0_downloadGlobe.py
+step1_downloadGLOBE.py
 step10_diffCL.png
 step10_diffCO.png
 step10_diffUS.png

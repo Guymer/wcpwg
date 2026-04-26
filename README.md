@@ -6,9 +6,12 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 
 ## Workflow
 
-1. Download the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset (by running [step0_downloadGlobe.py](step0_downloadGlobe.py))
-2. Convert the ZIP file of the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset to a BIN file (by running [step1_convertZipToBinGlobe.py](step1_convertZipToBinGlobe.py))
-3. Compile the FORTRAN programs (by running [src/Makefile](src/Makefile))
+1. Download the ZIP dataset:
+    * Run [step0_downloadGlobe.py](step0_downloadGlobe.py) to download the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset.
+2. Convert the ZIP file to a BIN file (for use by FORTRAN natively):
+    * Run [step1_convertZipToBinGlobe.py](step1_convertZipToBinGlobe.py).
+3. Downscale the BIN file (so that you can use quick/small datasets if you want to):
+    * Change to the [src](src) directory, compile the FORTRAN programs by running `gmake -r` and then run `./step2_downscaleGlobe`.
 4. Create the boolean mask (by running any of: [src/createMask1](src/createMask1.F90), [src/createMask2](src/createMask2.F90) or [src/createMask3](src/createMask3.F90))
     * [src/createMask1](src/createMask1.F90) applies the algorithm globally and loops until no more pixels are masked (or `nmax` is reached)
     * [src/createMask2](src/createMask2.F90) applies the algorithm globally **then applies the algorithm on tiles** and loops **over both stages** until no more pixels are masked (or `nmax` is reached)

@@ -78,14 +78,15 @@ all:				compile
 
 # "gmake -r clean"   = removes the compiled code
 clean:
-	$(RM) -f compareMasks createMask1 createMask2 createMask3 *.a *.gcda *.gcno *.mod *.o *.so
+	$(RM) -f compareMasks createMask1 createMask2 createMask3 step2_downscaleGlobe *.a *.gcda *.gcno *.mod *.o *.so
 	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) clean
 
 # "gmake -r compile" = compiles the code
 compile:			compareMasks												\
 					createMask1													\
 					createMask2													\
-					createMask3
+					createMask3													\
+					step2_downscaleGlobe
 
 # "gmake -r help"    = print this help
 help:
@@ -121,50 +122,58 @@ help:
 
 $(FTNLIB)/lib%.a																\
 $(FTNLIB)/%.mod																	\
-$(FTNLIB)/%.o &:	$(FTNLIB)/%.F90
+$(FTNLIB)/%.o &:						$(FTNLIB)/%.F90
 	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) $*.o
 
 libmod_funcs.a																	\
 mod_funcs.mod																	\
-mod_funcs.o &:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.F90
+mod_funcs.o &:							$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) mod_funcs.F90
 	$(AR) -r libmod_funcs.a mod_funcs.o
 
-compareMasks.o:		$(FTNLIB)/mod_safe.mod										\
-					compareMasks.F90
+compareMasks.o:							$(FTNLIB)/mod_safe.mod					\
+										compareMasks.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) compareMasks.F90 -o $@
 
-createMask1.o:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.mod												\
-					createMask1.F90
+createMask1.o:							$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod							\
+										createMask1.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask1.F90 -o $@
 
-createMask2.o:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.mod												\
-					createMask2.F90
+createMask2.o:							$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod							\
+										createMask2.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask2.F90 -o $@
 
-createMask3.o:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.mod												\
-					createMask3.F90
+createMask3.o:							$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod							\
+										createMask3.F90
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask3.F90 -o $@
 
-compareMasks:		$(FTNLIB)/mod_safe.o										\
-					compareMasks.o
+step2_downscaleGlobe.o:					step2_downscaleGlobe.F90				\
+										$(FTNLIB)/mod_safe.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
+
+compareMasks:							$(FTNLIB)/mod_safe.o					\
+										compareMasks.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
 
-createMask1:		$(FTNLIB)/mod_safe.o										\
-					mod_funcs.o													\
-					createMask1.o
+createMask1:							$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o								\
+										createMask1.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
-createMask2:		$(FTNLIB)/mod_safe.o										\
-					mod_funcs.o													\
-					createMask2.o
+createMask2:							$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o								\
+										createMask2.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
-createMask3:		$(FTNLIB)/mod_safe.o										\
-					mod_funcs.o													\
-					createMask3.o
+createMask3:							$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o								\
+										createMask3.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+
+step2_downscaleGlobe:					step2_downscaleGlobe.o					\
+										$(FTNLIB)/mod_safe.o
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) $< $(FTNLIB)/mod_safe.o -o $@

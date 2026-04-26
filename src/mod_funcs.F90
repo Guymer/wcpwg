@@ -52,7 +52,7 @@ MODULE mod_funcs
         END DO
     END SUBROUTINE incrementMask
 
-    SUBROUTINE saveShrunkMask(nx, ny, mask, tileScale, bname)
+    SUBROUTINE saveShrunkMask(nx, ny, mask, shrinkScale, bName)
         ! Import standard modules ...
         USE ISO_FORTRAN_ENV
 
@@ -66,8 +66,8 @@ MODULE mod_funcs
         INTEGER(kind = INT64), INTENT(in)                                       :: nx
         INTEGER(kind = INT64), INTENT(in)                                       :: ny
         LOGICAL(kind = INT8), DIMENSION(nx, ny), INTENT(in)                     :: mask
-        INTEGER(kind = INT64), INTENT(in)                                       :: tileScale
-        CHARACTER(len = *), INTENT(in)                                          :: bname
+        INTEGER(kind = INT64), INTENT(in)                                       :: shrinkScale
+        CHARACTER(len = *), INTENT(in)                                          :: bName
 
         ! Declare variables ...
         REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                       :: shrunkMask
@@ -77,12 +77,12 @@ MODULE mod_funcs
                      nx = nx,                                                   &
                      ny = ny,                                                   &
                     arr = mask,                                                 &
-            shrinkScale = tileScale,                                            &
+            shrinkScale = shrinkScale,                                          &
             shrunkenArr = shrunkMask                                            &
         )
 
         ! Save shrunk mask ...
-        CALL sub_save_array_as_BIN(shrunkMask, TRIM(bname))
+        CALL sub_save_array_as_BIN(shrunkMask, TRIM(bName))
 
         ! Clean up ...
         DEALLOCATE(shrunkMask)

@@ -13,7 +13,6 @@ PROGRAM main
     ! Declare parameters ...
     INTEGER(kind = INT64), PARAMETER                                            :: nx = 43200_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: ny = 21600_INT64
-    INTEGER(kind = INT64), PARAMETER                                            :: shrinkScale = 32_INT64
     INTEGER(kind = INT64), PARAMETER                                            :: tileScale = 32_INT64
 
     ! Declare variables ...
@@ -23,6 +22,8 @@ PROGRAM main
     CHARACTER(len = 256)                                                        :: dName2
     LOGICAL(kind = INT8), ALLOCATABLE, DIMENSION(:, :)                          :: mask
     INTEGER(kind = INT64)                                                       :: iIter
+    INTEGER(kind = INT64)                                                       :: iShrinkScale
+    INTEGER(kind = INT64)                                                       :: shrinkScale
     INTEGER(kind = INT64), ALLOCATABLE, DIMENSION(:)                            :: tot
     REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: elev
 
@@ -31,19 +32,17 @@ PROGRAM main
     INTEGER(kind = INT32)                                                       :: errNum
     INTEGER(kind = INT32)                                                       :: fUnit
 
-    ! Create output directory names ...
+    ! **************************************************************************
+
+    ! Create output directory name ...
     WRITE(                                                                      &
         dName1,                                                                 &
         fmt = '("../output/tileScale=", i2.2, "km")'                            &
     ) tileScale
-    WRITE(                                                                      &
-        dName2,                                                                 &
-        fmt = '(a, "/shrinkScale=", i2.2, "km")'                                &
-    ) TRIM(dName1), shrinkScale
 
-    ! Ensure that the output directories exist ...
+    ! Ensure that the output directory exists ...
     CALL EXECUTE_COMMAND_LINE(                                                  &
-        "mkdir -p " // TRIM(dName2),                                            &
+        "mkdir -p " // TRIM(dName1),                                            &
           cmdmsg = errMsg,                                                      &
         exitstat = errNum                                                       &
     )
@@ -53,11 +52,7 @@ PROGRAM main
         STOP
     END IF
 
-    ! Create file name ...
-    WRITE(                                                                      &
-        cName,                                                                  &
-        fmt = '(a, ".csv")'                                                     &
-    ) TRIM(dName1)
+    ! **************************************************************************
 
     ! Allocate array and populate it ...
     CALL sub_allocate_array(                                                    &
@@ -83,8 +78,7 @@ PROGRAM main
     )
     mask = .FALSE._INT8
 
-    ! Allow pregnant women to go to the top-left corner and flood the world
-    ! (with using tiling) ...
+    ! Allow pregnant women to go to the top-left corner and flood the world ...
     mask(1, 1) = .TRUE._INT8
     CALL sub_flood_array(                                                       &
                nx = nx,                                                         &
@@ -95,6 +89,14 @@ PROGRAM main
         tileScale = tileScale,                                                  &
               tot = tot                                                         &
     )
+
+    ! **************************************************************************
+
+    ! Create CSV file name ...
+    WRITE(                                                                      &
+        cName,                                                                  &
+        fmt = '(a, ".csv")'                                                     &
+    ) TRIM(dName1)
 
     ! Open CSV ...
     OPEN(                                                                       &
@@ -119,7 +121,7 @@ PROGRAM main
     ) "iteration,number of pixels allowed [#]"
     FLUSH(unit = fUnit)
 
-    ! Loop over all the iterations ...
+    ! Loop over all the possible iterations ...
     DO iIter = LBOUND(tot, dim = 1, kind = INT64), UBOUND(tot, dim = 1, kind = INT64)
         ! Stop looping if this iteration was not populated ...
         IF(tot(iIter) == 0_INT64)THEN
@@ -128,16 +130,10 @@ PROGRAM main
 
         ! Print progress ...
         WRITE(                                                                  &
-             fmt = '("Saving convergence for iteration ", i4, " ...")',         &
+             fmt = '("Writing progress for iteration ", i4, " ...")',           &
             unit = OUTPUT_UNIT                                                  &
         ) iIter
         FLUSH(unit = OUTPUT_UNIT)
-
-        ! Create file name ...
-        WRITE(                                                                  &
-            bName,                                                              &
-            fmt = '(a, "/iIter=", i4.4, ".bin")'                                &
-        ) TRIM(dName2), iIter
 
         ! Write progress ...
         WRITE(                                                                  &
@@ -150,6 +146,8 @@ PROGRAM main
     ! Close CSV ...
     CLOSE(unit = fUnit)
 
+    ! **************************************************************************
+
     ! Print progress ...
     WRITE(                                                                      &
          fmt = '("Saving final answer ...")',                                   &
@@ -157,14 +155,57 @@ PROGRAM main
     )
     FLUSH(unit = OUTPUT_UNIT)
 
-    ! Save shrunk final mask ...
-    CALL saveShrunkMask(                                                        &
-                 nx = nx,                                                       &
-                 ny = ny,                                                       &
-               mask = mask,                                                     &
-        shrinkScale = shrinkScale,                                              &
-              bName = TRIM(bName)                                               &
-    )
+    ! Loop over possible shrink scales ...
+    DO iShrinkScale = 0_INT64, 10_INT64
+        ! Determine shrink scale ...
+        shrinkScale = 2_INT64 ** iShrinkScale
+
+        ! Skip this shrink scale if it is not an integer division of both axes
+        ! of the array ...
+        IF(MODULO(nx, shrinkScale) /= 0_INT64)THEN
+            CYCLE
+        END IF
+        IF(MODULO(ny, shrinkScale) /= 0_INT64)THEN
+            CYCLE
+        END IF
+
+        ! **********************************************************************
+
+        ! Create output directory name ...
+        WRITE(                                                                  &
+            dName2,                                                             &
+            fmt = '(a, "/scale=", i2.2, "km")'                                  &
+        ) TRIM(dName1), shrinkScale
+
+        ! Ensure that the output directory exists ...
+        CALL EXECUTE_COMMAND_LINE(                                              &
+            "mkdir -p " // TRIM(dName2),                                        &
+              cmdmsg = errMsg,                                                  &
+            exitstat = errNum                                                   &
+        )
+        IF(errNum /= 0_INT32)THEN
+            WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to make output directory", TRIM(errMsg), errNum
+            FLUSH(unit = ERROR_UNIT)
+            STOP
+        END IF
+
+        ! **********************************************************************
+
+        ! Create BIN file name ...
+        WRITE(                                                                  &
+            bName,                                                              &
+            fmt = '(a, "/iIter=", i4.4, ".bin")'                                &
+        ) TRIM(dName2), iIter - 1_INT64
+
+        ! Save shrunk final mask ...
+        CALL saveShrunkMask(                                                    &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                   mask = mask,                                                 &
+            shrinkScale = shrinkScale,                                          &
+                  bName = TRIM(bName)                                           &
+        )
+    END DO
 
     ! Clean up ...
     DEALLOCATE(elev)

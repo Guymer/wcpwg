@@ -23,7 +23,6 @@ Screenshot_Photoshop.png
 src/compareMasks.F90
 src/Makefile
 src/mod_funcs.F90
-src/step2_createMask1.F90
 src/step2_createMask2.F90
 src/step2_createMask3.F90
 step0_downloadGlobe.py

@@ -32,6 +32,7 @@ src/createMask?
 # Hide large datasets ...
 data/globe.bin
 data/globe.zip
+data/globe/scale=??km.bin
 *.mp4
 *.webp
 

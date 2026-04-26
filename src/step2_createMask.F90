@@ -6,7 +6,9 @@ PROGRAM main
     USE mod_funcs
     USE mod_safe,           ONLY:   sub_allocate_array,                         &
                                     sub_flood_array,                            &
-                                    sub_load_array_from_BIN
+                                    sub_load_array_from_BIN,                    &
+                                    sub_save_array_as_BIN,                      &
+                                    sub_shrink_array
 
     IMPLICIT NONE
 
@@ -26,6 +28,7 @@ PROGRAM main
     INTEGER(kind = INT64)                                                       :: shrinkScale
     INTEGER(kind = INT64), ALLOCATABLE, DIMENSION(:)                            :: tot
     REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: elev
+    REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                           :: shrunkMask
 
     ! Declare FORTRAN variables ...
     CHARACTER(len = 256)                                                        :: errMsg
@@ -90,6 +93,9 @@ PROGRAM main
               tot = tot                                                         &
     )
 
+    ! Clean up ...
+    DEALLOCATE(elev)
+
     ! **************************************************************************
 
     ! Create CSV file name ...
@@ -146,6 +152,9 @@ PROGRAM main
     ! Close CSV ...
     CLOSE(unit = fUnit)
 
+    ! Clean up ...
+    DEALLOCATE(tot)
+
     ! **************************************************************************
 
     ! Print progress ...
@@ -191,24 +200,31 @@ PROGRAM main
 
         ! **********************************************************************
 
+        ! Shrink the logical array down to a real array ..
+        CALL sub_shrink_array(                                                  &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                    arr = mask,                                                 &
+            shrinkScale = shrinkScale,                                          &
+            shrunkenArr = shrunkMask                                            &
+        )
+
         ! Create BIN file name ...
         WRITE(                                                                  &
             bName,                                                              &
             fmt = '(a, "/iIter=", i4.4, ".bin")'                                &
         ) TRIM(dName2), iIter - 1_INT64
 
-        ! Save shrunk final mask ...
-        CALL saveShrunkMask(                                                    &
-                     nx = nx,                                                   &
-                     ny = ny,                                                   &
-                   mask = mask,                                                 &
-            shrinkScale = shrinkScale,                                          &
-                  bName = TRIM(bName)                                           &
+        ! Save shrunk mask ...
+        CALL sub_save_array_as_BIN(                                             &
+            shrunkMask,                                                         &
+            TRIM(bName)                                                         &
         )
+
+        ! Clean up ...
+        DEALLOCATE(shrunkMask)
     END DO
 
     ! Clean up ...
-    DEALLOCATE(elev)
     DEALLOCATE(mask)
-    DEALLOCATE(tot)
 END PROGRAM main

@@ -36,6 +36,7 @@ output/tileScale=??km.csv
 output/tileScale=??km/scale=??km/below2500m.bin
 output/tileScale=??km/scale=??km/flooded.bin
 output/tileScale=??km/scale=??km/inaccessible.bin
+output/tileScale=??km/scale=??km/inaccessible.geojson
 output/tileScale=??km/scale=??km/inaccessible.h5
 output/tileScale=??km/scale=??km/inaccessible.pgm
 output/tileScale=??km/scale=??km/inaccessible.png

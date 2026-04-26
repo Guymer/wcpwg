@@ -40,6 +40,9 @@ step10_flagsUS.png
 step10_makePlots.py
 step11_convergence.py
 step11.png
+step3_convertPgmToPng.py
+step4_convertH5toGeoJsonGlobe.py
+step5_checkGeoJson.py
 step7_convertBINtoPNG.py
 step8_convertPNGtoMP4.py
 step9_convertPNGtoWEBP.py

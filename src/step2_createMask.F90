@@ -570,13 +570,6 @@ PROGRAM main
             EXIT
         END IF
 
-        ! Print progress ...
-        WRITE(                                                                  &
-             fmt = '("Writing progress for iteration ", i4, " ...")',           &
-            unit = OUTPUT_UNIT                                                  &
-        ) iIter
-        FLUSH(unit = OUTPUT_UNIT)
-
         ! Write progress ...
         WRITE(                                                                  &
              fmt = '(i3, ",", i9)',                                             &
@@ -653,6 +646,13 @@ PROGRAM main
         IF(fExist)THEN
             CYCLE
         END IF
+
+        ! Print progress ...
+        WRITE(                                                                  &
+             fmt = '("Saving """, a, """ ...")',                                &
+            unit = OUTPUT_UNIT                                                  &
+        ) TRIM(fNameHDF)
+        FLUSH(unit = OUTPUT_UNIT)
 
         ! **********************************************************************
 
@@ -1199,10 +1199,6 @@ PROGRAM main
         DEALLOCATE(lons)
         DEALLOCATE(x)
         DEALLOCATE(y)
-
-        ! **********************************************************************
-        ! **********************************************************************
-        ! **********************************************************************
     END DO
 
     ! Clean up ...

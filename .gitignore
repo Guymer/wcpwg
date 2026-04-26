@@ -41,4 +41,8 @@ compareMasksOutput/diff_scale=??km.png
 compareMasksOutput/flags_scale=??km.bin
 compareMasksOutput/flags_scale=??km.png
 output/tileScale=??km.csv
-output/tileScale=??km/scale=??km/iIter=????.bin
+output/tileScale=??km/scale=??km/below2500m.bin
+output/tileScale=??km/scale=??km/flooded.bin
+output/tileScale=??km/scale=??km/inaccessible.bin
+output/tileScale=??km/scale=??km/inaccessible.h5
+output/tileScale=??km/scale=??km/inaccessible.pgm

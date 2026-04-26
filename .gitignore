@@ -26,23 +26,16 @@ shellcheck.log
 *.o
 *.so
 *.so.dSYM
-src/compareMasks
 src/step2_createMask
 
 # Hide large datasets ...
 data/globe.bin
+data/globe.json
 data/globe.zip
-*.mp4
-*.webp
-
-# Hide intermediary output files ...
-compareMasksOutput/diff_scale=??km.bin
-compareMasksOutput/diff_scale=??km.png
-compareMasksOutput/flags_scale=??km.bin
-compareMasksOutput/flags_scale=??km.png
 output/tileScale=??km.csv
 output/tileScale=??km/scale=??km/below2500m.bin
 output/tileScale=??km/scale=??km/flooded.bin
 output/tileScale=??km/scale=??km/inaccessible.bin
 output/tileScale=??km/scale=??km/inaccessible.h5
 output/tileScale=??km/scale=??km/inaccessible.pgm
+output/tileScale=??km/scale=??km/inaccessible.png

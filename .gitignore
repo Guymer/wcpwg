@@ -30,8 +30,8 @@ src/compareMasks
 src/createMask?
 
 # Hide large datasets ...
-all10g.bin
-all10g.zip
+data/globe.bin
+data/globe.zip
 *.mp4
 *.webp
 

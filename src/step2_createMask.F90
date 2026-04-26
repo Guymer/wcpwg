@@ -186,7 +186,14 @@ PROGRAM main
         ny,                                                                     &
         .FALSE._INT8                                                            &
     )
-    mask1 = elev < 2500.0e0_REAL32
+    mask1 = elev <= 2500.0e0_REAL32
+
+    ! Print progress ...
+    WRITE(                                                                      &
+         fmt = '(" > ", f9.6, "% of the world is below 2,500 m ASL.")',         &
+        unit = OUTPUT_UNIT                                                      &
+    ) 100.0e0_REAL64 * REAL(COUNT(mask1, kind = INT64), kind = REAL64) / REAL(nx * ny, kind = REAL64)
+    FLUSH(unit = OUTPUT_UNIT)
 
     ! Loop over possible shrink scales ...
     DO iShrinkScale = 0_INT64, 10_INT64
@@ -300,7 +307,7 @@ PROGRAM main
         "mask2",                                                                &
         nx,                                                                     &
         ny,                                                                     &
-        .TRUE._INT8                                                             &
+        .FALSE._INT8                                                            &
     )
     mask2 = .FALSE._INT8
 
@@ -315,6 +322,13 @@ PROGRAM main
         tileScale = tileScale,                                                  &
               tot = tot                                                         &
     )
+
+    ! Print progress ...
+    WRITE(                                                                      &
+         fmt = '(" > ", f9.6, "% of the world is accessible to pregnant women.")',  &
+        unit = OUTPUT_UNIT                                                      &
+    ) 100.0e0_REAL64 * REAL(COUNT(mask2, kind = INT64), kind = REAL64) / REAL(nx * ny, kind = REAL64)
+    FLUSH(unit = OUTPUT_UNIT)
 
     ! Clean up ...
     DEALLOCATE(elev)
@@ -352,7 +366,7 @@ PROGRAM main
         END IF
 
         ! Create file name ...
-        fNameBIN = TRIM(dName2) // "/flooded.bin"
+        fNameBIN = TRIM(dName2) // "/accessible.bin"
 
         ! Skip if the output file exists ...
         INQUIRE(                                                                &
@@ -477,7 +491,7 @@ PROGRAM main
 
     ! Print progress ...
     WRITE(                                                                      &
-         fmt = '("Finding inaccessible places ...")',                           &
+         fmt = '("Finding places inaccessible to pregnant women ...")',         &
         unit = OUTPUT_UNIT                                                      &
     )
     FLUSH(unit = OUTPUT_UNIT)
@@ -492,6 +506,13 @@ PROGRAM main
         .FALSE._INT8                                                            &
     )
     mask3 = mask1 .AND. (.NOT. mask2)
+
+    ! Print progress ...
+    WRITE(                                                                      &
+         fmt = '(" > ", f9.6, "% of the world is inaccessible to pregnant women.")',    &
+        unit = OUTPUT_UNIT                                                      &
+    ) 100.0e0_REAL64 * REAL(COUNT(mask3, kind = INT64), kind = REAL64) / REAL(nx * ny, kind = REAL64)
+    FLUSH(unit = OUTPUT_UNIT)
 
     ! Clean up ...
     DEALLOCATE(mask1)

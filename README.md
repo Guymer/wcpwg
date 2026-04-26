@@ -17,7 +17,11 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
     * Run [step4_convertH5toGeoJsonGlobe.py](step4_convertH5toGeoJsonGlobe.py).
 * Check GeoJSON files by running [step5_checkGeoJson.py](step5_checkGeoJson.py).
 
-
+```
+ > 93.802373% of the world is below 2,500 m ASL.
+ > 93.800614% of the world is accessible to pregnant women.
+ >  0.001759% of the world is inaccessible to pregnant women.
+```
 
 
 

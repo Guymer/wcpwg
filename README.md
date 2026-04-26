@@ -7,7 +7,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 ## Workflow
 
 1. Download the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset (by running [step0_downloadGlobe.py](step0_downloadGlobe.py))
-2. Convert the ZIP file of the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset to a BIN file (by running [step2_convertZIPtoBIN.py](step2_convertZIPtoBIN.py))
+2. Convert the ZIP file of the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset to a BIN file (by running [step1_convertZipToBinGlobe.py](step1_convertZipToBinGlobe.py))
 3. Compile the FORTRAN programs (by running [src/Makefile](src/Makefile))
 4. Create the boolean mask (by running any of: [src/createMask1](src/createMask1.F90), [src/createMask2](src/createMask2.F90) or [src/createMask3](src/createMask3.F90))
     * [src/createMask1](src/createMask1.F90) applies the algorithm globally and loops until no more pixels are masked (or `nmax` is reached)

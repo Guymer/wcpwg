@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Convert "GLOBE" dataset ZIP file to a BIN file"""
+
 # Use the proper idiom in the main module ...
 # NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
@@ -16,8 +18,8 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Check if the BIN file does not exist yet ...
-    if not os.path.exists("all10g.bin"):
-        print("Making \"all10g.bin\" ...")
+    if not os.path.exists("data/globe.bin"):
+        print("Making \"data/globe.bin\" ...")
 
         # Define constants ...
         bins = [
@@ -45,7 +47,7 @@ if __name__ == "__main__":
         elev = numpy.zeros((ny, nx), dtype = numpy.int16)                       # [m]
 
         # Load dataset ...
-        with zipfile.ZipFile("all10g.zip", "r") as fObj:
+        with zipfile.ZipFile("data/globe.zip", "r") as fObj:
             # Initialize index ...
             iy = 0                                                              # [px]
 
@@ -66,7 +68,7 @@ if __name__ == "__main__":
                     # Load tile ...
                     tile = numpy.frombuffer(
                         fObj.read(bins[j + i * 4]),
-                        dtype = numpy.int16
+                        dtype = numpy.int16,
                     ).reshape(nrows, ncols)                                     # [m]
 
                     # Fill map ...
@@ -79,4 +81,16 @@ if __name__ == "__main__":
                 iy += nrows                                                     # [px]
 
         # Save BIN ...
-        elev.tofile("all10g.bin")
+        elev.astype(numpy.float32).tofile("data/globe.bin")
+
+    # **************************************************************************
+
+    # Check if the output folder does not exist yet ...
+    if not os.path.exists("data/globe"):
+        # Make output folder ...
+        os.mkdir("data/globe")
+
+    # Check if the first scale does not exist yet ...
+    if not os.path.exists("data/globe/scale=01km.bin"):
+        # Make symlink for the first scale ...
+        os.symlink("../globe.bin", "data/globe/scale=01km.bin")

@@ -27,15 +27,13 @@ shellcheck.log
 *.so
 *.so.dSYM
 src/compareMasks
-src/createMask1
-src/createMask2
-src/createMask3
-src/step2_downscaleGlobe
+src/step3_createMask1
+src/step3_createMask2
+src/step3_createMask3
 
 # Hide large datasets ...
 data/globe.bin
 data/globe.zip
-data/globe/scale=??km.bin
 *.mp4
 *.webp
 

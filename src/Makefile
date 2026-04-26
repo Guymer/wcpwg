@@ -78,15 +78,14 @@ all:				compile
 
 # "gmake -r clean"   = removes the compiled code
 clean:
-	$(RM) -f compareMasks createMask1 createMask2 createMask3 step2_downscaleGlobe *.a *.gcda *.gcno *.mod *.o *.so
+	$(RM) -f compareMasks step3_createMask1 step3_createMask2 step3_createMask3 *.a *.gcda *.gcno *.mod *.o *.so
 	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) clean
 
 # "gmake -r compile" = compiles the code
 compile:			compareMasks												\
-					createMask1													\
-					createMask2													\
-					createMask3													\
-					step2_downscaleGlobe
+					step3_createMask1											\
+					step3_createMask2											\
+					step3_createMask3
 
 # "gmake -r help"    = print this help
 help:
@@ -127,44 +126,36 @@ compareMasks.o:							compareMasks.F90						\
 										$(FTNLIB)/mod_safe.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask1.o:							createMask1.F90							\
+step3_createMask1.o:					step3_createMask1.F90					\
 										$(FTNLIB)/mod_safe.mod					\
 										mod_funcs.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask2.o:							createMask2.F90							\
+step3_createMask2.o:					step3_createMask2.F90					\
 										$(FTNLIB)/mod_safe.mod					\
 										mod_funcs.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask3.o:							createMask3.F90							\
+step3_createMask3.o:					step3_createMask3.F90					\
 										$(FTNLIB)/mod_safe.mod					\
 										mod_funcs.mod
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
-
-step2_downscaleGlobe.o:					step2_downscaleGlobe.F90				\
-										$(FTNLIB)/mod_safe.mod
 	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
 compareMasks:							compareMasks.o							\
 										$(FTNLIB)/mod_safe.o
 	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
 
-createMask1:							createMask1.o							\
+step3_createMask1:						step3_createMask1.o						\
 										$(FTNLIB)/mod_safe.o					\
 										mod_funcs.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step3_createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
-createMask2:							createMask2.o							\
+step3_createMask2:						step3_createMask2.o						\
 										$(FTNLIB)/mod_safe.o					\
 										mod_funcs.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step3_createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
 
-createMask3:							createMask3.o							\
+step3_createMask3:						step3_createMask3.o						\
 										$(FTNLIB)/mod_safe.o					\
 										mod_funcs.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
-
-step2_downscaleGlobe:					step2_downscaleGlobe.o					\
-										$(FTNLIB)/mod_safe.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) $< $(FTNLIB)/mod_safe.o -o $@
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step3_createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@

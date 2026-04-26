@@ -20,6 +20,14 @@ Screenshot_Photoshop.png
 src/compareMasks.F90
 src/Makefile
 src/mod_funcs.F90
+src/mod_funcs/sub_go_east.f90
+src/mod_funcs/sub_go_north.f90
+src/mod_funcs/sub_go_south.f90
+src/mod_funcs/sub_go_west.f90
+src/mod_funcs/sub_going_east.f90
+src/mod_funcs/sub_going_north.f90
+src/mod_funcs/sub_going_south.f90
+src/mod_funcs/sub_going_west.f90
 src/step2_createMask.F90
 step0_downloadGlobe.py
 step1_convertZipToBinGlobe.py

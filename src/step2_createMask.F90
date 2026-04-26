@@ -417,6 +417,64 @@ PROGRAM main
     ! **************************************************************************
     ! **************************************************************************
 
+    ! Create CSV file name ...
+    fNameCSV = TRIM(dName1) // ".csv"
+
+    ! Print progress ...
+    WRITE(                                                                      &
+         fmt = '("Saving """, a, """ ...")',                                    &
+        unit = OUTPUT_UNIT                                                      &
+    ) TRIM(fNameCSV)
+    FLUSH(unit = OUTPUT_UNIT)
+
+    ! Open CSV ...
+    OPEN(                                                                       &
+         action = "write",                                                      &
+           file = TRIM(fNameCSV),                                               &
+           form = "formatted",                                                  &
+          iomsg = errMsg,                                                       &
+         iostat = errNum,                                                       &
+        newunit = fUnit,                                                        &
+         status = "replace"                                                     &
+    )
+    IF(errNum /= 0_INT32)THEN
+        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open CSV", TRIM(errMsg), errNum
+        FLUSH(unit = ERROR_UNIT)
+        STOP
+    END IF
+
+    ! Write header ...
+    WRITE(                                                                      &
+         fmt = '(a)',                                                           &
+        unit = fUnit                                                            &
+    ) "iteration,number of pixels allowed [#]"
+    FLUSH(unit = fUnit)
+
+    ! Loop over all the possible iterations ...
+    DO iIter = LBOUND(tot, dim = 1, kind = INT64), UBOUND(tot, dim = 1, kind = INT64)
+        ! Stop looping if this iteration was not populated ...
+        IF(tot(iIter) == 0_INT64)THEN
+            EXIT
+        END IF
+
+        ! Write progress ...
+        WRITE(                                                                  &
+             fmt = '(i3, ",", i9)',                                             &
+            unit = fUnit                                                        &
+        ) iIter, tot(iIter)
+        FLUSH(unit = fUnit)
+    END DO
+
+    ! Close CSV ...
+    CLOSE(unit = fUnit)
+
+    ! Clean up ...
+    DEALLOCATE(tot)
+
+    ! **************************************************************************
+    ! **************************************************************************
+    ! **************************************************************************
+
     ! Print progress ...
     WRITE(                                                                      &
          fmt = '("Finding inaccessible places ...")',                           &
@@ -424,8 +482,15 @@ PROGRAM main
     )
     FLUSH(unit = OUTPUT_UNIT)
 
-    ! Set a new mask to be all places below 2,500 m ASL but which are not
-    ! flooded ...
+    ! Allocate array and set it to be all places below 2,500 m ASL but which are
+    ! not flooded ...
+    CALL sub_allocate_array(                                                    &
+        mask3,                                                                  &
+        "mask3",                                                                &
+        nx,                                                                     &
+        ny,                                                                     &
+        .FALSE._INT8                                                            &
+    )
     mask3 = mask1 .AND. (.NOT. mask2)
 
     ! Clean up ...
@@ -525,64 +590,6 @@ PROGRAM main
         ! Clean up ...
         DEALLOCATE(shrunkMask)
     END DO
-
-    ! **************************************************************************
-    ! **************************************************************************
-    ! **************************************************************************
-
-    ! Create CSV file name ...
-    fNameCSV = TRIM(dName1) // ".csv"
-
-    ! Print progress ...
-    WRITE(                                                                      &
-         fmt = '("Saving """, a, """ ...")',                                    &
-        unit = OUTPUT_UNIT                                                      &
-    ) TRIM(fNameCSV)
-    FLUSH(unit = OUTPUT_UNIT)
-
-    ! Open CSV ...
-    OPEN(                                                                       &
-         action = "write",                                                      &
-           file = TRIM(fNameCSV),                                               &
-           form = "formatted",                                                  &
-          iomsg = errMsg,                                                       &
-         iostat = errNum,                                                       &
-        newunit = fUnit,                                                        &
-         status = "replace"                                                     &
-    )
-    IF(errNum /= 0_INT32)THEN
-        WRITE(fmt = '("ERROR: ", a, ". ERRMSG = ", a, ". ERRNUM = ", i3, ".")', unit = ERROR_UNIT) "Failed to open CSV", TRIM(errMsg), errNum
-        FLUSH(unit = ERROR_UNIT)
-        STOP
-    END IF
-
-    ! Write header ...
-    WRITE(                                                                      &
-         fmt = '(a)',                                                           &
-        unit = fUnit                                                            &
-    ) "iteration,number of pixels allowed [#]"
-    FLUSH(unit = fUnit)
-
-    ! Loop over all the possible iterations ...
-    DO iIter = LBOUND(tot, dim = 1, kind = INT64), UBOUND(tot, dim = 1, kind = INT64)
-        ! Stop looping if this iteration was not populated ...
-        IF(tot(iIter) == 0_INT64)THEN
-            EXIT
-        END IF
-
-        ! Write progress ...
-        WRITE(                                                                  &
-             fmt = '(i3, ",", i9)',                                             &
-            unit = fUnit                                                        &
-        ) iIter, tot(iIter)
-        FLUSH(unit = fUnit)
-    END DO
-
-    ! Close CSV ...
-    CLOSE(unit = fUnit)
-
-    ! Clean up ...
-    DEALLOCATE(tot)
 
     ! **************************************************************************
     ! **************************************************************************

@@ -6,20 +6,22 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 
 ## Workflow
 
-1. Download the ZIP dataset:
+* Download the ZIP dataset:
     * Run [step0_downloadGlobe.py](step0_downloadGlobe.py) to download the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset.
-2. Convert the ZIP file to a BIN file (for use by FORTRAN natively):
+* Convert the ZIP file to a BIN file (for use by FORTRAN natively):
     * Run [step1_convertZipToBinGlobe.py](step1_convertZipToBinGlobe.py).
-3. Create the boolean mask:
-    * Change to the [src](src) directory, compile the FORTRAN programs by running `gmake -r` and then run `./step2_createMask`.
+* Create the boolean masks and vectorise inaccessible land:
+    * Change to the [src](src) directory, compile the FORTRAN program by running `gmake -r` and then run `./step2_createMask`.
+* Convert the sidecar PGM images to PNG images by running [step3_convertPgmToPng.py](step3_convertPgmToPng.py).
+* Convert the LinearRings in HDF files to Polygons in GeoJSON files:
+    * Run [step4_convertH5toGeoJsonGlobe.py](step4_convertH5toGeoJsonGlobe.py).
+* Check GeoJSON files by running [step5_checkGeoJson.py](step5_checkGeoJson.py).
 
 
 
 
 
-5. Compare the output between versions (by running `join -t, step2_createMask1.csv step2_createMask2.csv > step2_createMask.csv`)
 6. Compare the masks and summarise the study (by running [src/compareMasks](src/compareMasks.F90))
-7. Convert all generated BIN files to PNG images (by running [step7_convertBINtoPNG.py](step7_convertBINtoPNG.py))
 8. Convert the sequence of PNG images to a MP4 video (by running [step8_convertPNGtoMP4.py](step8_convertPNGtoMP4.py))
 9. Convert the sequence of PNG images to a WEBP animation (by running [step9_convertPNGtoWEBP.py](step9_convertPNGtoWEBP.py))
 10. Make plots (by running [step10_makePlots.py](step10_makePlots.py))

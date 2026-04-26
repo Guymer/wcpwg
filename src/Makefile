@@ -13,12 +13,12 @@ MACH_OPTS := -march=native -m64
 # *                                  BINARIES                                  *
 # ******************************************************************************
 
-AR      := $(shell which ar             2> /dev/null || echo "ERROR")
-CUT     := $(shell which cut            2> /dev/null || echo "ERROR")
-FC      := $(shell which gfortran-mp-14 2> /dev/null || echo "ERROR")
-GREP    := $(shell which grep           2> /dev/null || echo "ERROR")
-PYTHON3 := $(shell which python3.12     2> /dev/null || echo "ERROR")
-RM      := $(shell which rm             2> /dev/null || echo "ERROR")
+AR      := $(shell which ar         2> /dev/null || echo "ERROR")
+CUT     := $(shell which cut        2> /dev/null || echo "ERROR")
+FC      := $(shell which h5fc       2> /dev/null || echo "ERROR")
+GREP    := $(shell which grep       2> /dev/null || echo "ERROR")
+PYTHON3 := $(shell which python3.12 2> /dev/null || echo "ERROR")
+RM      := $(shell which rm         2> /dev/null || echo "ERROR")
 
 # ******************************************************************************
 # *                             DYNAMIC VARIABLES                              *

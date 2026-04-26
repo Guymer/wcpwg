@@ -213,11 +213,11 @@ PROGRAM main
 
         ! Save shrunk mask ...
         CALL saveShrunkMask(                                                    &
-                   nx = nx,                                                     &
-                   ny = ny,                                                     &
-                 mask = mask,                                                   &
-            tileScale = tileScale,                                              &
-                bname = TRIM(bname)                                             &
+                     nx = nx,                                                   &
+                     ny = ny,                                                   &
+                   mask = mask,                                                 &
+            shrinkScale = tileScale,                                            &
+                  bname = TRIM(bname)                                           &
         )
 
         ! Stop looping once no changes have been made ...

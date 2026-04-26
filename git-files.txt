@@ -21,12 +21,11 @@ requirements.txt
 Screenshot_Atom.png
 Screenshot_Photoshop.png
 src/compareMasks.F90
-src/createMask1.F90
-src/createMask2.F90
-src/createMask3.F90
 src/Makefile
 src/mod_funcs.F90
-src/step2_downscaleGlobe.F90
+src/step2_createMask1.F90
+src/step2_createMask2.F90
+src/step2_createMask3.F90
 step0_downloadGlobe.py
 step1_convertZipToBinGlobe.py
 step10_diffCL.png

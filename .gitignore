@@ -27,9 +27,7 @@ shellcheck.log
 *.so
 *.so.dSYM
 src/compareMasks
-src/step3_createMask1
-src/step3_createMask2
-src/step3_createMask3
+src/step2_createMask
 
 # Hide large datasets ...
 data/globe.bin
@@ -42,11 +40,5 @@ compareMasksOutput/diff_scale=??km.bin
 compareMasksOutput/diff_scale=??km.png
 compareMasksOutput/flags_scale=??km.bin
 compareMasksOutput/flags_scale=??km.png
-createMask.csv
-createMask?.csv
-createMask?output/mask????_scale=??km.bin
-createMask?output/mask????_scale=??km.png
-createMask3output/after_scale=??km.bin
-createMask3output/after_scale=??km.png
-createMask3output/before_scale=??km.bin
-createMask3output/before_scale=??km.png
+output/tileScale=??km.csv
+output/tileScale=??km/scale=??km/iIter=????.bin

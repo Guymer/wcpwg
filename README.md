@@ -10,17 +10,13 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
     * Run [step0_downloadGlobe.py](step0_downloadGlobe.py) to download the [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/globe.html) dataset.
 2. Convert the ZIP file to a BIN file (for use by FORTRAN natively):
     * Run [step1_convertZipToBinGlobe.py](step1_convertZipToBinGlobe.py).
-3. Downscale the BIN file (so that you can use quick/small datasets if you want to):
-    * Change to the [src](src) directory, compile the FORTRAN programs by running `gmake -r` and then run `./step2_downscaleGlobe`.
+3. Create the boolean mask:
+    * Change to the [src](src) directory, compile the FORTRAN programs by running `gmake -r` and then run `./step2_createMask`.
 
 
 
 
 
-4. Create the boolean mask (by running any of: [src/step2_createMask1](src/step2_createMask1.F90), [src/step2_createMask2](src/step2_createMask2.F90) or [src/step2_createMask3](src/step2_createMask3.F90))
-    * [src/step2_createMask1](src/step2_createMask1.F90) applies the algorithm globally and loops until no more pixels are masked (or `nmax` is reached)
-    * [src/step2_createMask2](src/step2_createMask2.F90) applies the algorithm globally **then applies the algorithm on tiles** and loops **over both stages** until no more pixels are masked (or `nmax` is reached)
-    * [src/step2_createMask3](src/step2_createMask3.F90) is the same as [src/step2_createMask2](src/step2_createMask2.F90) but has extra output to make a pretty blog post
 5. Compare the output between versions (by running `join -t, step2_createMask1.csv step2_createMask2.csv > step2_createMask.csv`)
 6. Compare the masks and summarise the study (by running [src/compareMasks](src/compareMasks.F90))
 7. Convert all generated BIN files to PNG images (by running [step7_convertBINtoPNG.py](step7_convertBINtoPNG.py))

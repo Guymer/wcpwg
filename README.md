@@ -12,11 +12,12 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
     * Run [step1_convertZipToBinGlobe.py](step1_convertZipToBinGlobe.py).
 * Create the boolean masks and vectorise inaccessible land:
     * Change to the [src](src) directory, compile the FORTRAN program by running `gmake -r` and then run `./step2_createMask`.
-* Convert the sidecar PGM images to PNG images by running [step3_convertPgmToPng.py](step3_convertPgmToPng.py).
+* Convert the sidecar BIN arrays to PNG images by running [step3_convertBinToPng.py](step3_convertBinToPng.py).
+* Convert the sidecar PGM images to PNG images by running [step4_convertPgmToPng.py](step4_convertPgmToPng.py).
 * Convert the LinearRings in HDF files to Polygons in GeoJSON files:
     * Run [step4_convertH5toGeoJsonGlobe.py](step4_convertH5toGeoJsonGlobe.py).
-* Check GeoJSON files by running [step5_checkGeoJson.py](step5_checkGeoJson.py).
-* Make plots by running [step6_makePlots.py](step6_makePlots.py).
+* Check GeoJSON files by running [step6_checkGeoJson.py](step6_checkGeoJson.py).
+* Make plots by running [step7_makePlots.py](step7_makePlots.py).
 
 ## Output
 
@@ -28,7 +29,7 @@ The FORTRAN program [step2_createMask](src/step2_createMask.F90) will print out:
  >  0.001759% of the world is inaccessible to pregnant women.
 ```
 
-The Python script [step6_makePlots.py](step6_makePlots.py) will make:
+The Python script [step7_makePlots.py](step7_makePlots.py) will make:
 
 ![places less than 2,500 m ASL but which are not accessible in Colorado](output/tileScale=32km/scale=01km/Colorado.png)
 
@@ -52,14 +53,3 @@ WCPWG uses some [Global Self-Consistent Hierarchical High-Resolution Geography](
 ## Bugs
 
 * The algorithm does not cross the meridian. Therefore, if a valley is only accessible by crossing the meridian then this program will incorrectly mark it as inaccessible.
-
-
-
-
-
-
-
-
-
-
-11. Confirm updated behaviour (by running [step11_convergence.py](step11_convergence.py))

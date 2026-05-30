@@ -350,6 +350,7 @@ if __name__ == "__main__":
                                     "*",
                                         color = "black",
                                     transform = cartopy.crs.PlateCarree(),
+                                       zorder = 1.8,
                                 )
                                 pyguymer3.geo.add_annotation(
                                     ax,
@@ -362,6 +363,7 @@ if __name__ == "__main__":
                                              txtOffsetX = 4,
                                              txtOffsetY = 2,
                                       verticalalignment = "center",
+                                                 zorder = 1.8,
                                 )
 
             # ******************************************************************

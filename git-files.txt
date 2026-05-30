@@ -10,10 +10,8 @@
 .shellcheckrc
 fortranlib
 git-files.txt
-images.json
 LICENCE.txt
 output/tileScale=32km/scale=01km/Colorado.png
-printBoundingBoxes.py
 README.md
 requirements.txt
 src/Makefile
@@ -29,8 +27,6 @@ src/mod_funcs/sub_going_west.f90
 src/step2_createMask.F90
 step0_downloadGlobe.py
 step1_convertZipToBinGlobe.py
-step11_convergence.py
-step11.png
 step3_convertPgmToPng.py
 step4_convertH5toGeoJsonGlobe.py
 step5_checkGeoJson.py

@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Loop over GeoJSONs ...
-    for fName in sorted(glob.glob("data/*/scale=*/elev=????m.geojson")):
+    for fName in sorted(glob.glob("output/tileScale=??km/scale=??km/inaccessible.geojson")):
         # Load GeometryCollection ...
         with open(fName, "rt", encoding = "utf-8") as fObj:
             geoms = shapely.geometry.shape(

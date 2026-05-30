@@ -139,7 +139,7 @@ if __name__ == "__main__":
         results = []
 
         # Loop over PGMs backwards ...
-        for fName in sorted(glob.glob("output/tileScale=??km/scale=??km/inaccessible.pgm"))[::-1]:
+        for fName in sorted(glob.glob("output/tileScale=??km/scale=??km/inaccessibleBoundaries.pgm"))[::-1]:
             # Add job to convert the PGM to the worker pool ...
             results.append(
                 pObj.apply_async(

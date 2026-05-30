@@ -664,7 +664,7 @@ PROGRAM main
 
         ! Create file names ...
         fNameHDF = TRIM(dName2) // "/inaccessible.h5"
-        fNamePGM = TRIM(dName2) // "/inaccessible.pgm"
+        fNamePGM = TRIM(dName2) // "/inaccessibleBoundaries.pgm"
 
         ! Skip if the output file exists ...
         INQUIRE(                                                                &

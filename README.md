@@ -38,10 +38,13 @@ The Python script [step7_makePlots.py](step7_makePlots.py) will make:
 WCPWG requires the following Python modules to be installed and available in your `PYTHONPATH`.
 
 * [cartopy](https://pypi.org/project/Cartopy/)
+* [geojson](https://pypi.org/project/geojson/)
+* [h5py](https://pypi.org/project/h5py/)
 * [matplotlib](https://pypi.org/project/matplotlib/)
 * [numpy](https://pypi.org/project/numpy/)
+* [PIL](https://pypi.org/project/Pillow/)
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
-* [requests](https://pypi.org/project/requests/)
+* [shapely](https://pypi.org/project/Shapely/)
 
 Additionally, due to the dependency on [my FORTRAN library](https://github.com/Guymer/fortranlib), you will also require the following Python modules to be installed and available in your `PYTHONPATH`:
 

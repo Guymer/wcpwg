@@ -13,12 +13,12 @@ MACH_OPTS := -march=native -m64
 # *                                  BINARIES                                  *
 # ******************************************************************************
 
-AR      := $(shell which ar             2> /dev/null || echo "ERROR")
-CUT     := $(shell which cut            2> /dev/null || echo "ERROR")
-FC      := $(shell which gfortran-mp-14 2> /dev/null || echo "ERROR")
-GREP    := $(shell which grep           2> /dev/null || echo "ERROR")
-PYTHON3 := $(shell which python3.12     2> /dev/null || echo "ERROR")
-RM      := $(shell which rm             2> /dev/null || echo "ERROR")
+AR      := $(shell which ar         2> /dev/null || echo "ERROR")
+CUT     := $(shell which cut        2> /dev/null || echo "ERROR")
+FC      := $(shell which h5fc       2> /dev/null || echo "ERROR")
+GREP    := $(shell which grep       2> /dev/null || echo "ERROR")
+PYTHON3 := $(shell which python3.12 2> /dev/null || echo "ERROR")
+RM      := $(shell which rm         2> /dev/null || echo "ERROR")
 
 # ******************************************************************************
 # *                             DYNAMIC VARIABLES                              *
@@ -78,14 +78,11 @@ all:				compile
 
 # "gmake -r clean"   = removes the compiled code
 clean:
-	$(RM) -f compareMasks createMask1 createMask2 createMask3 *.a *.gcda *.gcno *.mod *.o *.so
+	$(RM) -f step2_createMask *.a *.gcda *.gcno *.mod *.o *.so
 	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) clean
 
 # "gmake -r compile" = compiles the code
-compile:			compareMasks												\
-					createMask1													\
-					createMask2													\
-					createMask3
+compile:			step2_createMask
 
 # "gmake -r help"    = print this help
 help:
@@ -110,61 +107,24 @@ help:
 
 # NOTE: See https://numpy.org/doc/stable/f2py/buildtools/distutils-to-meson.html
 
-# NOTE: How GCC embeds the RPATH has changed, which results in binaries which do
-#       not work on MacOS 15.5 using GFortran 14.2 and Python 3.12 (as of
-#       21/Jun/2025). Here are two examples of other people having the same
-#       problem:
-#         * https://github.com/mesonbuild/meson/issues/10711
-#         * https://stackoverflow.com/questions/52430325/f2py-compilation-failed-cannot-find-library-gomp
-#       After hours of investigation, I have settled on a work around using
-#       "install_name_tool -add_rpath" on Darwin-based operating systems.
-
 $(FTNLIB)/lib%.a																\
 $(FTNLIB)/%.mod																	\
-$(FTNLIB)/%.o &:	$(FTNLIB)/%.F90
+$(FTNLIB)/%.o &:						$(FTNLIB)/%.F90
 	$(MAKE) -r -C $(FTNLIB) COVERAGE=$(COVERAGE) DEBUG=$(DEBUG) FC=$(FC) PYTHON3=$(PYTHON3) $*.o
 
 libmod_funcs.a																	\
 mod_funcs.mod																	\
-mod_funcs.o &:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) mod_funcs.F90
+mod_funcs.o &:							mod_funcs.F90							\
+										$(FTNLIB)/mod_safe.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $<
 	$(AR) -r libmod_funcs.a mod_funcs.o
 
-compareMasks.o:		$(FTNLIB)/mod_safe.mod										\
-					compareMasks.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) compareMasks.F90 -o $@
+step2_createMask.o:						step2_createMask.F90					\
+										$(FTNLIB)/mod_safe.mod					\
+										mod_funcs.mod
+	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) $< -o $@
 
-createMask1.o:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.mod												\
-					createMask1.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask1.F90 -o $@
-
-createMask2.o:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.mod												\
-					createMask2.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask2.F90 -o $@
-
-createMask3.o:		$(FTNLIB)/mod_safe.mod										\
-					mod_funcs.mod												\
-					createMask3.F90
-	$(FC) -c $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) -I$(FTNLIB) createMask3.F90 -o $@
-
-compareMasks:		$(FTNLIB)/mod_safe.o										\
-					compareMasks.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) compareMasks.o $(FTNLIB)/mod_safe.o -o $@
-
-createMask1:		$(FTNLIB)/mod_safe.o										\
-					mod_funcs.o													\
-					createMask1.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask1.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
-
-createMask2:		$(FTNLIB)/mod_safe.o										\
-					mod_funcs.o													\
-					createMask2.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask2.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
-
-createMask3:		$(FTNLIB)/mod_safe.o										\
-					mod_funcs.o													\
-					createMask3.o
-	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) createMask3.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@
+step2_createMask:						step2_createMask.o						\
+										$(FTNLIB)/mod_safe.o					\
+										mod_funcs.o
+	$(FC) $(LANG_OPTS) $(WARN_OPTS) $(MACH_OPTS) step2_createMask.o $(FTNLIB)/mod_safe.o mod_funcs.o -o $@

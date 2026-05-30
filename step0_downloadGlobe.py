@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Download the "GLOBE" dataset"""
+
 # Use the proper idiom in the main module ...
 # NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
@@ -18,7 +20,7 @@ if __name__ == "__main__":
     # Create argument parser and parse the arguments ...
     parser = argparse.ArgumentParser(
            allow_abbrev = False,
-            description = "Download the GLOBE dataset.",
+            description = "Download the \"GLOBE\" dataset.",
         formatter_class = argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -28,27 +30,38 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--timeout",
-        default = 60.0,
+        default = 3600.0,               # NOTE: Would normally be "60.0".
            help = "the timeout for any requests/subprocess calls (in seconds)",
            type = float,
+    )
+    parser.add_argument(
+        "--url",
+        default = "https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.zip",
+           help = "the URL to the \"GLOBE\" dataset",
+           type = str,
     )
     args = parser.parse_args()
 
     # **************************************************************************
 
+    # Check if the output folder does not exist yet ...
+    if not os.path.exists("data"):
+        # Make output folder ...
+        os.mkdir("data")
+
     # Check if the ZIP file does not exist yet ...
-    if not os.path.exists("all10g.zip"):
-        print("Downloading \"all10g.zip\" ...")
+    if not os.path.exists("data/globe.zip"):
+        print("Downloading \"data/globe.zip\" ...")
 
         # Start session ...
         with pyguymer3.start_session() as sess:
             # Download the ZIP file ...
             if not pyguymer3.download_file(
                 sess,
-                "https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.zip",
-                "all10g.zip",
+                args.url,
+                "data/globe.zip",
                   debug = args.debug,
                 timeout = args.timeout,
                  verify = True,
             ):
-                raise Exception("download failed", "https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.zip") from None
+                raise Exception(f"failed to download \"{args.url}\"") from None

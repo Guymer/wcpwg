@@ -1,6 +1,16 @@
 MODULE mod_funcs
     CONTAINS
 
+    ! Include subroutines ...
+    INCLUDE "mod_funcs/sub_go_east.f90"
+    INCLUDE "mod_funcs/sub_go_north.f90"
+    INCLUDE "mod_funcs/sub_go_south.f90"
+    INCLUDE "mod_funcs/sub_go_west.f90"
+    INCLUDE "mod_funcs/sub_going_east.f90"
+    INCLUDE "mod_funcs/sub_going_north.f90"
+    INCLUDE "mod_funcs/sub_going_south.f90"
+    INCLUDE "mod_funcs/sub_going_west.f90"
+
     PURE SUBROUTINE incrementMask(nx, ny, elev, mask, ixlo, ixhi, iylo, iyhi)
         ! Import standard modules ...
         USE ISO_FORTRAN_ENV
@@ -51,40 +61,4 @@ MODULE mod_funcs
             END DO
         END DO
     END SUBROUTINE incrementMask
-
-    SUBROUTINE saveShrunkMask(nx, ny, mask, tileScale, bname)
-        ! Import standard modules ...
-        USE ISO_FORTRAN_ENV
-
-        ! Import my modules ...
-        USE mod_safe,       ONLY:   sub_save_array_as_BIN,                      &
-                                    sub_shrink_array
-
-        IMPLICIT NONE
-
-        ! Declare inputs/outputs ...
-        INTEGER(kind = INT64), INTENT(in)                                       :: nx
-        INTEGER(kind = INT64), INTENT(in)                                       :: ny
-        LOGICAL(kind = INT8), DIMENSION(nx, ny), INTENT(in)                     :: mask
-        INTEGER(kind = INT64), INTENT(in)                                       :: tileScale
-        CHARACTER(len = *), INTENT(in)                                          :: bname
-
-        ! Declare variables ...
-        REAL(kind = REAL32), ALLOCATABLE, DIMENSION(:, :)                       :: shrunkMask
-
-        ! Shrink the logical array down to a real array ..
-        CALL sub_shrink_array(                                                  &
-                     nx = nx,                                                   &
-                     ny = ny,                                                   &
-                    arr = mask,                                                 &
-            shrinkScale = tileScale,                                            &
-            shrunkenArr = shrunkMask                                            &
-        )
-
-        ! Save shrunk mask ...
-        CALL sub_save_array_as_BIN(shrunkMask, TRIM(bname))
-
-        ! Clean up ...
-        DEALLOCATE(shrunkMask)
-    END SUBROUTINE saveShrunkMask
 END MODULE mod_funcs

@@ -26,25 +26,23 @@ shellcheck.log
 *.o
 *.so
 *.so.dSYM
-src/compareMasks
-src/createMask?
+src/step2_createMask
 
 # Hide large datasets ...
-all10g.bin
-all10g.zip
-*.mp4
-*.webp
-
-# Hide intermediary output files ...
-compareMasksOutput/diff_scale=??km.bin
-compareMasksOutput/diff_scale=??km.png
-compareMasksOutput/flags_scale=??km.bin
-compareMasksOutput/flags_scale=??km.png
-createMask.csv
-createMask?.csv
-createMask?output/mask????_scale=??km.bin
-createMask?output/mask????_scale=??km.png
-createMask3output/after_scale=??km.bin
-createMask3output/after_scale=??km.png
-createMask3output/before_scale=??km.bin
-createMask3output/before_scale=??km.png
+data/globe.bin
+data/globe.json
+data/globe.zip
+output/tileScale=??km.csv
+output/tileScale=??km/scale=??km/accessible.bin
+output/tileScale=??km/scale=??km/accessible.png
+output/tileScale=??km/scale=??km/below2500m.bin
+output/tileScale=??km/scale=??km/below2500m.png
+output/tileScale=??km/scale=??km/inaccessible.bin
+output/tileScale=??km/scale=??km/inaccessible.geojson
+output/tileScale=??km/scale=??km/inaccessible.h5
+output/tileScale=??km/scale=??km/inaccessible.png
+output/tileScale=??km/scale=??km/inaccessibleBoundaries.pgm
+output/tileScale=??km/scale=??km/inaccessibleBoundaries.png
+output/tileScale=??km/scale=??km/Chile.png
+output/tileScale=??km/scale=??km/Colorado.png
+output/tileScale=??km/scale=??km/UnitedStates.png

@@ -15,7 +15,7 @@ This all started after reading the [NHS guidance on exercise in pregnancy](https
 * Convert the sidecar BIN arrays to PNG images by running [step3_convertBinToPng.py](step3_convertBinToPng.py).
 * Convert the sidecar PGM images to PNG images by running [step4_convertPgmToPng.py](step4_convertPgmToPng.py).
 * Convert the LinearRings in HDF files to Polygons in GeoJSON files:
-    * Run [step4_convertH5toGeoJsonGlobe.py](step4_convertH5toGeoJsonGlobe.py).
+    * Run [step5_convertH5toGeoJsonGlobe.py](step5_convertH5toGeoJsonGlobe.py).
 * Check GeoJSON files by running [step6_checkGeoJson.py](step6_checkGeoJson.py).
 * Make plots by running [step7_makePlots.py](step7_makePlots.py).
 

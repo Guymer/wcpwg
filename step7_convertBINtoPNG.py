@@ -1,13 +1,43 @@
 #!/usr/bin/env python3
 
-# Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
-if __name__ == "__main__":
+"""Convert BIN arrays to PNG images"""
+
+# Define function ...
+def bin2png(
+    fNameIn,
+    nxScaledIn,
+    nyScaledIn,
+    /,
+    *,
+    debug = __debug__,
+):
+    """Convert a BIN array to a PNG image
+
+    Parameters
+    ----------
+    fNameIn : str
+        the path to the input BIN array
+    nxScaledIn : int
+        the number of pixels in the x-axis
+    nyScaledIn : int
+        the number of pixels in the y-axis
+    debug : bool, optional
+        print debug messages
+
+    Notes
+    -----
+    Copyright 2026 Thomas Guymer [1]_
+
+    References
+    ----------
+    .. [1] Guymer, https://codeberg.org/guymer
+    """
+
+    # **************************************************************************
+
     # Import standard modules ...
-    import argparse
-    import glob
     import json
-    import re
+    import os
 
     # Import special modules ...
     try:
@@ -24,10 +54,65 @@ if __name__ == "__main__":
 
     # **************************************************************************
 
+    # Create short-hand and return if the PNG already exists ...
+    png = f'{fNameIn.removesuffix(".bin")}.png'
+    if os.path.exists(png):
+        return
+
+    print(f"  Converting \"{fNameIn}\" to \"{png}\" ...")
+
+    # Load colour tables and create short-hand ...
+    with open(f"{pyguymer3.__path__[0]}/data/json/colourTables.json", "rt", encoding = "utf-8") as fObj:
+        colourTables = json.load(fObj)
+    turbo = numpy.array(colourTables["turbo"]).astype(numpy.uint8)
+
+    # Open BIN and scale from 0 to 255 ...
+    img = (
+        255.0 * numpy.fromfile(
+            fNameIn,
+            dtype = numpy.float32,
+        ).reshape(nyScaledIn, nxScaledIn, 1)
+    ).astype(numpy.uint8)
+
+    # Save NumPy array as a PNG ...
+    src = pyguymer3.image.makePng(
+        img,
+        calcAdaptive = True,
+         calcAverage = True,
+            calcNone = True,
+           calcPaeth = True,
+             calcSub = True,
+              calcUp = True,
+             choices = "all",
+               debug = debug,
+                 dpi = None,
+              levels = [9,],
+           memLevels = [9,],
+             modTime = None,
+            palUint8 = turbo,
+          strategies = None,
+              wbitss = [15,],
+    )
+    with open(png, "wb") as fObj:
+        fObj.write(src)
+
+# ******************************************************************************
+
+# Use the proper idiom in the main module ...
+# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+if __name__ == "__main__":
+    # Import standard modules ...
+    import argparse
+    import glob
+    import multiprocessing
+    import os
+
+    # **************************************************************************
+
     # Create argument parser and parse the arguments ...
     parser = argparse.ArgumentParser(
            allow_abbrev = False,
-            description = "Convert BIN files to PNG images.",
+            description = "Convert BIN arrays to PNG images.",
         formatter_class = argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -36,229 +121,91 @@ if __name__ == "__main__":
           help = "print debug messages",
     )
     parser.add_argument(
-        "--maximum-size",
-        default = 250.0,
-           dest = "maxSize",
-           help = "the maximum size of image to make a PNG for (in mega-pixels)",
+        "--number-of-children",
+        default = os.cpu_count() - 1,   # TODO: Once I ditch Python 3.11 and
+                                        #       Python 3.12 then I can use
+                                        #       "os.process_cpu_count()" instead.
+           dest = "nChild",
+           help = "the number of child \"multiprocessing\" processes to use when converting the images",
+           type = int,
+    )
+    parser.add_argument(
+        "--timeout",
+        default = 21600.0,              # NOTE: Would normally be "60.0".
+           help = "the timeout for any requests/subprocess calls (in seconds)",
            type = float,
     )
     args = parser.parse_args()
 
     # **************************************************************************
 
-    # Load colour tables and create short-hand ...
-    with open(f"{pyguymer3.__path__[0]}/data/json/colourTables.json", "rt", encoding = "utf-8") as fObj:
-        colourTables = json.load(fObj)
-    r2g = numpy.array(colourTables["r2g"]).astype(numpy.uint8)
-    r2o2g = numpy.array(colourTables["r2o2g"]).astype(numpy.uint8)
-    turbo = numpy.array(colourTables["turbo"]).astype(numpy.uint8)
-
-    # Define the size of the dataset ...
+    # Create short-hands ...
     nx = 43200                                                                  # [px]
     ny = 21600                                                                  # [px]
+    res = 1                                                                     # [km]
 
-    # Find files ...
-    fNames = sorted(glob.glob("compareMasksOutput/*.*") + glob.glob("createMask?output/*.*"))
+    # Loop over possible shrink scales ...
+    for iShrinkScale in range(11):
+        # Determine shrink scale ...
+        shrinkScale = pow(2, iShrinkScale)
 
-    # Loop over files ...
-    for bName in fNames:
-        # Skip this file if it is not a BIN file ...
-        if not bName.endswith(".bin"):
+        # Skip this shrink scale if it is not an integer division of both axes
+        # of the array ...
+        if nx % shrinkScale != 0:
+            continue
+        if ny % shrinkScale != 0:
             continue
 
-        # Create short-hand and skip this BIN file if the associated PNG file
-        # already exists ...
-        pName = f'{bName.removesuffix(".bin")}.png'
-        if pName in fNames:
-            print(f"Skipping \"{bName}\" (the PNG already exists).")
-            continue
+        # Create short-hands ...
+        nxScaled = nx // shrinkScale                                            # [px]
+        nyScaled = ny // shrinkScale                                            # [px]
+        scaleStub = f"scale={res * shrinkScale:02d}km"
 
-        # Figure out what to do with it ...
-        match bName:
-            case "compareMasksOutput/diff_scale=01km.bin" | "createMask3output/after_scale=01km.bin" | "createMask3output/before_scale=01km.bin":
-                print(f"Skipping \"{bName}\" (it contains FORTRAN \"LOGICAL kind\" data).")
-                continue
-            case str(x) if re.fullmatch(r"compareMasksOutput/diff_scale=[0-9][0-9]km.bin", x):
-                # Find scale ...
-                scale = int(bName.split("=")[1][:2])
+        print(f"Processing scale \"{scaleStub}\" ...")
 
-                # Find out how many mega-pixels there are and skip this BIN if
-                # the PNG would be too big ...
-                mega = float((nx // scale) * (ny // scale)) / 1.0e6             # [Mpx]
-                if mega > args.maxSize:
-                    print(f"Skipping \"{bName}\" (the PNG would be {mega:,.1f} Mpx).")
-                    continue
+        # Create a pool of workers ...
+        with multiprocessing.Pool(args.nChild) as pObj:
+            # Initialize list ...
+            results = []
 
-                print(f"Making \"{pName}\" ...")
-
-                # Load data ...
-                data = numpy.fromfile(
-                    bName,
-                    dtype = numpy.float32,
-                ).reshape(ny // scale, nx // scale, 1)
-
-                # Scale data from 0 to 255 ...
-                data *= 255.0
-                numpy.place(data, data <   0.0,   0.0)
-                numpy.place(data, data > 255.0, 255.0)
-                data = data.astype(numpy.uint8)
-
-                # Make PNG ...
-                src = pyguymer3.image.makePng(
-                    data,
-                    calcAdaptive = True,
-                     calcAverage = True,
-                        calcNone = True,
-                       calcPaeth = True,
-                         calcSub = True,
-                          calcUp = True,
-                         choices = "all",
-                           debug = args.debug,
-                             dpi = None,
-                          levels = [9,],
-                       memLevels = [9,],
-                         modTime = None,
-                        palUint8 = turbo,
-                      strategies = None,
-                          wbitss = [15,],
+            # Loop over BINs ...
+            for fName in sorted(
+                glob.glob(f"output/tileScale=??km/{scaleStub}/accessible.bin")
+                + glob.glob(f"output/tileScale=??km/{scaleStub}/below2500m.bin")
+                + glob.glob(f"output/tileScale=??km/{scaleStub}/inaccessible.bin")
+            ):
+                # Add job to convert the BIN to the worker pool ...
+                results.append(
+                    pObj.apply_async(
+                        bin2png,
+                        (
+                            fName,
+                            nxScaled,
+                            nyScaled,
+                        ),
+                        {
+                            "debug" : args.debug,
+                        },
+                    )
                 )
-                with open(pName, "wb") as fObj:
-                    fObj.write(src)
-            case "compareMasksOutput/flags_scale=01km.bin":
-                # Find out how many mega-pixels there are and skip this BIN if
-                # the PNG would be too big ...
-                mega = float(nx * ny) / 1.0e6                                   # [Mpx]
-                if mega > args.maxSize:
-                    print(f"Skipping \"{bName}\" (the PNG would be {mega:,.1f} Mpx).")
-                    continue
 
-                print(f"Making \"{pName}\" ...")
+            print("  Waiting for child \"multiprocessing\" processes to finish ...")
 
-                # Load data ...
-                data = numpy.fromfile(
-                    bName,
-                    dtype = numpy.int8,
-                ).astype(numpy.uint8).reshape(ny, nx, 1)
+            # Loop over results ...
+            for result in results:
+                # Get result ...
+                _ = result.get(args.timeout)
 
-                # Make PNG ...
-                src = pyguymer3.image.makePng(
-                    data,
-                    calcAdaptive = True,
-                     calcAverage = True,
-                        calcNone = True,
-                       calcPaeth = True,
-                         calcSub = True,
-                          calcUp = True,
-                         choices = "all",
-                           debug = args.debug,
-                             dpi = None,
-                          levels = [9,],
-                       memLevels = [9,],
-                         modTime = None,
-                        palUint8 = numpy.array(
-                        [
-                            [255,   0,   0],
-                            [255, 127,   0],
-                            [  0, 255,   0],
-                        ],
-                        dtype = numpy.uint8,
-                    ),
-                      strategies = None,
-                          wbitss = [15,],
-                )
-                with open(pName, "wb") as fObj:
-                    fObj.write(src)
-            case str(x) if re.fullmatch(r"compareMasksOutput/flags_scale=[0-9][0-9]km.bin", x):
-                # Find scale ...
-                scale = int(bName.split("=")[1][:2])
+                # Check result ...
+                if not result.successful():
+                    # Cry ...
+                    raise Exception("\"multiprocessing.Pool().apply_async()\" was not successful") from None
 
-                # Find out how many mega-pixels there are and skip this BIN if
-                # the PNG would be too big ...
-                mega = float((nx // scale) * (ny // scale)) / 1.0e6             # [Mpx]
-                if mega > args.maxSize:
-                    print(f"Skipping \"{bName}\" (the PNG would be {mega:,.1f} Mpx).")
-                    continue
-
-                print(f"Making \"{pName}\" ...")
-
-                # Load data ...
-                data = numpy.fromfile(
-                    bName,
-                    dtype = numpy.float32,
-                ).reshape(ny // scale, nx // scale, 1)
-
-                # Scale data from 0 to 255, mapping from 0 to 2 ...
-                data = 255.0 * (data / 2.0)
-                numpy.place(data, data <   0.0,   0.0)
-                numpy.place(data, data > 255.0, 255.0)
-                data = data.astype(numpy.uint8)
-
-                # Make PNG ...
-                src = pyguymer3.image.makePng(
-                    data,
-                    calcAdaptive = True,
-                     calcAverage = True,
-                        calcNone = True,
-                       calcPaeth = True,
-                         calcSub = True,
-                          calcUp = True,
-                         choices = "all",
-                           debug = args.debug,
-                             dpi = None,
-                          levels = [9,],
-                       memLevels = [9,],
-                         modTime = None,
-                        palUint8 = r2o2g,
-                      strategies = None,
-                          wbitss = [15,],
-                )
-                with open(pName, "wb") as fObj:
-                    fObj.write(src)
-            case str(x) if re.fullmatch(r"createMask[0-9]output/.+_scale=[0-9][0-9]km.bin", x):
-                # Find scale ...
-                scale = int(bName.split("=")[1][:2])
-
-                # Find out how many mega-pixels there are and skip this BIN if
-                # the PNG would be too big ...
-                mega = float((nx // scale) * (ny // scale)) / 1.0e6             # [Mpx]
-                if mega > args.maxSize:
-                    print(f"Skipping \"{bName}\" (the PNG would be {mega:,.1f} Mpx).")
-                    continue
-
-                print(f"Making \"{pName}\" ...")
-
-                # Load data ...
-                data = numpy.fromfile(
-                    bName,
-                    dtype = numpy.float32,
-                ).reshape(ny // scale, nx // scale, 1)
-
-                # Scale data from 0 to 255 ...
-                data *= 255.0
-                numpy.place(data, data <   0.0,   0.0)
-                numpy.place(data, data > 255.0, 255.0)
-                data = data.astype(numpy.uint8)
-
-                # Make PNG ...
-                src = pyguymer3.image.makePng(
-                    data,
-                    calcAdaptive = True,
-                     calcAverage = True,
-                        calcNone = True,
-                       calcPaeth = True,
-                         calcSub = True,
-                          calcUp = True,
-                         choices = "all",
-                           debug = args.debug,
-                             dpi = None,
-                          levels = [9,],
-                       memLevels = [9,],
-                         modTime = None,
-                        palUint8 = r2g,
-                      strategies = None,
-                          wbitss = [15,],
-                )
-                with open(pName, "wb") as fObj:
-                    fObj.write(src)
-            case _:
-                raise ValueError(f"there is no case which matches \"{bName}\"") from None
+            # Close the pool of worker processes and wait for all of the tasks to
+            # finish ...
+            # NOTE: The "__exit__()" call of the context manager for
+            #       "multiprocessing.Pool()" calls "terminate()" instead of
+            #       "join()", so I must manage the end of the pool of worker
+            #       processes myself.
+            pObj.close()
+            pObj.join()

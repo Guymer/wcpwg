@@ -84,6 +84,13 @@ if __name__ == "__main__":
            type = int,
     )
     parser.add_argument(
+        "--data-path",
+        default = f"{pyguymer3.__path__[0]}/data",
+           dest = "dataPath",
+           help = "the path to the PyGuymer3 \"data\" folder",
+           type = str,
+    )
+    parser.add_argument(
         "--debug",
         action = "store_true",
           help = "print debug messages",
@@ -110,17 +117,10 @@ if __name__ == "__main__":
            type = str,
     )
     parser.add_argument(
-        "--GLOBE-path",
-        default = f"{pyguymer3.__path__[0]}/data/geojson/globe",
-           dest = "globePath",
-           help = "the path to the GeoJSON files derived from the \"GLOBE\" dataset",
-           type = str,
-    )
-    parser.add_argument(
         "--GLOBE-scale",
         default = "32km",
            dest = "globeScale",
-           help = "the scale of the Polygons of elevation from the \"GLOBE\" dataset",
+           help = "the scale of the GeoJSON files of elevation derived from the \"GLOBE\" dataset",
            type = str,
     )
     parser.add_argument(
@@ -255,10 +255,10 @@ if __name__ == "__main__":
 
             # ******************************************************************
 
-            print(f"    Loading \"{args.globePath}/scale={args.globeScale}/elev=2500m.geojson\" ...")
+            print(f"    Loading \"{args.dataPath}/geojson/globe/scale={args.globeScale}/elev=2500m.geojson\" ...")
 
             # Load GeometryCollection from GeoJSON ...
-            with open(f"{args.globePath}/scale={args.globeScale}/elev=2500m.geojson", "rt", encoding = "utf-8") as fObj:
+            with open(f"{args.dataPath}/geojson/globe/scale={args.globeScale}/elev=2500m.geojson", "rt", encoding = "utf-8") as fObj:
                 geoms = shapely.geometry.shape(
                     geojson.load(fObj)
                 )

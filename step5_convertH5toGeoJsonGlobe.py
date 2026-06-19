@@ -3,7 +3,7 @@
 """Convert "GLOBE" dataset H5 files to GeoJSON files"""
 
 # Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+# NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
     import argparse
@@ -112,7 +112,7 @@ if __name__ == "__main__":
             print(f"    Loading \"{hName}\" ...")
 
             # Open HDF5 file ...
-            with h5py.File(hName, "r") as hObj:
+            with h5py.File(hName, mode = "r") as hObj:
                 # Loop over rings ...
                 for iRing in range(hObj.attrs["nRings"]):
                     # Create short-hand ...
@@ -259,7 +259,7 @@ if __name__ == "__main__":
             #       of the written string. Fortunately, if you have no shame,
             #       then you can load and then dump the string again, see:
             #         * https://stackoverflow.com/a/29066406
-            with open(jName, "wt", encoding = "utf-8") as fObj:
+            with open(jName, mode = "wt", encoding = "utf-8") as fObj:
                 json.dump(
                     json.loads(
                         geojson.dumps(
@@ -296,7 +296,7 @@ if __name__ == "__main__":
                     #       Fortunately, if you have no shame, then you can load
                     #       and then dump the string again, see:
                     #         * https://stackoverflow.com/a/29066406
-                    with open(jName, "wt", encoding = "utf-8") as fObj:
+                    with open(jName, mode = "wt", encoding = "utf-8") as fObj:
                         json.dump(
                             json.loads(
                                 geojson.dumps(
@@ -318,7 +318,7 @@ if __name__ == "__main__":
     print("Making \"data/globe.json\" ...")
 
     # Save metadata dictionary as a JSON ...
-    with open("data/globe.json", "wt", encoding = "utf-8") as fObj:
+    with open("data/globe.json", mode = "wt", encoding = "utf-8") as fObj:
         json.dump(
             meta,
             fObj,

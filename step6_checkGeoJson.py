@@ -3,7 +3,7 @@
 """Check GeoJSON files"""
 
 # Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+# NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
     import glob
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # Loop over GeoJSONs ...
     for fName in sorted(glob.glob("output/tileScale=??km/scale=??km/inaccessible.geojson")):
         # Load GeometryCollection ...
-        with open(fName, "rt", encoding = "utf-8") as fObj:
+        with open(fName, mode = "rt", encoding = "utf-8") as fObj:
             geoms = shapely.geometry.shape(
                 geojson.load(fObj)
             )

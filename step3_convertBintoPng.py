@@ -62,7 +62,7 @@ def bin2png(
     print(f"  Converting \"{fNameIn}\" to \"{png}\" ...")
 
     # Load colour tables and create short-hand ...
-    with open(f"{pyguymer3.__path__[0]}/data/json/colourTables.json", "rt", encoding = "utf-8") as fObj:
+    with open(f"{pyguymer3.__path__[0]}/data/json/colourTables.json", mode = "rt", encoding = "utf-8") as fObj:
         colourTables = json.load(fObj)
     turbo = numpy.array(colourTables["turbo"]).astype(numpy.uint8)
 
@@ -93,13 +93,13 @@ def bin2png(
           strategies = None,
               wbitss = [15,],
     )
-    with open(png, "wb") as fObj:
+    with open(png, mode = "wb") as fObj:
         fObj.write(src)
 
 # ******************************************************************************
 
 # Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+# NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
     import argparse

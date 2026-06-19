@@ -3,7 +3,7 @@
 """Convert "GLOBE" dataset ZIP file to a BIN file"""
 
 # Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+# NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
     import os
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         elev = numpy.zeros((ny, nx), dtype = numpy.int16)                       # [m]
 
         # Load dataset ...
-        with zipfile.ZipFile("data/globe.zip", "r") as fObj:
+        with zipfile.ZipFile("data/globe.zip", mode = "r") as fObj:
             # Initialize index ...
             iy = 0                                                              # [px]
 

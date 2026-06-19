@@ -84,7 +84,7 @@ def pgm2png(
           strategies = None,
               wbitss = [15,],
     )
-    with open(png, "wb") as fObj:
+    with open(png, mode = "wb") as fObj:
         fObj.write(src)
 
     # Remove PGM ...
@@ -93,7 +93,7 @@ def pgm2png(
 # ******************************************************************************
 
 # Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+# NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
     import argparse

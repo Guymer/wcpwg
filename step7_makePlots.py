@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Use the proper idiom in the main module ...
-# NOTE: See https://docs.python.org/3.12/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
+# NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
     import argparse
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     print("Loading \"data/globe.json\" ...")
 
     # Load metadata dictionary from JSON ...
-    with open("data/globe.json", "rt", encoding = "utf-8") as fObj:
+    with open("data/globe.json", mode = "rt", encoding = "utf-8") as fObj:
         meta = json.load(fObj)
 
     # **************************************************************************
@@ -258,7 +258,7 @@ if __name__ == "__main__":
             print(f"    Loading \"{args.dataPath}/geojson/globe/scale={args.globeScale}/elev=2500m.geojson\" ...")
 
             # Load GeometryCollection from GeoJSON ...
-            with open(f"{args.dataPath}/geojson/globe/scale={args.globeScale}/elev=2500m.geojson", "rt", encoding = "utf-8") as fObj:
+            with open(f"{args.dataPath}/geojson/globe/scale={args.globeScale}/elev=2500m.geojson", mode = "rt", encoding = "utf-8") as fObj:
                 geoms = shapely.geometry.shape(
                     geojson.load(fObj)
                 )
@@ -289,7 +289,7 @@ if __name__ == "__main__":
             print(f"    Loading \"output/tileScale=32km/{scale}/inaccessible.geojson\" ...")
 
             # Load GeometryCollection from GeoJSON ...
-            with open(f"output/tileScale=32km/{scale}/inaccessible.geojson", "rt", encoding = "utf-8") as fObj:
+            with open(f"output/tileScale=32km/{scale}/inaccessible.geojson", mode = "rt", encoding = "utf-8") as fObj:
                 geoms = shapely.geometry.shape(
                     geojson.load(fObj)
                 )

@@ -1,6 +1,6 @@
 # Where Can Pregnant Women Go? (WCPWG)
 
-!["gmake" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/gmake.yaml/badge.svg) !["mypy" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/mypy.yaml/badge.svg) !["pylint" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/pylint.yaml/badge.svg)
+!["gmake" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/gmake.yaml/badge.svg) !["mypy" GitHub Action Status](https://github.com/Guymer/wcpwg/actions/workflows/mypy.yaml/badge.svg)
 
 This all started after reading the [NHS guidance on exercise in pregnancy](https://www.nhs.uk/conditions/pregnancy-and-baby/pregnancy-exercise/).
 
